@@ -5,8 +5,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 class NotificationService {
   constructor(private client: ClientProxy) {}
-//גיוס עובדים
-// פרסום משרה
+
 async sendRecruitmentNotification(
     recipient: string,
     messageType: string,
@@ -44,10 +43,9 @@ async sendRecruitmentNotification(
       Successfully!
       ${nameOfHRDepartment}
     `;
-    // Send the message here
-  }
   
-  // קבלת קורות חיים
+  }
+
   async sendCVReceiptNotification(
     recipient: string,
     messageType: string,
@@ -82,10 +80,9 @@ async sendRecruitmentNotification(
       Phone: ${candidatePhone}
       Email: ${candidateEmail}
     `;
-    // Send the message here
+ 
   }
   
-  // אישור זימון לראיון
   async sendInterviewConfirmation(
     recipient: string,
     messageType: string,
@@ -126,11 +123,10 @@ async sendRecruitmentNotification(
       Best regards,
       ${HRDepartment}
     `;
-    // Send the message here
+   
   }
   
-  
-  // עדכון סטטוס גיוס
+
   async sendRecruitmentStatusUpdate(
     recipient: string,
     messageType: string,
@@ -155,12 +151,9 @@ async sendRecruitmentNotification(
       Best regards,
       Recruitment team
     `;
-    // Send the message here
+   
   }
-  
-///////////////////////////////////////////////////////////////
-//ניהול עובדים
-//הקצאת משימה
+
 async sendTaskAssignment(
     recipient: string,
     taskName: string,
@@ -193,9 +186,9 @@ async sendTaskAssignment(
       Best regards,
       [Director's name]
     `;
-    // Send the message here
+ 
   }
-//עדכון סטטוס משימה
+
 async sendTaskStatusUpdate(
     recipient: string,
     taskName: string,
@@ -227,10 +220,9 @@ async sendTaskStatusUpdate(
       Best regards,
       [name of updating employee]
     `;
-    // Send the message here
+  
   }
 
-  // שליחת בקשת אישור פעולה
   async sendApprovalRequest(
     recipient: string,
     employeeName: string,
@@ -259,10 +251,9 @@ async sendTaskStatusUpdate(
       Best regards,
       [name of requesting employee]
     `;
-    // Send the message here
+  
   }
   
-  // שליחת משוב לעובד
   async sendFeedbackToEmployee(
     recipient: string,
     employeeName: string,
@@ -292,13 +283,10 @@ async sendTaskStatusUpdate(
       Best regards,
       [Director's name]
     `;
-    // Send the message here
+
   }
 
- 
-  /////////////////////////////////////////////////////////
-//הדרכה ופיתוח
-  // שליחת הודעה על קורס חדש
+
   async sendNewCourseNotification(
     courseName: string,
     courseSubject: string,
@@ -344,10 +332,9 @@ async sendTaskStatusUpdate(
       Signature:
       ${HumanResourcesDepartment}
     `;
-    // Send the message here
+
   }
   
-  // שליחת הזמנה להשתתפות בהכשרה
   async sendTrainingInvitation(
     recipient: string,
     trainingName: string,
@@ -393,10 +380,9 @@ async sendTaskStatusUpdate(
       Signature:
       ${nameOfHRDepartment}
     `;
-    // Send the message here
+
   }
   
-  // שליחת עדכון סטטוס הדרכה
   async sendTrainingStatusUpdate(
     recipient: string,
     trainingName: string,
@@ -426,12 +412,9 @@ async sendTaskStatusUpdate(
       Signature:
       ${nameOfHRDepartment}
     `;
-    // Send the message here
+ 
   }
 
-  ////////////////////////////////////////////////////
-  //נוכחות ותגמולים
-    // שליחת עדכון דוח נוכחות
     async sendAttendanceReportUpdate(
         employeeName: string,
         date: string,
@@ -472,10 +455,9 @@ async sendTaskStatusUpdate(
           Signature:
           ${nameOfHRDepartment}
         `;
-        // Send the message here
+      
       }
       
-      // שליחת עדכון חישוב שכר
       async sendSalaryCalculationUpdate(
         employeeName: string,
         paymentPeriod: string,
@@ -530,10 +512,9 @@ async sendTaskStatusUpdate(
           Signature:
           ${nameOfHRDepartment}
         `;
-        // Send the message here
+       
       }
-      
-      // שליחת אישור העברת תשלום
+
       async sendPaymentTransferConfirmation(
         employeeName: string,
         paymentDescription: string,
@@ -562,6 +543,6 @@ async sendTaskStatusUpdate(
           Signature:
           ${nameOfHRDepartment}
         `;
-        // Send the message here
+  
       }
     }
