@@ -19,6 +19,10 @@ export class Employee extends Document {
 
     @Prop({ type: Types.ObjectId, ref: 'role' })
     roleId: Types.ObjectId
+
+    //Change to relevant roles
+    @Prop({enum:['secretary','cleaner','deliveryPerson']})
+    position:String
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);
