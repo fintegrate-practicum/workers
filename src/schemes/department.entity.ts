@@ -5,13 +5,13 @@ import { Document, Types } from 'mongoose';
 export class Department extends Document {
 
     @Prop()
-    depNumber: Number
+    departmentNumber: Number
 
     @Prop()
-    deptName: String
+    Name: String
 
     @Prop({ type: Types.ObjectId, ref: 'permission' })
-    menagerNumber: Types.ObjectId
+    departmentMenagerNumber: Types.ObjectId
 
     @Prop()
     location: String

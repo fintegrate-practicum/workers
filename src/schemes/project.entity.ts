@@ -5,16 +5,16 @@ import { Document, Types } from 'mongoose';
 export class Project extends Document {
 
     @Prop({ type: Types.ObjectId, ref: 'employee' })
-    respemp: Types.ObjectId
+    ResponsibleEmployee: Types.ObjectId
 
     @Prop()
-    projname: String
+    projectName: String
 
     @Prop()
-    startproj: Date
+    start: Date
 
     @Prop()
-    endproj: Date
+    end: Date
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
