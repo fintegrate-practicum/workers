@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://userDBWorkers:1234@workers.iccnfuh.mongodb.net/?retryWrites=true&w=majority&appName=Workers'),
-    MongooseModule.forRoot('mongodb://localhost:27017/project')]
-  ,
+    //Connection to Mongo DB Atlas
+    //MongooseModule.forRoot(process.env.MONGODB_CONNECTION_ATLAS)
+    //Connection to Mongo DB compass - for development
+    MongooseModule.forRoot(process.env.MONGODB_CONNECTION_COMPASS)
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
