@@ -22,12 +22,16 @@ services:
   mongodb:
     image : mongo:latest
     container_name: mongodb
-   
- 
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${Fintegrate}
+      MONGO_INITDB_ROOT_PASSWORD: ${BSR4Practicum2024}
+      MONGO_INITDB_DATABASE: ${Worker}
+    
     ports:
       - 27017:27017
     volumes:
       - ./database:/data/db
+    
 
     networks:
       - nesjs-network
