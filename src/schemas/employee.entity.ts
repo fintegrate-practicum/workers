@@ -3,26 +3,24 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {
+  @Prop({ type: Types.ObjectId, ref: 'user' })
+  userId: Types.ObjectId;
 
+  @Prop()
+  code: string;
 
-    @Prop({ type: Types.ObjectId, ref: 'user' })
-    userId: Types.ObjectId
+  @Prop()
+  createdBy: string;
 
-    @Prop()
-    code: String
+  @Prop()
+  updatedBy: string;
 
-    @Prop()
-    createdBy: String;
+  @Prop({ type: Types.ObjectId, ref: 'role' })
+  roleId: Types.ObjectId;
 
-    @Prop()
-    updatedBy: String
-
-    @Prop({ type: Types.ObjectId, ref: 'role' })
-    roleId: Types.ObjectId
-
-    //Change to relevant roles
-    @Prop({enum:['secretary','cleaner','deliveryPerson']})
-    position:String
+  //Change to relevant roles
+  @Prop({ enum: ['secretary', 'cleaner', 'deliveryPerson'] })
+  position: string;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

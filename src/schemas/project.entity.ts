@@ -3,18 +3,17 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Project extends Document {
+  @Prop({ type: Types.ObjectId, ref: 'employee' })
+  ResponsibleEmployee: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: 'employee' })
-    ResponsibleEmployee: Types.ObjectId
+  @Prop()
+  projectName: string;
 
-    @Prop()
-    projectName: String
+  @Prop()
+  start: Date;
 
-    @Prop()
-    start: Date
-
-    @Prop()
-    end: Date
+  @Prop()
+  end: Date;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
