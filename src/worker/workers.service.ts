@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Worker } from './worker.entity'; // Assuming Worker entity is defined
+// import { Worker } from './worker.entity'; // Assuming Worker entity is defined
    @Injectable()
 export class WorkersService {
     constructor(@InjectModel('Worker') private readonly workerModel: Model<Worker>) {}
