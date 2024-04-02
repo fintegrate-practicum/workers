@@ -4,7 +4,9 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class WorkersService {
-  constructor(@InjectModel('Worker') private readonly workerModel: Model<Worker>) { }
+  constructor(
+    @InjectModel('Worker') private readonly workerModel: Model<Worker>,
+  ) {}
 
   async createWorker(worker: Worker): Promise<Worker> {
     const newWorker = new this.workerModel(worker);
@@ -20,7 +22,9 @@ export class WorkersService {
   }
 
   async updateWorker(id: string, worker: Worker): Promise<Worker> {
-    return await this.workerModel.findByIdAndUpdate(id, worker, { new: true }).exec();
+    return await this.workerModel
+      .findByIdAndUpdate(id, worker, { new: true })
+      .exec();
   }
 
   async deleteWorker(id: string): Promise<Worker> {
