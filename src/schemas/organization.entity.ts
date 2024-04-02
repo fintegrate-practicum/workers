@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Organization extends Document {
@@ -24,6 +24,17 @@ export class Organization extends Document {
     street: string;
     num: number;
   };
+  @Prop({ type: Types.ObjectId, ref: 'permission' })
+  owner: Types.ObjectId;
+
+  @Prop({ enum: ['Private', 'public', 'International', 'global'] })
+  businessSize: string;
+
+  @Prop()
+  industryType: string;
+
+  @Prop()
+  establishmentDate: string;
 }
 
 export const OrganizationSchema = SchemaFactory.createForClass(Organization);

@@ -18,8 +18,17 @@ export class Employee extends Document {
   @Prop({ type: Types.ObjectId, ref: 'role' })
   roleId: Types.ObjectId;
 
-  //Change to relevant roles
-  @Prop({ enum: ['secretary', 'cleaner', 'deliveryPerson'] })
+  @Prop({
+    enum: [
+      'secretary',
+      'cleaner',
+      'deliveryPerson',
+      'developer',
+      'tester',
+      'maneger',
+      'owner',
+    ],
+  })
   position: string;
 }
 
