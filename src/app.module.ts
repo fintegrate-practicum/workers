@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config'; // Import ConfigService
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -13,10 +13,10 @@ import { WorkersModule } from './worker/workers.module';
     AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule], // Inject ConfigModule to use ConfigService
-      useFactory: async (config) => ({
-        uri: config.get('DATABASE_URI'), // Use DATABASE_URI from environment variable
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get('DATABASE_URI'),
       }),
-      inject: [ConfigService],
+      inject: [ConfigService], // Inject ConfigService
     }),
   ],
   controllers: [AppController],
