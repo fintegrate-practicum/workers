@@ -10,7 +10,7 @@ export class WorkersController {
   async findAll(): Promise<Worker[]> {
     return this.workersService.findAll();
   }
-  
+
   @Get(':id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getWorker(id);

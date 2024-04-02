@@ -1,18 +1,40 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { WorkersController } from './workers.controller';
+import { WorkersService } from './workers.service';
 
 describe('WorkersController', () => {
-  let controller: WorkersController;
+  let workersController: WorkersController;
+  let workersService: WorkersService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [WorkersController],
-    }).compile();
+    const moduleRef  = await Test.createTestingModule({
+        controllers: [WorkersController],
+        providers: [WorkersService],
+      }).compile();
 
-    controller = module.get<WorkersController>(WorkersController);
+      workersController = moduleRef.get<WorkersController>(WorkersController);
+      workersService = moduleRef.get<WorkersService>(WorkersService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('findAll', () => {
+    it('should return an array of workers', async () => {
+      const workersList = [
+        {
+          userId: 1,
+          createdBy: 'John Doe',
+          updateBy: 'Manager',
+          createdAt: 2023,
+          updateAt: 2024
+        },
+        {
+          userId: 1,
+          createdBy: 'Ron Noy',
+          updateBy: 'Luis Nilsson',
+          createdAt: 2022,
+          updateAt: 2024
+        }];
+        jest.spyOn(workersService, 'findAll').mockResolvedValue(workersList);
+      expect(await workersController.findAll()).toBe(workersList);
+    });
   });
 });

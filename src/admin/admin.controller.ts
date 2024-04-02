@@ -10,7 +10,7 @@ export class AdminController {
   async findAll(): Promise<Admin[]> {
     return this.adminService.findAll();
   }
-  
+
   @Get(':id')
   getAdmin(@Param('id') id: string) {
     return this.adminService.getAdmin(id);
