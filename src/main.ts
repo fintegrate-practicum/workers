@@ -5,16 +5,10 @@ import { ValidateDataStructure } from 'transformDataStructure/convertDataValidat
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-    // Apply middleware globally
-    app.use(TransformDataStructure);
-    app.use(ValidateDataStructure);
-    
+  // Apply middlewares globally
+  app.use(TransformDataStructure);
+  app.use(ValidateDataStructure);
+
   await app.listen(3000);
 }
 bootstrap();
-
-
-
-
-
-

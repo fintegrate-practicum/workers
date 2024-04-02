@@ -10,7 +10,7 @@ export class ValidateDataStructure implements NestMiddleware {
         if (!transformedResponse || typeof transformedResponse !== 'object' || !transformedResponse.hasOwnProperty('status') || !transformedResponse.hasOwnProperty('data')) {
             throw new HttpException('Invalid response format', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        next();
+    
+    next();
     }
 }
