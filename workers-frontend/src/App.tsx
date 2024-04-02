@@ -1,11 +1,15 @@
-import './App.css'
+import React from 'react';
+import { Box, AppBar, Toolbar, Typography } from '@mui/material';
+import SideebarWorkerDetails from './components/sidebar_bacik_personal_details';
 
-function App() {
-
+const App = () => {
   return (
     <>
-    </>
-  )
-}
 
-export default App
+      <SideebarWorkerDetails />
+    </>
+
+  );
+};
+
+export default App;
