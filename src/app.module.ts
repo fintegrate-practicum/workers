@@ -14,7 +14,7 @@ import { WorkersModule } from './worker/workers.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get('DATABASE_URI'),
+        uri: config.get(process.env.DATABASE_URI),
       }),
       inject: [ConfigService],
     }),
