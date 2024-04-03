@@ -1,28 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkersService } from './workers.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { Employee } from './schemas/employee.schema';
-import { Model } from 'mongoose';
+import { Employee } from 'src/schemes/employee.entity';
+import { Model, Types } from 'mongoose';
 
 describe('WorkersService', () => {
   let workersService: WorkersService;
   let model: Model<Employee>;
 
-const mockEmployee = [{
-  code: '1',
-  position: 'deliveryPerson',
-  roleId: 30,
-  createdBy: "Dan",
-  updatedBy: "Yon",
-}];
-
+  const mockEmployee = {
+    code: '1',
+    roleId: 30,
+    createdBy: 'Dan',
+    updatedBy: 'Yon',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         WorkersService,
         {
-          provide: getModelToken(Employee.name),
+          provide: getModelToken('Employee'),
           useValue: {
             create: jest.fn(),
             findById: jest.fn(),
@@ -34,7 +32,7 @@ const mockEmployee = [{
     }).compile();
 
     workersService = module.get<WorkersService>(WorkersService);
-    model = module.get<Model<Employee>>(getModelToken(Employee.name));
+    model = module.get<Model<Employee>>(getModelToken('Employee'));
   });
 
   describe('createEmployee', () => {
@@ -42,10 +40,10 @@ const mockEmployee = [{
       jest.spyOn(model, 'create').mockResolvedValue(mockEmployee);
 
       const newEmployee: Employee = {
-        position: 'deliveryPerson',
+        code: '1',
         roleId: 30,
-        createdBy: "Dan",
-        updatedBy: "Yon",
+        createdBy: 'Dan',
+        updatedBy: 'Yon',
       };
 
       const result = await workersService.createEmployee(newEmployee);
@@ -60,6 +58,17 @@ const mockEmployee = [{
       const result = await workersService.getEmployee(mockEmployee.code);
       expect(result).toEqual(mockEmployee);
     });
+
+    it('should handle error when employee is not found', async () => {
+      jest.spyOn(model, 'findById').mockResolvedValue(null);
+
+      try {
+        await workersService.getEmployee('nonExistentCode');
+        fail('Expected an error to be thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      }
+    });
   });
 
   describe('updateEmployee', () => {
@@ -67,12 +76,32 @@ const mockEmployee = [{
       jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValue(mockEmployee);
 
       const updatedEmployeeData: Employee = {
-        position: 'Senior Engineer',
-        age: 35,
+        roleId: 20,
+        createdBy: 'Dan',
+        updatedBy: 'Yon',
       };
 
       const result = await workersService.updateEmployee(mockEmployee.code, updatedEmployeeData);
       expect(result).toEqual(mockEmployee);
+    });
+
+    it('should handle error when updating employee fails', async () => {
+      jest.spyOn(model, 'findByIdAndUpdate').mockRejectedValue(new Error('Update failed'));
+
+      const updatedEmployeeData: Employee = {
+        userId: new Types.ObjectId(),
+        code: '1',
+        roleId: new Types.ObjectId(),
+        createdBy: 'Dan',
+        updatedBy: 'Yon',
+      };
+
+      try {
+        await workersService.updateEmployee(mockEmployee.code, updatedEmployeeData);
+        fail('Expected an error to be thrown');
+      } catch (error) {
+        expect(error.message).toEqual('Update failed');
+      }
     });
   });
 
@@ -82,6 +111,17 @@ const mockEmployee = [{
 
       const result = await workersService.deleteEmployee(mockEmployee.code);
       expect(result).toEqual(mockEmployee);
+    });
+
+    it('should handle error when deleting employee fails', async () => {
+      jest.spyOn(model, 'findByIdAndDelete').mockRejectedValue(new Error('Deletion failed'));
+
+      try {
+        await workersService.deleteEmployee('invalidCode');
+        fail('Expected an error to be thrown');
+      } catch (error) {
+        expect(error.message).toEqual('Deletion failed');
+      }
     });
   });
 });
