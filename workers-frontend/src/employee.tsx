@@ -1,14 +1,23 @@
 class employee {
 
-    id: number;
-    name: string;
-    age: number;
+    userId!: number;
+    code!: string;
+    createdBy!: string;
+    updatedBy!: string;
+    roleId!: number;
+    position!: positions;
 
-    constructor(id: number, name: string, age: number) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
+    constructor() { }
 }
 
 export default employee
+
+enum positions {
+    secretary,
+    cleaner,
+    deliveryPerson,
+    developer,
+    tester,
+    maneger,
+    owner,
+}
