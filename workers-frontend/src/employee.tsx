@@ -1,4 +1,4 @@
-class worker {
+class employee {
 
     id: number;
     name: string;
@@ -11,4 +11,4 @@ class worker {
     }
 }
 
-export default worker
+export default employee
