@@ -3,11 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
-
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  // imports: [
-  //   MongooseModule.forRoot('mongodb+srv://userDBWorkers:1234@workers.iccnfuh.mongodb.net/?retryWrites=true&w=majority&appName=Workers'),
-  // ],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal:true,
+    })
+  ],
   controllers: [AppController],
   providers: [AppService, RabbitPublisherService, ],
 })
