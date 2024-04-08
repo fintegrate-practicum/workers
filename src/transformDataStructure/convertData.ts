@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 type DataType = {
-  status: any,
+  status: number,
   data: JSON
   }
 
