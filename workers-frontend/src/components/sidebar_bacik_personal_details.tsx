@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Icon } from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Icon,Button,Item,ItemText } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import CallIcon from '@mui/icons-material/Call';
 import AddIcon from '@mui/icons-material/Add';
@@ -31,38 +31,38 @@ export default function SidebarWorkerDetails(props: SidebarWorkerDetailsProps) {
                         <Box sx={{ 'auto': 250 }} role="presentation">
                             <List>
                                 <Item disablePadding>
-                                    <ListItemButton>
+                                    <Button>
                                         <Icon sx={{
                                             padding: "4px",
                                         }}>
                                             <AccountBoxIcon /></Icon>
-                                        <ListItemText primary="name" />
-                                    </ListItemButton>
+                                        <ItemText primary="name" />
+                                    </Button>
                                 </Item>
-                                <ListItem disablePadding>
-                                    <ListItemButton>
+                                <Item disablePadding>
+                                    <Button>
                                         <Icon sx={{
                                             padding: "4px",
                                         }}><CallIcon /></Icon>
-                                        <ListItemText primary="phon" />
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton>
+                                        <ItemText primary="phon" />
+                                    </Button>
+                                </Item>
+                                <Item disablePadding>
+                                    <Button>
                                         <Icon sx={{
                                             padding: "4px",
                                         }}><MailIcon /></Icon>
-                                        <ListItemText primary="email" />
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem disablePadding>
-                                    <ListItemButton>
+                                        <ItemText primary="email" />
+                                    </Button>
+                                </Item>
+                                <Item disablePadding>
+                                    <Button>
                                         <Icon sx={{
                                             padding: "4px",
                                         }}> <AddIcon /></Icon>
-                                        <ListItemText primary="details" />
-                                    </ListItemButton>
-                                </ListItem>
+                                        <ItemText primary="details" />
+                                    </Button>
+                                </Item>
                                 <Divider />
                             </List>
                         </Box>
