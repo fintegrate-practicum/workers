@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AdminModule } from './admin/admin.module';
+import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/workers.module';
 
 @Module({
