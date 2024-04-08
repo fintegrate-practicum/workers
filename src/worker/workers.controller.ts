@@ -1,4 +1,3 @@
-//workers.controller.ts
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { TransformDataStructure } from '../transformDataStructure/convertData';
 import { Request, Response } from 'express';
