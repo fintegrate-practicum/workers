@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Worker } from 'cluster';
 import { Employee } from '../schemas/employee.entity';
+
 @Injectable()
 export class WorkersService {
   constructor(
