@@ -4,6 +4,6 @@ import { WorkersController } from './workers.controller';
 
 @Module({
   providers: [WorkersService],
-  controllers: [WorkersController]
+  controllers: [WorkersController],
 })
 export class WorkersModule {}
