@@ -17,8 +17,6 @@ const GenericList = (props: {
     return(
         <>
         <h2>{props.title}</h2>
-        {
-            props.desing? props.desing:
             <TableContainer>
                 <Table aria-label="collapsible table">
                     <TableHead>
@@ -33,13 +31,12 @@ const GenericList = (props: {
                     <TableBody>
                         {
                             list.map((l) => (
-                                <Item column={column} item={l} />
+                                <Item column={column} item={l} desing={props.desing}/>
                             ))
                         }
                     </TableBody>
                 </Table>
             </TableContainer>
-        }
         </>
     )
 }

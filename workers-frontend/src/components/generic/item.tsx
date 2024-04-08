@@ -3,7 +3,8 @@ import TableRow from '@mui/material/TableRow';
 
 const Item = (props: {
     item: Object,
-    column: string[] 
+    column: string[],
+    desing: HTMLElement | null
 }) => {
 
     const item = props.item;
@@ -11,13 +12,16 @@ const Item = (props: {
 
     return(
         <>
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-            {
-                column.map((c)=>{
-                    return(<TableCell align="left">{item[c as keyof typeof undefined]}</TableCell>)
-                })
-            }
-        </TableRow>
+        {
+            props.desing? props.desing:
+            <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                {
+                    column.map((c)=>{
+                        return(<TableCell align="left">{item[c as keyof typeof undefined]}</TableCell>)
+                    })
+                }
+            </TableRow>
+        }
         </>
     )
 }
