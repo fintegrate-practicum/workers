@@ -286,7 +286,6 @@ async sendTaskStatusUpdate(
 
   }
 
-
   async sendNewCourseNotification(
     courseName: string,
     courseSubject: string,
