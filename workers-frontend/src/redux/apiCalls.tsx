@@ -33,7 +33,7 @@ export type WorkersActionTypes =
 
   export const getWorkers = (): ThunkAction<void, State, unknown, WorkersActionTypes> => {
     return (dispatch) => {
-      dispatch({ type: 'GET_WORKERS_REQUEST' });
+      // dispatch({ type: 'GET_WORKERS_REQUEST' });
   
       return axios.get('https://api.example.com/workers')
         .then(response => {
