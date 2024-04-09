@@ -5,18 +5,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Item from "./item";
+import { ComponentType } from 'react';
 
 const GenericList = (props: {
     title: string,
-    list: Object[],
+    list: object[],
     column: string[],
-    desing: HTMLElement | null
-}) => {
-    const list = props.list;
-    const column = props.column;
+    desing: ComponentType<{
+        item: object,
+        column: string[]
+    }> | null}) => {
+
+    const {title, list, column, desing} = props
+
     return(
         <>
-        <h2>{props.title}</h2>
+        <h2>{title}</h2>
             <TableContainer>
                 <Table aria-label="collapsible table">
                     <TableHead>
@@ -31,7 +35,7 @@ const GenericList = (props: {
                     <TableBody>
                         {
                             list.map((l) => (
-                                <Item column={column} item={l} desing={props.desing}/>
+                                <Item column={column} item={l} Desing={desing}/>
                             ))
                         }
                     </TableBody>

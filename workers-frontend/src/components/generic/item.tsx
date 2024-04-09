@@ -1,19 +1,22 @@
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
+import { ComponentType } from 'react';
 
 const Item = (props: {
-    item: Object,
+    item: object,
     column: string[],
-    desing: HTMLElement | null
+    Desing: ComponentType<{
+        item: object,
+        column: string[]
+    }> | null
 }) => {
 
-    const item = props.item;
-    const column = props.column;
+    const { item, column, Desing } = props
 
     return(
         <>
-        {
-            props.desing? props.desing:
+        {            
+            Desing? <Desing item={item} column={column}/>:
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                 {
                     column.map((c)=>{
