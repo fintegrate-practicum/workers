@@ -3,28 +3,27 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Organization extends Document {
+  @Prop()
+  description: string;
 
-    @Prop()
-    description: String
+  @Prop()
+  name: string;
 
-    @Prop()
-    name: String
+  @Prop()
+  email: string;
 
-    @Prop()
-    email: String;
+  @Prop()
+  logo: string;
 
-    @Prop()
-    logo: String
+  @Prop()
+  phone: string;
 
-    @Prop()
-    phone: String
-
-    @Prop()
-    address: {
-        city: String,
-        street: String,
-        num:Number
-    }
+  @Prop()
+  address: {
+    city: string;
+    street: string;
+    num: number;
+  };
 }
 
 export const OrganizationSchema = SchemaFactory.createForClass(Organization);

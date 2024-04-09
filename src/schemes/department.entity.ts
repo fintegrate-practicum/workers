@@ -3,18 +3,17 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Department extends Document {
+  @Prop()
+  depNumber: number;
 
-    @Prop()
-    depNumber: Number
+  @Prop()
+  deptName: string;
 
-    @Prop()
-    deptName: String
+  @Prop({ type: Types.ObjectId, ref: 'permission' })
+  menagerNumber: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: 'permission' })
-    menagerNumber: Types.ObjectId
-
-    @Prop()
-    location: String
+  @Prop()
+  location: string;
 }
 
 export const DepartmentSchema = SchemaFactory.createForClass(Department);

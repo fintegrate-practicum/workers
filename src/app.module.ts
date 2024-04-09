@@ -7,10 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal:true,
-    })
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, RabbitPublisherService, ],
+  providers: [AppService, RabbitPublisherService],
 })
-export class AppModule { }
+export class AppModule {}
