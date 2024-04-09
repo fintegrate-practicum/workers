@@ -1,8 +1,12 @@
 import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from './app.module';
+import { TransformDataStructure } from './transformDataStructure/convertData';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+
+  app.useGlobalInterceptors(new TransformDataStructure());
+  await app.listen(4000);
 }
 bootstrap();
