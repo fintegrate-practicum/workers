@@ -4,12 +4,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { AdminModule } from './admin/module/admin.module';
-import { WorkersModule } from './worker/workers.module';
+import { WorkersModule } from './worker/module/workers.module';
+
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),   
     WorkersModule,
     AdminModule,
     MongooseModule.forRootAsync({
@@ -22,8 +26,9 @@ import { WorkersModule } from './worker/workers.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService,TransformDataStructure],
 })
+
 export class AppModule { }
 
 
