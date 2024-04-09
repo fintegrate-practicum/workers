@@ -5,7 +5,7 @@ import { TransformDataStructure } from './transformDataStructure/convertData';
 
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
-    .setTitle('Main api example')
+    .setTitle('Main api base')
     .setDescription('The main API description')
     .setVersion('1.0')
     .addTag('main')
