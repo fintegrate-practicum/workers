@@ -1,47 +1,41 @@
 import axios from "axios";
-import { ThunkAction } from "redux-thunk";
+import { createAsyncThunk } from '@reduxjs/toolkit'
 
-export type Worker = {
-  id: number;
-  name: string;
-};
+export const getEmployee = createAsyncThunk('', async () => {
+  try {
+    const response = await axios.get('https://api.example.com/employee')
+    return response.data
+  } catch (error) {
+    return error
+  }
 
-export type GetWorkersAction = {
-  type: 'GET_WORKERS';
-  workers: Worker[];
-};
+});
+export const addEmployee = createAsyncThunk('', async () => {
+  try {
+    const response = await axios.post('https://api.example.com/employee')
+    return response.data
+  } catch (error) {
+    return error
+  }
 
-export type GetWorkersRequestAction = {
-  type: 'GET_WORKERS_REQUEST';
-};
+});
+export const editEmployee = createAsyncThunk('', async () => {
+  try {
+    const response = await axios.put('https://api.example.com/employee')
+    return response.data
+  } catch (error) {
+    return error
+  }
 
-export type GetWorkersSuccessAction = {
-  type: 'GET_WORKERS_SUCCESS';
-  workers: Worker[];
-};
+});
+export const deleteEmployee = createAsyncThunk('', async () => {
+  try {
+    const response = await axios.delete('https://api.example.com/employee')
+    return response.data
+  } catch (error) {
+    return error
+  }
 
-export type GetWorkersFailureAction = {
-  type: 'GET_WORKERS_FAILURE';
-  error: string;
-};
+});
 
-export type WorkersActionTypes =
-  | GetWorkersAction
-  | GetWorkersRequestAction
-  | GetWorkersSuccessAction
-  | GetWorkersFailureAction;
 
-  export const getWorkers = (): ThunkAction<void, State, unknown, WorkersActionTypes> => {
-    return (dispatch) => {
-      // dispatch({ type: 'GET_WORKERS_REQUEST' });
-  
-      return axios.get('https://api.example.com/workers')
-        .then(response => {
-          dispatch({ type: 'GET_WORKERS_SUCCESS', workers: response.data });
-        })
-        .catch(error => {
-          dispatch({ type: 'GET_WORKERS_FAILURE', error: error.message });
-        });
-    };
-  };
-  
