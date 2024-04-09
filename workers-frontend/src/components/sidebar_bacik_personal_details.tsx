@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Icon,Button,Item,ItemText } from '@mui/material';
+import { Box, Drawer, List, Divider, Icon, Button, MenuItem, Typography } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import CallIcon from '@mui/icons-material/Call';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,41 +28,41 @@ export default function SidebarWorkerDetails(props: SidebarWorkerDetailsProps) {
                 <React.Fragment key='right'>
                     <Button onClick={toggleDrawer(true)} sx={{ 'auto': 200 }}>details</Button>
                     <Drawer anchor={ANCHOR} open={state} onClose={toggleDrawer(false)}>
-                        <Box sx={{ 'auto': 250 }} role="presentation">
+                        <Box sx={{ 'auto': 250, pointerEvents: 'none' }} role="presentation" >
                             <List>
-                                <Item disablePadding>
-                                    <Button>
+                                <MenuItem   >
+                                    <Button >
                                         <Icon sx={{
-                                            padding: "4px",
+                                            padding: "12px ", paddingTop: "2px"
                                         }}>
                                             <AccountBoxIcon /></Icon>
-                                        <ItemText primary="name" />
+                                        name
                                     </Button>
-                                </Item>
-                                <Item disablePadding>
+                                </MenuItem>
+                                <MenuItem >
                                     <Button>
                                         <Icon sx={{
-                                            padding: "4px",
+                                            padding: "12px", paddingTop: "2px",
                                         }}><CallIcon /></Icon>
-                                        <ItemText primary="phon" />
+                                        phon
                                     </Button>
-                                </Item>
-                                <Item disablePadding>
+                                </MenuItem>
+                                <MenuItem >
                                     <Button>
                                         <Icon sx={{
-                                            padding: "4px",
+                                            padding: "12px", paddingTop: "2px"
                                         }}><MailIcon /></Icon>
-                                        <ItemText primary="email" />
+                                        email
                                     </Button>
-                                </Item>
-                                <Item disablePadding>
-                                    <Button>
+                                </MenuItem>
+                                <MenuItem sx={{pointerEvents: 'auto' ,border:0}} >
+                                    <Button >
                                         <Icon sx={{
-                                            padding: "4px",
+                                            padding: "12px", paddingTop: "2px"
                                         }}> <AddIcon /></Icon>
-                                        <ItemText primary="details" />
+                                        details
                                     </Button>
-                                </Item>
+                                </MenuItem>
                                 <Divider />
                             </List>
                         </Box>
