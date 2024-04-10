@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from 'src/schemas/employee.entity'; // Assuming Employee entity is defined
+import { WorkersModule } from 'src/worker/module/workers.module';
 
 @Injectable()
 export class AdminService {

@@ -8,11 +8,11 @@ COPY . /app
 RUN npm i -g nodemon
 
 
-RUN npm install @nestjs/common
+# RUN npm install @nestjs/common
 
-RUN npm install @nestjs/core
+# RUN npm install @nestjs/core
 
-RUN npm i reflect-metadata
+# RUN npm i reflect-metadata
 
 RUN npm run build
 
