@@ -32,9 +32,13 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AdminModule } from './admin/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
+import { env } from 'node:process';
 
-// import { AdminModule } from './admin/module/admin.module';
-// import { WorkersModule } from './worker/module/workers.module';
+
+
+import { TransformDataStructure } from './transformDataStructure/convertData';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -43,10 +47,14 @@ import { WorkersModule } from './worker/module/workers.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get(process.env.MONGODB_CONNECTION_COMPASS),
+        // uri: config.get("mongodb://127.0.0.1:27017/snaptoon"),
+        uri: process.env.MONGODB_CONNECTION_COMPASS
+        
+
+        
         //uri: config.get(process.env.MONGODB_CONNECTION_ATLAS),
       }),
-      inject: [ConfigService],
+      inject: [ConfigService]
     }),
   ],
   controllers: [AppController],
