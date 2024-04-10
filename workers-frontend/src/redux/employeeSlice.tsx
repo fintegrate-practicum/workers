@@ -16,14 +16,14 @@ const employeeSlice = createSlice({
         },
         remove: (state, actions: PayloadAction<number>) => {
             // delete request
-            state.employees = state.employees.filter((employee: employee) => employee.id !== actions.payload)
+            state.employees = state.employees.filter((employee: employee) => employee.userId !== actions.payload)
         },
         update: (state, actions: PayloadAction<employee>) => {
             // put request
-            const employee = state.employees.find((employee: employee) => employee.id === actions.payload.id)
+            const employee = state.employees.find((employee: employee) => employee.userId === actions.payload.userId)
             if(employee !== undefined){
-                employee.name = actions.payload.name;
-                employee.age = actions.payload.age;
+                employee.updatedBy = actions.payload.updatedBy;
+                employee.position = actions.payload.position;
             }
         }
     }
