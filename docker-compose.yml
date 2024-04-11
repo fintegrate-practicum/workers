@@ -1,5 +1,3 @@
-
-
 version: '3.8'
 services:
   dev:
@@ -20,18 +18,17 @@ services:
     #   - /usr/src/app/node_modules
     restart: unless-stopped
   mongodb:
-    image : mongo:latest
+    image: mongo:latest
     container_name: mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${Fintegrate}
       MONGO_INITDB_ROOT_PASSWORD: ${BSR4Practicum2024}
       MONGO_INITDB_DATABASE: ${Worker}
-    
+
     ports:
       - 27017:27017
     volumes:
       - ./database:/data/db
-    
 
     networks:
       - nesjs-network
@@ -49,14 +46,21 @@ services:
     networks:
       - nesjs-network
 
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5673:5672
+      - 15673:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - nesjs-network
+
 networks:
-    nesjs-network:
-      driver: bridge
-     
-
-
-
-
-
-
-    
+  nesjs-network:
+    driver: bridge
