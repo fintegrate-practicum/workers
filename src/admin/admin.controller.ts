@@ -5,7 +5,7 @@ import { Admin } from './admin.entity';
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
-  
+
   @Get()
   async findAll(): Promise<Admin[]> {
     return this.adminService.findAll();

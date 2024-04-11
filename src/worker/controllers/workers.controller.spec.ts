@@ -8,12 +8,11 @@ import { ContextType, ExecutionContext, Type } from '@nestjs/common';
 import { of } from 'rxjs';
 import { RpcArgumentsHost, WsArgumentsHost } from '@nestjs/common/interfaces';
 
-
 describe('WorkersController', () => {
   let workersController: WorkersController;
   let workersService: WorkersService;
   let interceptor: TransformDataStructure;
-  let errors: any[] = [];
+  const errors: any[] = [];
   let req: Partial<Request> = {};
   let res: Partial<Response<any, Record<string, any>>> = {};
 
@@ -41,24 +40,26 @@ describe('WorkersController', () => {
       it('should return an array of workers', async () => {
         const workersList: Employee[] = [
           new Employee({
-          userId: '1',
-          createdBy: 'John Doe',
-          code: '123',
-          updatedBy: 'Admin',
-          roleId: '456',
-          position: 'Developer'
-        }),
-        new Employee({
-          userId: '2',
-          createdBy: 'Alice Smith',
-          code: '456',
-          updatedBy: 'Manager',
-          roleId: '789',
-          position: 'Designer'
-        })
+            userId: '1',
+            createdBy: 'John Doe',
+            code: '123',
+            updatedBy: 'Admin',
+            roleId: '456',
+            position: 'Developer',
+          }),
+          new Employee({
+            userId: '2',
+            createdBy: 'Alice Smith',
+            code: '456',
+            updatedBy: 'Manager',
+            roleId: '789',
+            position: 'Designer',
+          }),
         ];
-        
-        jest.spyOn(workersService, 'findAllByBusinessId').mockResolvedValue(workersList);
+
+        jest
+          .spyOn(workersService, 'findAllByBusinessId')
+          .mockResolvedValue(workersList);
         const result = await workersController.findAll('businessId');
 
         expect(result).toEqual(workersList);
@@ -91,14 +92,16 @@ describe('WorkersController', () => {
         },
         getType: function <TContext extends string = ContextType>(): TContext {
           throw new Error('Function not implemented.');
-        }
+        },
       };
 
       const next = {
-        handle: jest.fn().mockReturnValue(of({
-          data: {},
-          Status: 200
-        })),
+        handle: jest.fn().mockReturnValue(
+          of({
+            data: {},
+            Status: 200,
+          }),
+        ),
       };
 
       interceptor.intercept(context, next).subscribe({
@@ -109,7 +112,7 @@ describe('WorkersController', () => {
           } catch (err) {
             errors.push(err);
           }
-        }
+        },
       });
     });
   });

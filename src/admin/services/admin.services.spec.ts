@@ -9,8 +9,8 @@ describe('AdminService', () => {
   let model: Model<Employee>;
 
   const mockEmployees: Employee[] = [
-    { code: '1', createdBy: "Dan", updatedBy: "yoel", position: 'Manager' },
-    { code: '2', createdBy: "aviv", updatedBy: "avi", position: 'Developer' },
+    { code: '1', createdBy: 'Dan', updatedBy: 'yoel', position: 'Manager' },
+    { code: '2', createdBy: 'aviv', updatedBy: 'avi', position: 'Developer' },
   ];
 
   beforeEach(async () => {
@@ -22,7 +22,7 @@ describe('AdminService', () => {
           useValue: {
             find: jest.fn().mockResolvedValue(mockEmployees),
             findById: jest.fn().mockImplementation((code: string) => {
-              return mockEmployees.find(e => e.code === code);
+              return mockEmployees.find((e) => e.code === code);
             }),
           },
         },
@@ -46,7 +46,7 @@ describe('AdminService', () => {
     it('should return an employee by ID', async () => {
       const employeeId = '1';
       const result = await adminService.getEmployee(employeeId);
-      const expectedEmployee = mockEmployees.find(e => e.code === employeeId);
+      const expectedEmployee = mockEmployees.find((e) => e.code === employeeId);
       expect(result).toEqual(expectedEmployee);
     });
 

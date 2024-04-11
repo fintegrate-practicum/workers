@@ -15,7 +15,7 @@ describe('WorkersService', () => {
       code: '123',
       updatedBy: 'Admin',
       roleId: '456',
-      position: 'Developer'
+      position: 'Developer',
     }),
     new Employee({
       userId: '2',
@@ -23,10 +23,10 @@ describe('WorkersService', () => {
       code: '456',
       updatedBy: 'Manager',
       roleId: '789',
-      position: 'Designer'
-    })
+      position: 'Designer',
+    }),
   ];
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -50,20 +50,21 @@ describe('WorkersService', () => {
 
   describe('createEmployee', () => {
     it('should create and return an employee', async () => {
-      jest.spyOn(model, 'create').mockResolvedValueOnce([mockEmployee[0]] as any);
+      jest
+        .spyOn(model, 'create')
+        .mockResolvedValueOnce([mockEmployee[0]] as any);
       const newEmployee = new Employee({
         userId: '1',
         createdBy: 'John Doe',
         code: '123',
         updatedBy: 'Admin',
         roleId: '456',
-        position: 'Developer'
+        position: 'Developer',
       });
       const result = await workersService.createEmployee(newEmployee);
       expect(result).toEqual(mockEmployee[0]);
     });
   });
-  
 
   describe('getEmployee', () => {
     it('should find and return an employee by ID', async () => {
@@ -74,44 +75,64 @@ describe('WorkersService', () => {
 
     it('should handle error when employee is not found', async () => {
       jest.spyOn(model, 'findById').mockResolvedValueOnce(null);
-      await expect(workersService.getEmployee('nonExistentCode')).rejects.toThrowError();
+      await expect(
+        workersService.getEmployee('nonExistentCode'),
+      ).rejects.toThrowError();
     });
   });
 
   describe('updateEmployee', () => {
     it('should update and return an employee by ID', async () => {
-      jest.spyOn(model, 'findByIdAndUpdate').mockResolvedValueOnce(mockEmployee[0]);
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockResolvedValueOnce(mockEmployee[0]);
       const updatedEmployeeData = new Employee({
         roleId: 20,
         createdBy: 'Dan',
         updatedBy: 'Yon',
       });
-      const result = await workersService.updateEmployee(mockEmployee[0].code, updatedEmployeeData);
+      const result = await workersService.updateEmployee(
+        mockEmployee[0].code,
+        updatedEmployeeData,
+      );
       expect(result).toEqual(mockEmployee[0]);
     });
 
     it('should handle error when updating employee fails', async () => {
-      jest.spyOn(model, 'findByIdAndUpdate').mockRejectedValueOnce(new Error('Update failed'));
+      jest
+        .spyOn(model, 'findByIdAndUpdate')
+        .mockRejectedValueOnce(new Error('Update failed'));
       const updatedEmployeeData = new Employee({
         code: '1',
         roleId: new Types.ObjectId(),
         createdBy: 'Dan',
         updatedBy: 'Yon',
       });
-      await expect(workersService.updateEmployee(mockEmployee[0].code, updatedEmployeeData)).rejects.toThrowError('Update failed');
+      await expect(
+        workersService.updateEmployee(
+          mockEmployee[0].code,
+          updatedEmployeeData,
+        ),
+      ).rejects.toThrowError('Update failed');
     });
   });
 
   describe('deleteEmployee', () => {
     it('should delete and return an employee by ID', async () => {
-      jest.spyOn(model, 'findByIdAndDelete').mockResolvedValueOnce(mockEmployee[0]);
+      jest
+        .spyOn(model, 'findByIdAndDelete')
+        .mockResolvedValueOnce(mockEmployee[0]);
       const result = await workersService.deleteEmployee(mockEmployee[0].code);
       expect(result).toEqual(mockEmployee[0]);
     });
 
     it('should handle error when deleting employee fails', async () => {
-      jest.spyOn(model, 'findByIdAndDelete').mockRejectedValueOnce(new Error('Deletion failed'));
-      await expect(workersService.deleteEmployee('invalidCode')).rejects.toThrowError('Deletion failed');
+      jest
+        .spyOn(model, 'findByIdAndDelete')
+        .mockRejectedValueOnce(new Error('Deletion failed'));
+      await expect(
+        workersService.deleteEmployee('invalidCode'),
+      ).rejects.toThrowError('Deletion failed');
     });
   });
 
@@ -126,12 +147,3 @@ describe('WorkersService', () => {
     });
   });
 });
-
-
-
-
-
-
-
-
-

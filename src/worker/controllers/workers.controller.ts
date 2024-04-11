@@ -1,4 +1,11 @@
-import { Controller, Get, Param, UseInterceptors, Query, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseInterceptors,
+  Query,
+  Body,
+} from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';

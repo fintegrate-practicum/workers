@@ -17,9 +17,7 @@ async function initializeSwagger(app) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-
   await initializeSwagger(app);
-
 
   app.useGlobalInterceptors(new TransformDataStructure());
   await app.listen(3000);

@@ -24,7 +24,7 @@ export class Organization extends Document {
     street: string;
     num: number;
   };
-  @Prop({ type: Types.ObjectId, ref: 'permission' })
+  @Prop({ type: Types.ObjectId, ref: 'employee' })
   owner: Types.ObjectId;
 
   @Prop({ enum: ['Private', 'public', 'International', 'global'] })
