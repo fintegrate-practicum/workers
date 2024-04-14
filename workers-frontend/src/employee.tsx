@@ -5,7 +5,7 @@ class employee {
     createdBy!: string;
     updatedBy!: string;
     roleId!: number;
-    position!: positions;
+    position!: string;
    
 
     constructor() { }
@@ -13,12 +13,3 @@ class employee {
 
 export default employee
 
-enum positions {
-    secretary,
-    cleaner,
-    deliveryPerson,
-    developer,
-    tester,
-    maneger,
-    owner,
-}
