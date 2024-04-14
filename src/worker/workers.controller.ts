@@ -30,20 +30,23 @@ export class WorkersController {
     @UseInterceptors(TransformDataStructure)
     async getData(req: Request, res: Response): Promise<void> {
    
-      
         res.json({ message: 'Original data' });
     }
+
 
     @Get()
     async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
       return this.workersService.findAllByBusinessId(businessId);
     }
+
+
     
 
     @Get(':id')
     getWorker(@Param('id') id: string) {
       return this.workersService.getEmployee(id);
     }
+
   
   
     @UseGuards(AuthGuard('jwt'))
@@ -51,6 +54,8 @@ export class WorkersController {
     async create(@Body('worker') worker: Employee): Promise<void> {
       this.workersService.createEmployee(worker);
     }
+  
+
     
 }
 

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WorkersController } from './workers.controller';
+// import { WorkersController } from './workers.controller';
+import { WorkersController } from '../workers.controller';
 // import { TransformDataStructure } from '../transformDataStructure/convertData';
 import { TransformDataStructure } from 'src/transformDataStructure/convertData';
 import { Request, Response } from 'express';

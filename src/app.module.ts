@@ -25,6 +25,8 @@
 //   providers: [AppService, TransformDataStructure],
 // })
 // export class AppModule { }
+import { AuthzModule } from './authz/authz.module';
+
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -45,9 +47,10 @@ import { TransformDataStructure } from './transformDataStructure/convertData';
     WorkersModule,
     AdminModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      
+      imports: [ConfigModule,WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
-        // uri: config.get("mongodb://127.0.0.1:27017/snaptoon"),
+        // uri: config.get(process.env.MONGODB_CONNECTION_COMPASS),
         uri: process.env.MONGODB_CONNECTION_COMPASS
         
 
