@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getEmployee, addEmployee, deleteEmployee, editEmployee } from "./apiCalls";
-//import {get,post,put,delete} from "./redux"
+import employee from "../employee";
+import { add, remove, update } from "./employeeSlice";
+import { useAppDispatch } from "./hooks";
 
 export interface State {
-  employees: Employee[];
+  employees: employee[];
   status: string;
   error: string | undefined;
 }
@@ -22,10 +24,9 @@ const apiSlice = createSlice({
     builder.addCase(getEmployee.pending, (state) => {
       state.status = 'loading'
     })
-      .addCase(getEmployee.fulfilled, (state, action) => {
+      .addCase(getEmployee.fulfilled, (state) => {
         state.status = 'succeeded'
         // get()
-
       })
       .addCase(getEmployee.rejected, (state, action) => {
         state.status = 'failed'
@@ -35,6 +36,8 @@ const apiSlice = createSlice({
       })
       .addCase(addEmployee.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        const dispatch = useAppDispatch()
+        dispatch(add(action.payload))
         //post()
       })
       .addCase(addEmployee.rejected, (state, action) => {
@@ -46,6 +49,8 @@ const apiSlice = createSlice({
       })
       .addCase(editEmployee.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        const dispatch = useAppDispatch()
+        dispatch(update(action.payload))
         //put()
       })
       .addCase(editEmployee.rejected, (state, action) => {
@@ -57,6 +62,8 @@ const apiSlice = createSlice({
       })
       .addCase(deleteEmployee.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        const dispatch = useAppDispatch()
+        dispatch(remove(action.payload))
         //delete()
       })
       .addCase(deleteEmployee.rejected, (state, action) => {
