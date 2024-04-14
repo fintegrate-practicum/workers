@@ -6,8 +6,10 @@ class employee {
     updatedBy!: string;
     roleId!: number;
     position!: string;
+   
 
     constructor() { }
 }
 
 export default employee
+
