@@ -1,7 +1,7 @@
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { TransformDataStructure } from '../transformDataStructure/convertData';
+import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
 
 import {
@@ -14,7 +14,7 @@ import {
     UseInterceptors,
     Query
   } from '@nestjs/common';
-  import { WorkersService  } from '../worker/services/workers.service'
+  import { WorkersService  } from '../services/workers.service'
   import { AuthGuard } from '@nestjs/passport';
 import { Employee } from 'src/schemas/employee.entity';
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { WorkersService } from '../services/workers.service';
-import { WorkersController } from '../workers.controller';
+import { WorkersController } from '../controllers/workers.controller';
 import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
 
 @Module({
