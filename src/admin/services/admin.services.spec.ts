@@ -8,26 +8,26 @@
 //   let adminService: AdminService;
 //   let model: Model<Employee>;
 
-//   const mockEmployees: Employee[] = [
-//     { code: '1', createdBy: "Dan", updatedBy: "yoel", position: 'Manager' },
-//     { code: '2', createdBy: "aviv", updatedBy: "avi", position: 'Developer' },
-//   ];
+  const mockEmployees: Employee[] = [
+    { code: '1', createdBy: 'Dan', updatedBy: 'yoel', position: 'Manager' },
+    { code: '2', createdBy: 'aviv', updatedBy: 'avi', position: 'Developer' },
+  ];
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       providers: [
-//         AdminService,
-//         {
-//           provide: getModelToken(Employee.name),
-//           useValue: {
-//             find: jest.fn().mockResolvedValue(mockEmployees),
-//             findById: jest.fn().mockImplementation((code: string) => {
-//               return mockEmployees.find(e => e.code === code);
-//             }),
-//           },
-//         },
-//       ],
-//     }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AdminService,
+        {
+          provide: getModelToken(Employee.name),
+          useValue: {
+            find: jest.fn().mockResolvedValue(mockEmployees),
+            findById: jest.fn().mockImplementation((code: string) => {
+              return mockEmployees.find((e) => e.code === code);
+            }),
+          },
+        },
+      ],
+    }).compile();
 
 //     adminService = module.get<AdminService>(AdminService);
 //     model = module.get<Model<Employee>>(getModelToken(Employee.name));
@@ -42,13 +42,13 @@
 //     });
 //   });
 
-//   describe('getEmployee', () => {
-//     it('should return an employee by ID', async () => {
-//       const employeeId = '1';
-//       const result = await adminService.getEmployee(employeeId);
-//       const expectedEmployee = mockEmployees.find(e => e.code === employeeId);
-//       expect(result).toEqual(expectedEmployee);
-//     });
+  describe('getEmployee', () => {
+    it('should return an employee by ID', async () => {
+      const employeeId = '1';
+      const result = await adminService.getEmployee(employeeId);
+      const expectedEmployee = mockEmployees.find((e) => e.code === employeeId);
+      expect(result).toEqual(expectedEmployee);
+    });
 
 //     it('should return null for non-existent employee ID', async () => {
 //       const nonExistentId = '3';

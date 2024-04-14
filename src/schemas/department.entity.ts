@@ -9,7 +9,7 @@ export class Department extends Document {
   @Prop()
   Name: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'permission' })
+  @Prop({ type: Types.ObjectId, ref: 'employee' })
   departmentMenagerNumber: Types.ObjectId;
 
   @Prop()

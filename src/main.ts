@@ -27,7 +27,6 @@ async function bootstrap() {
 
   await initializeSwagger(app);
 
-
   app.useGlobalInterceptors(new TransformDataStructure());
   await app.listen(3000);
 }
