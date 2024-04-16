@@ -1,13 +1,17 @@
-import './App.css'
-import WorkersShowList from './components/workersShowList'
+
+import './App.css';
 
 
-function App() {
+
+const App = () => {
   return (
     <>
-   <WorkersShowList  />
-    </>
-  )
-}
 
-export default App
+
+    </>
+
+  );
+};
+
+
+export default App;

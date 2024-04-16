@@ -2,28 +2,41 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
 import employee from "../employee";
+import { useAppDispatch } from "./hooks";
+import { addEmployee, deleteEmployee, editEmployee } from "./apiCalls";
 
-const res = await axios.get('');
-const {employees = {}} = res.data;
+// const res = await axios.get('');
+// const res = {data: [{userId:2,code:"w",createdBy:"u",updatedBy:"u",roleId:6,position:"secretary"}]}
+
+// let employees=res.data
+// const {employees = {}} = res.data;
+const employees = {
+    employees: [
+        new employee(2,"w","u","u",6,"secretary")
+    ],
+}
 
 const employeeSlice = createSlice({
     name: "employees",
     initialState: employees,
     reducers: {
         add: (state, actions: PayloadAction<employee>) => {
-            // post request
+            const dispatch = useAppDispatch()
+            dispatch(addEmployee(actions.payload))
             state.employees.push(actions.payload)
         },
         remove: (state, actions: PayloadAction<number>) => {
-            // delete request
-            state.employees = state.employees.filter((employee: employee) => employee.id !== actions.payload)
+            const dispatch = useAppDispatch()
+            dispatch(deleteEmployee(actions.payload))
+            state.employees = state.employees.filter((employee: employee) => employee.userId !== actions.payload)
         },
         update: (state, actions: PayloadAction<employee>) => {
-            // put request
-            const employee = state.employees.find((employee: employee) => employee.id === actions.payload.id)
+            const dispatch = useAppDispatch()
+            dispatch(editEmployee(actions.payload))
+            const employee = state.employees.find((employee: employee) => employee.userId === actions.payload.userId)
             if(employee !== undefined){
-                employee.name = actions.payload.name;
-                employee.age = actions.payload.age;
+                employee.updatedBy = actions.payload.updatedBy;
+                employee.position = actions.payload.position;
             }
         }
     }

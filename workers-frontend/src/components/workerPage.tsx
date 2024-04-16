@@ -9,27 +9,26 @@ import {
 
 } from '@mui/material';
 
-
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 
-interface WorkerDetails {
-    name: string;
-    workingPosition: string;
-    salary: string;
-    employmentDetails: string;
-}
+import User from '../user';
+import employee from '../employee';
+import React from 'react';
 
-const workerPage = () => {
-    const workerData: WorkerDetails = {
-        name: 'Remy Sharp',
-        workingPosition: 'Software Engineer',
-        salary: '50000',
-        employmentDetails: 'Full-time',
-    };
+interface WorkerPageProps {
+    user: User;
+    employee:employee;
+    
+  }  
+
+
+  const WorkerPage: React.FC<WorkerPageProps> = (props) => {
+ 
 
     return (
+
         <>
             <Stack spacing={4} direction="row-reverse" sx={{ color: 'action.active', display: 'flex', justifyContent: 'flex-end', width: '90%', flexDirection: 'row' }}>
                 <Badge color="secondary" badgeContent={0} showZero>
@@ -39,8 +38,8 @@ const workerPage = () => {
 
             <Grid style={{ display: 'flex', flexWrap: 'wrap', width: '80%', margin: 'auto', flexDirection: 'column' }} id="all">
                 <Grid style={{ textAlign: 'left', margin: 'none' }} >
-                    <Typography>Name: </Typography>
-                    <Typography>Working Position: </Typography>
+                    <Typography>Name:{props.user.name} </Typography>
+                    <Typography>Working Position:{props.employee.position}</Typography>
                 </Grid>
 
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -57,24 +56,15 @@ const workerPage = () => {
                                         component="span"
                                         variant="body2"
                                         color="text.primary"
-                                    >
-                                        Salary:example,
-                                    </Typography>
-                                }
+                                    > dateOfBirth: {props.user.name}
+                                    <br/> 
+                                    mobile: {props.user.mobile} 
+                                    <br/>
+                                    status: {props.user.status}                                                                                                     
+                                    </Typography>                                    
+                                }                                
                             />
-                            <ListItemText
-                                primary="Employment Details:"
-                                secondary={
-                                    <Typography
-                                        sx={{ display: 'inline-block' }}
-                                        component="span"
-                                        variant="body2"
-                                        color="text.primary"
-                                    >
-                                        examples...
-                                    </Typography>
-                                }
-                            />
+                            
                         </Grid>
                     </ListItem>
                 </List>
@@ -82,4 +72,5 @@ const workerPage = () => {
         </>
     );
 };
-export default workerPage;
+
+export default WorkerPage;
