@@ -3,7 +3,9 @@ import { RootState } from "./store";
 import axios from "axios";
 import employee from "../employee";
 import { useAppDispatch } from "./hooks";
-import { addEmployee, deleteEmployee, editEmployee } from "./apiCalls";
+import {addEmployee} from './apiCalls/postCall'
+import {deleteEmployee} from "./apiCalls/deleteCall";
+import {editEmployee} from './apiCalls/putCall'
 
 // const res = await axios.get('');
 // const res = {data: [{userId:2,code:"w",createdBy:"u",updatedBy:"u",roleId:6,position:"secretary"}]}

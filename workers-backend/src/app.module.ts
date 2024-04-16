@@ -5,26 +5,27 @@ import { AppService } from './app.service';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
-import { AdminModule } from './admin/module/admin.module';
+// import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
+import { Employee } from './schemas/employee.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     WorkersModule,
-    AdminModule,
+    // AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get(process.env.MONGODB_CONNECTION_COMPASS),
-        //uri: config.get(process.env.MONGODB_CONNECTION_ATLAS),
+        uri: process.env.MONGODB_CONNECTION,
       }),
       inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure],
+  providers: [AppService,RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
