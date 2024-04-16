@@ -26,6 +26,6 @@ import { Employee } from './schemas/employee.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, TransformDataStructure],
+  providers: [AppService,RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
