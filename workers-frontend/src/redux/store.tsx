@@ -1,11 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import employeeSlice from "./employeeSlice";
-import apiSlice from "./reducers";
+import deleteSlice from './apiCalls/deleteCall'
+import postSlice from './apiCalls/postCall'
+import editSlice from './apiCalls/putCall'
 
 const store = configureStore({
     reducer:{
         employeeSlice,
-        apiSlice
+        deleteSlice,
+        postSlice,
+        editSlice
+       
     }
 })
 
