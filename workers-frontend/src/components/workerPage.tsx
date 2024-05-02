@@ -20,7 +20,6 @@ import React from 'react';
 interface WorkerPageProps {
     user: User;
     employee:employee;
-    
   }  
 
 
