@@ -18,7 +18,6 @@ const GenericList = (props: {
 
     const {title, list, column, desing} = props
 
-    console.log('generic');
     
     return(
         <>

@@ -6,12 +6,7 @@ import { log } from 'console';
 
 const WorkersShowList = () => {
 
-  console.log('WorkersShowList');
-  const emoloyees = useAppSelector(selectEmployees);
-  console.log(emoloyees);
-
-
-  // const emoloyees=[{userId:2,code:"w",createdBy:"u",updatedBy:"u",roleId:6,position:"secretary"}]
+  const emoloyees = useAppSelector(selectEmployees); 
 
   return (
     <>

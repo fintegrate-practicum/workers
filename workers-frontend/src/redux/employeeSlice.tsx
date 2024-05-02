@@ -7,16 +7,9 @@ import {addEmployee} from './apiCalls/postCall'
 import {deleteEmployee} from "./apiCalls/deleteCall";
 import {editEmployee} from './apiCalls/putCall'
 
-// const res = await axios.get('');
-// const res = {data: [{userId:2,code:"w",createdBy:"u",updatedBy:"u",roleId:6,position:"secretary"}]}
+const res = await axios.get('');
+const {employees = {}} = res.data;
 
-// let employees=res.data
-// const {employees = {}} = res.data;
-const employees = {
-    employees: [
-        new employee(2,"w","u","u",6,"secretary")
-    ],
-}
 
 const employeeSlice = createSlice({
     name: "employees",
