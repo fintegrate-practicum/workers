@@ -19,6 +19,7 @@ async function bootstrap() {
 
   await initializeSwagger(app);
 
+  app.enableCors();
   app.useGlobalInterceptors(new TransformDataStructure());
   await app.listen(3001);
 }

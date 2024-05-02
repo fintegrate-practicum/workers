@@ -18,7 +18,7 @@ export class User extends Document {
   @Prop()
   dateOfBirth: Date;
 
-  @Prop()
+  @Prop({ type: Object })
   address: {
     city: string;
     street: string;
