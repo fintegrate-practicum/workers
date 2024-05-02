@@ -7,7 +7,7 @@ import {addEmployee} from './apiCalls/postCall'
 import {deleteEmployee} from "./apiCalls/deleteCall";
 import {editEmployee} from './apiCalls/putCall'
 
-const res = await axios.get('http://localhost:3001/workers/1');
+const res = await axios.get('http://localhost:3001/workers?businessId=1');
 const {data = {}} = res.data;
 
 

@@ -10,7 +10,7 @@ export class Employee extends Document {
   userId: Types.ObjectId;
 
   @Prop()
-  businessId: string;
+  businessId: number;
 
   @Prop()
   code: string;

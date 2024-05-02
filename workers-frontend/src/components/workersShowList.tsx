@@ -1,18 +1,16 @@
-import React from 'react';
 import GenericList from './generic/genericList'
-import { selectEmployees } from '../redux/employeeSlice'
 import { useAppSelector } from '../redux/hooks'
-import { log } from 'console';
+import ItemDetailToWorker from './itemDetailToWorker';
 
 const WorkersShowList = () => {
 
-  const emoloyees = useAppSelector(selectEmployees); 
+  const emoloyees = useAppSelector(state => state.employeeSlice); 
 
   return (
     <>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
 
-        <GenericList title={"workers list"} list={emoloyees} column={["id", "code", "createdBy", "updatedBy", "roleId", "position"]} desing={null} />
+        <GenericList title={"workers list"} list={emoloyees} column={["userId", "code", "createdBy", "updatedBy", "roleId", "position", "details"]} desing={ItemDetailToWorker} />
 
       </div>
     </>
