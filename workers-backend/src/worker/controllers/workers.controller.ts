@@ -15,8 +15,8 @@ import { Request, Response } from 'express';
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
-  @Get(':businessId')
-  async findAll(@Param('businessId') businessId: string): Promise<Employee[]> {
+  @Get()
+  async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAllByBusinessId(businessId);
   }
 

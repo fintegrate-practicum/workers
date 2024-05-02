@@ -1,16 +1,10 @@
 import './App.css';
-import { useAppSelector } from './redux/hooks';
-
+import WorkersShowList from './components/workersShowList';
 
 const App = () => {
-  const data = useAppSelector(state => state.employeeSlice)
-  console.log(data);
-
-  
   return (
     <>
-    <h1>hello</h1>
-
+    <WorkersShowList/>
     </>
 
   );
