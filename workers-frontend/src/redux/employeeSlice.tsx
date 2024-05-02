@@ -10,6 +10,7 @@ import {editEmployee} from './apiCalls/putCall'
 const res = await axios.get('http://localhost:3001/workers/1');
 const {data = {}} = res.data;
 
+
 const employeeSlice = createSlice({
     name: "employees",
     initialState: data,

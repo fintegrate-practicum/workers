@@ -18,6 +18,7 @@ const GenericList = (props: {
 
     const {title, list, column, desing} = props
 
+    
     return(
         <>
         <h2>{title}</h2>
