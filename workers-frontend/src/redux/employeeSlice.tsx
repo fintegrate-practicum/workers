@@ -7,13 +7,13 @@ import {addEmployee} from './apiCalls/postCall'
 import {deleteEmployee} from "./apiCalls/deleteCall";
 import {editEmployee} from './apiCalls/putCall'
 
-const res = await axios.get('');
-const {employees = {}} = res.data;
+const res = await axios.get('http://localhost:3001/workers/1');
+const {data = {}} = res.data;
 
 
 const employeeSlice = createSlice({
     name: "employees",
-    initialState: employees,
+    initialState: data,
     reducers: {
         add: (state, actions: PayloadAction<employee>) => {
             const dispatch = useAppDispatch()
