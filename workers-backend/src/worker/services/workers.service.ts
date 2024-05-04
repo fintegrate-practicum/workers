@@ -21,12 +21,12 @@ export class WorkersService {
   ): Promise<Employee[]> {
     const skip = (page - 1) * limit;
     const query = { businessId };
-
+    
     const employees = await this.employeeModel
       .find(query)
       .skip(skip)
       .limit(limit)
-      .exec();
+      .exec();      
     return employees;
   }
 
