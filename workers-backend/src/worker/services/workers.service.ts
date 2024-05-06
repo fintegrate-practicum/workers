@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
 
 @Injectable()
 export class WorkersService {
@@ -9,7 +10,7 @@ export class WorkersService {
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
 
-  async createEmployee(worker: Employee): Promise<Employee> {
+  async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     const newEmployee = new this.employeeModel(worker);
     return await newEmployee.save();
   }
