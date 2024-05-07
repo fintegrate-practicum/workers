@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@nestjs/testing": "^10.3.8",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6"
+  }
+}
