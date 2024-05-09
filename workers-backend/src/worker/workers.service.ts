@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../schemas/employee.entity';
 @Injectable()
 export class WorkersService {
+
+  private readonly logger = new Logger(WorkersService.name)
+
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
