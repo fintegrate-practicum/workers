@@ -5,6 +5,7 @@ import {
   UseInterceptors,
   Query,
   Body,
+  Post,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
@@ -16,7 +17,7 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Get(':businessId')
-  async findAll(@Param('businessId') businessId: string): Promise<Employee[]> {
+  async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAllByBusinessId(businessId);
   }
 

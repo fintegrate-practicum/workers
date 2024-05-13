@@ -23,7 +23,7 @@ export class WorkersService {
     const query = { businessId };
 
     const employees = await this.employeeModel
-      .find()
+      .find(query)
       .skip(skip)
       .limit(limit)
       .exec();
