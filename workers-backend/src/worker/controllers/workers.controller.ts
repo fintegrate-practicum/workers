@@ -16,11 +16,8 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Get()
-  async findAll(
-    @Query('businessId') businessId: string,
-    @Query('page') page: number,
-  ): Promise<Employee[]> {
-    return this.workersService.findAllByBusinessId(businessId, page);
+  async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
+    return this.workersService.findAll(businessId);
   }
 
   @Get(':id')
