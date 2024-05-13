@@ -5,9 +5,9 @@ import { AppService } from './app.service';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
-// import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
+import { TasksModule } from './tasks/module/tasks.module';
 
 @Module({
   imports: [
@@ -16,6 +16,7 @@ import { Employee } from './schemas/employee.entity';
       isGlobal: true,
     }),
     WorkersModule,
+    TasksModule,
     // AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -26,6 +27,6 @@ import { Employee } from './schemas/employee.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService,RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
