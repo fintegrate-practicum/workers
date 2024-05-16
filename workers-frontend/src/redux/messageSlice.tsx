@@ -5,7 +5,7 @@ import { useAppDispatch } from "./hooks";
 import { getAllMessages, updateIsRead } from "./apiCalls/messageCalls";
 
 
-const response = await axios.get('https://api.example.com/messages');
+const response = await axios.get('https://localhost:3001/messages');
 const { data = {} } = response.data;
 
 const messageSlice = createSlice({

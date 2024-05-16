@@ -9,8 +9,7 @@ export class MessagesService {
         @InjectModel(Message.name) private readonly messageModel: Model<Message>,
     ) { }
 
-    async createMessage(message: Message): Promise<Message> {
-        const newMessage = new this.messageModel(message);
-        return await newMessage.save();
+    async updateMessage(message: Message): Promise<Message> {
+        return await this.messageModel.findByIdAndUpdate(message.id, message, { new: true }).exec()
     }
 }

@@ -1,8 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Mongoose, Types } from 'mongoose';
-import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {

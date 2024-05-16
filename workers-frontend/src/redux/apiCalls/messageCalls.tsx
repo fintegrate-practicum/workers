@@ -16,7 +16,7 @@ export const getAllMessages = createAsyncThunk(
 );
 export const updateIsRead = createAsyncThunk(
     'employees/updateIsRead',
-    async (id:number, { rejectWithValue }) => {
+    async (id: number, { rejectWithValue }) => {
         try {
             const response = await axios.put(`http://localhost:3001/message/updateRead/${id}`);
             return response.data;
