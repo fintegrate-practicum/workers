@@ -1,12 +1,13 @@
 class task {
 
     companyName!: string;
-    managerId!:string;
+    managerId!: string;
     taskName!: string;
     description!: string;
     targetDate!: string;
-    theUrgencyOfTheTask!: string;
-    associatedWithEmployee!: number;
+    associatedWithEmployee!: string;
+    theUrgencyOfTheTask!: number;
+
     constructor() { }
 }
 

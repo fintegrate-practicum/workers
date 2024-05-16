@@ -3,10 +3,7 @@ import { RootState } from "./store";
 import axios from "axios";
 import task from "../task";
 
-const managerId = 1; //from auth0
-const res = await axios.get(`http://localhost:3001/tasks/manager/${managerId}/new-task:managerId/new-task`);
-const {data = {}} = res.data;
-// const {data = {}} = {};
+const {data = {}} = {};
 
 const taskSlice = createSlice({
     name: "tasks",
@@ -20,8 +17,10 @@ export default taskSlice.reducer;
 
 export const createTask = createAsyncThunk('', async (_task: task) => {
     
-    try {        
-        const response = await axios.post(`http://localhost:3001/tasks/manager/${managerId}/new-task`, _task)
+    try { 
+        console.log(_task);          
+        const response = await axios.post(`http://localhost:3001/tasks/manager/new-task`, _task)
+        console.log(response.data); 
         return response.data
     } catch (error) {
         return error

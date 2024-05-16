@@ -6,9 +6,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import task from '../../task';
-import { createTask } from '../../redux/taskSlice';
-import { useAppDispatch } from '../../redux/hooks';
+import task from '../../../task';
+import { createTask } from '../../../redux/taskSlice';
+import { useAppDispatch } from '../../../redux/hooks';
 
 export default function AddTaskBtn() {
   const [open, setOpen] = React.useState(false);
@@ -16,8 +16,8 @@ export default function AddTaskBtn() {
   const [taskName, setTaskName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [targetDate, setTargetDate] = React.useState('');
-  const [theUrgencyOfTheTask, setTheUrgencyOfTheTask] = React.useState('');
-  const [associatedWithEmployee, setAssociatedWithEmployee] = React.useState(0);
+  const [associatedWithEmployee, setAssociatedWithEmployee] = React.useState('');
+  const [theUrgencyOfTheTask, setTheUrgencyOfTheTask] = React.useState(0);
 
   const Task : task = {
     "companyName": companyName,
@@ -25,8 +25,8 @@ export default function AddTaskBtn() {
     "taskName": taskName,
     "description": description,
     "targetDate": targetDate,
-    "theUrgencyOfTheTask": theUrgencyOfTheTask,
-    "associatedWithEmployee": associatedWithEmployee
+    "associatedWithEmployee": associatedWithEmployee,
+    "theUrgencyOfTheTask": theUrgencyOfTheTask
   }
   const dispatch=useAppDispatch();
   const handleClickOpen = () => {
@@ -110,21 +110,9 @@ export default function AddTaskBtn() {
             type="date"
             fullWidth
             variant="standard"
-          />
+          />        
           <TextField
-            onChange={(e) => setTheUrgencyOfTheTask(e.target.value)}
-            autoFocus
-            required
-            margin="dense"
-            id="the_urgency_of_the_task"
-            name="The Urgency Of The Task"
-            label="The Urgency Of The Task"
-            type="number"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            onChange={(e) => setAssociatedWithEmployee(parseInt(e.target.value))}
+            onChange={(e) => setAssociatedWithEmployee(e.target.value)}
             autoFocus
             required
             margin="dense"
@@ -132,6 +120,18 @@ export default function AddTaskBtn() {
             name="Associated with employee(s)"
             label="Associated with employee(s)"
             type="text"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            onChange={(e) => setTheUrgencyOfTheTask(parseInt(e.target.value))}
+            autoFocus
+            required
+            margin="dense"
+            id="the_urgency_of_the_task"
+            name="The Urgency Of The Task"
+            label="The Urgency Of The Task"
+            type="number"
             fullWidth
             variant="standard"
           />

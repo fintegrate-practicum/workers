@@ -3,10 +3,7 @@ import { RootState } from "./store";
 import axios from "axios";
 import employee from "../employee";
 
-const businessId = 1; //from auth0
-const res = await axios.get(`http://localhost:3001/workers?businessId=${businessId}`);
-const { data = {} } = res.data;
-// const {data = {}} = {};
+const {data = {}} = {};
 
 const employeeSlice = createSlice({
     name: "employees",
