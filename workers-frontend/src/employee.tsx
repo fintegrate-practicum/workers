@@ -1,6 +1,7 @@
 class employee {
 
     userId!: number;
+    businessId!: string;
     code!: string;
     createdBy!: string;
     updatedBy!: string;
@@ -8,8 +9,9 @@ class employee {
     position!: string;
 
 
-    constructor(userId: number, code: string,createdBy: string,updatedBy: string, roleId: number,position: string) {
+    constructor(userId: number, businessId: string, code: string,createdBy: string,updatedBy: string, roleId: number,position: string) {
         this.userId = userId
+        this.businessId = businessId
         this.code = code
         this.createdBy = createdBy
         this.updatedBy = updatedBy
@@ -19,5 +21,4 @@ class employee {
     }
 }
 
-export default employee
-
+export default employee;
