@@ -1,14 +1,20 @@
-class task {
+export enum StatusEnum {
+    ToDo = 1,
+    Open = 2,
+    InProgress = 3,
+    Completed = 4
+}
+export default class Task {
 
-    companyName!: string;
+    businessId!: string;
     managerId!: string;
     taskName!: string;
     description!: string;
     targetDate!: string;
-    associatedWithEmployee!: string;
-    theUrgencyOfTheTask!: number;
+    employee!: string;
+    urgency!: number;
+    status!: StatusEnum;
+    completionDate!: string;
 
     constructor() { }
 }
-
-export default task

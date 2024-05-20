@@ -3,14 +3,10 @@ import { RootState } from "./store";
 import axios from "axios";
 import employee from "../employee";
 
-<<<<<<< HEAD
-const {data = {}} = {};
-=======
+const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
 const businessId = 1; //from auth0
-const res = await axios.get(`http://localhost:3001/workers?businessId=${businessId}`);
+const res = await axios.get(http+`/workers?businessId=${businessId}`);
 const { data = {} } = res.data;
-// const {data = {}} = {};
->>>>>>> 847352ea0e90ab627a9b88d474f453ec26f6e921
 
 const employeeSlice = createSlice({
     name: "employees",
@@ -24,7 +20,7 @@ export default employeeSlice.reducer;
 
 export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
     try {
-        const response = await axios.post('http://localhost:3001/workers', _employee)
+        const response = await axios.post(http+'/workers', _employee)
         return response.data
     } catch (error) {
         return error
@@ -33,7 +29,7 @@ export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
 
 export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
     try {
-        const response = await axios.delete(`http://localhost:3001/workers/${_num}`)
+        const response = await axios.delete(http+`/workers/${_num}`)
         return response.data
     } catch (error) {
         return error
@@ -42,7 +38,7 @@ export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
 
 export const editEmployee = createAsyncThunk('', async (_employee: employee) => {
     try {
-        const response = await axios.put(`http://localhost:3001/workers/${_employee.userId}`, _employee)
+        const response = await axios.put(http+`/workers/${_employee.userId}`, _employee)
         return response.data
     } catch (error) {
         return error
