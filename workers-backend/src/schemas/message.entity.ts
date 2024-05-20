@@ -4,7 +4,7 @@ import { Document, Types } from 'mongoose';
 @Schema({ timestamps: true })
 export class Message extends Document {
   @Prop()
-  message_id: Types.ObjectId;
+  message_id: Number;
 
   @Prop({ type: Types.ObjectId, ref: 'Employee' })
   sender_id: Types.ObjectId;

@@ -21,10 +21,10 @@ const messageSlice = createSlice({
             const dispatch = useAppDispatch();
             const messageId = action.payload;
             dispatch(updateIsRead(messageId));
-            const foundMessage = state.find((message: any) => message.id === messageId);
-            if (foundMessage) {
-                foundMessage.isRead = true;
-            }
+            // const foundMessage = state.find((message: any) => message.id === messageId);
+            // if (foundMessage) {
+            //     foundMessage.isRead = true;
+            // }
         }
     }
 }
