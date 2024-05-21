@@ -15,6 +15,11 @@ export class WorkersService {
     const newEmployee = new this.employeeModel(worker);
     return await newEmployee.save();
   }
+  async findAll(businessId: string): Promise<Employee[]> {
+    const query = { businessId };
+    const employees = await this.employeeModel.find(query).exec();
+    return employees;
+  }
 
   async findAllByBusinessId(
     businessId: string,
