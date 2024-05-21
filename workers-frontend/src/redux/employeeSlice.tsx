@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
-import employee from "../employee";
+import employee from "../classes/employee";
 import { useAppDispatch } from "./hooks";
 import {addEmployee} from './apiCalls/postCall'
 import {deleteEmployee} from "./apiCalls/deleteCall";
