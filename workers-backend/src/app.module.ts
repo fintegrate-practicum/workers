@@ -7,7 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 // import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
-import { Employee } from './schemas/employee.entity';
 
 @Module({
   imports: [
@@ -26,6 +25,6 @@ import { Employee } from './schemas/employee.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService,RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}

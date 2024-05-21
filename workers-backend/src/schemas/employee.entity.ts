@@ -24,6 +24,12 @@ export class Employee extends Document {
   @Prop({ type: Types.ObjectId, ref: 'role' })
   roleId: Types.ObjectId;
 
+  @Prop({ default: false })
+  active: boolean;
+
+  @Prop()
+  signupTime: Date;
+
   @Prop({
     enum: [
       'secretary',
