@@ -3,11 +3,10 @@ import { TasksController } from './tasks.controller';
 import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
-
+import { StatusEnum } from 'src/schemas/task.entity';
 describe('TasksController', () => {
   let controller: TasksController;
   let service: TasksService;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TasksController],
@@ -23,16 +22,17 @@ describe('TasksController', () => {
     controller = module.get<TasksController>(TasksController);
     service = module.get<TasksService>(TasksService);
   });
-
   describe('create', () => {
     const taskData: CreateTaskDto = {
-      companyName: 'Test Company',
-      managerId: '12345',
+      businessId: 'Test Company',
       taskName: 'Test Task',
-      description: 'efvdvbgtdc',
+      completionDate: 'Test completionDate',
+      description: 'efrat',
+      managerId: 'Test managerId',
       targetDate: '2024-05-10',
-      associatedWithEmployee: 'fgnfdrtyhd',
-      theUrgencyOfTheTask: 2,
+      employee: 'efrat',
+      status: StatusEnum.Completed,
+      urgency: 2,
     };
     it('should call service.createTask with dto', async () => {
       const spy = jest.spyOn(service, 'createTask').mockResolvedValue(taskData);
@@ -40,14 +40,12 @@ describe('TasksController', () => {
       expect(spy).toHaveBeenCalledWith(taskData);
       expect(result).toEqual(taskData);
     });
-
     it('result should be equal to TaskStub', async () => {
       const taskStub = { ...taskData };
       jest.spyOn(service, 'createTask').mockResolvedValue(taskStub);
       const result = await controller.createTask(taskData);
       expect(result).toEqual(taskStub);
     });
-
     it('should throw BadRequestException if creation fails', async () => {
       jest
         .spyOn(service, 'createTask')
