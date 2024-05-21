@@ -66,6 +66,8 @@ describe('WorkersController', () => {
       });
     });
 
+    
+
     it('should transform the data structure and send it as a JSON response', async () => {
       const context: ExecutionContext = {
         switchToHttp: jest.fn().mockReturnValue({
@@ -116,4 +118,5 @@ describe('WorkersController', () => {
       });
     });
   });
+
 });

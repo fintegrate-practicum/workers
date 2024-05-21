@@ -1,28 +1,29 @@
-import { IsNotEmpty, IsString, IsEnum, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsMongoId, Matches } from 'class-validator';
 
 export class workerValidationsSchema {
   @IsString()
   @IsNotEmpty()
   businessId:string
 
-  @IsString()
   @IsNotEmpty()
+  @IsMongoId()
   userId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  code: string;
+  workerCode:string
 
   @IsString()
   @IsNotEmpty()
   createdBy: string;
 
-  @IsString()
-  updatedBy: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // updatedBy: string;
 
-  @IsMongoId()
+  @IsString()
+  @IsNotEmpty()
   roleId: string;
 
+  @IsNotEmpty()
   @IsEnum([
     'secretary',
     'cleaner',
