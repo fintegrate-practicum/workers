@@ -8,35 +8,25 @@ export enum StatusEnum {
 }
 
 export type TaskDoc = Task & Document;
-
 @Schema()
 export class Task {
   @Prop({ required: true })
   businessId: string;
-
   @Prop({ required: true })
   taskName: string;
-
   @Prop({ required: true })
   managerId: string;
-
   @Prop({ required: true })
   description: string;
-
   @Prop({ required: true })
   targetDate: string;
-
   @Prop({ required: true })
   employee: string;
-
   @Prop({ required: true })
   urgency: number;
-
   @Prop({ required: true, enum: StatusEnum, default: StatusEnum.ToDo })
   status: StatusEnum;
-
   @Prop({ default: null })
   completionDate: string;
 }
-
 export const TaskSchema = SchemaFactory.createForClass(Task);

@@ -8,7 +8,6 @@ class employee {
     roleId!: number;
     position!: string;
 
-
     constructor(userId: number, businessId: string, code: string,createdBy: string,updatedBy: string, roleId: number,position: string) {
         this.userId = userId
         this.businessId = businessId
@@ -17,7 +16,6 @@ class employee {
         this.updatedBy = updatedBy
         this.roleId = roleId
         this.position = position
-
     }
 }
 
