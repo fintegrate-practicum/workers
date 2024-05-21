@@ -28,8 +28,3 @@ export class Task {
   completionDate: Date;
 }
 export const TaskSchema = SchemaFactory.createForClass(Task);
-
-
-
-
-
