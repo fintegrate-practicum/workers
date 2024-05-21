@@ -147,3 +147,26 @@ describe('WorkersService', () => {
     });
   });
 });
+
+describe('findAll', () => {
+  it('should find and return employees by business ID', async () => {
+    const businessId = '123456789';
+    jest.spyOn(model, 'find').mockReturnValue({
+      exec: jest.fn().mockResolvedValueOnce(mockEmployee),
+    } as any);
+
+    const result = await workersService.findAll(businessId);
+    expect(result).toEqual(mockEmployee);
+    expect(model.find).toHaveBeenCalledWith({ businessId });
+  });
+
+  it('should handle error when finding employees fails', async () => {
+    const businessId = 'business123';
+    jest.spyOn(model, 'find').mockReturnValue({
+      exec: jest.fn().mockRejectedValueOnce(new Error('Find failed')),
+    } as any);
+
+    await expect(workersService.findAll(businessId)).rejects.toThrowError('Find failed');
+  });
+});
+
