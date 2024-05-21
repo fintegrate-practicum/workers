@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
-import employee from "../employee";
+import employee from "../classes/employee";
 
 const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
 const businessId = 1; //from auth0
