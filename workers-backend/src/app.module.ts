@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 // import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
+import { MessagesModule } from './message/module/messages.module';
 import { Employee } from './schemas/employee.entity';
 
 @Module({
@@ -16,6 +17,7 @@ import { Employee } from './schemas/employee.entity';
       isGlobal: true,
     }),
     WorkersModule,
+    MessagesModule,
     // AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
