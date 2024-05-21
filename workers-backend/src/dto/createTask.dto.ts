@@ -45,11 +45,11 @@ export class CreateTaskDto {
   targetDate: Date;
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: '2024-05-10',
+    example: ['123', '234'],
   })
   @IsNotEmpty()
   @IsString()
-  employee: string;
+  employee: string[];
   @ApiProperty({
     description: 'The urgency level of the task',
     example: 1,

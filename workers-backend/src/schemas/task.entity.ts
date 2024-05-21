@@ -19,7 +19,7 @@ export class Task {
   @Prop({ required: true })
   targetDate: Date;
   @Prop({ required: true })
-  employee: string;
+  employee: string[];
   @Prop({ required: true })
   urgency: number;
   @Prop({ required: true, enum: StatusEnum, default: StatusEnum.ToDo })

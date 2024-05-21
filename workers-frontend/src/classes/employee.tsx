@@ -1,21 +1,28 @@
+export enum RoleEnum {
+    'secretary',
+    'cleaner',
+    'deliveryPerson',
+    'developer',
+    'tester',
+    'maneger',
+    'owner',
+}
 class employee {
 
-    userId!: number;
+    userId!: string;
     businessId!: string;
     code!: string;
     createdBy!: string;
     updatedBy!: string;
-    roleId!: number;
-    position!: string;
+    role!: RoleEnum;
 
-    constructor(userId: number, businessId: string, code: string,createdBy: string,updatedBy: string, roleId: number,position: string) {
+    constructor(userId: string, businessId: string, code: string, createdBy: string, updatedBy: string, role: RoleEnum) {
         this.userId = userId
         this.businessId = businessId
         this.code = code
         this.createdBy = createdBy
         this.updatedBy = updatedBy
-        this.roleId = roleId
-        this.position = position
+        this.role = role
     }
 }
 

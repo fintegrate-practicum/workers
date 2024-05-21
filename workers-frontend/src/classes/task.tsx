@@ -10,11 +10,11 @@ export default class Task {
     managerId!: string;
     taskName!: string;
     description!: string;
-    targetDate!: string;
-    employee!: string;
+    targetDate!: Date;
+    employee!: string[];
     urgency!: number;
     status!: StatusEnum;
-    completionDate!: string;
+    completionDate!: Date;
 
     constructor() { }
 }

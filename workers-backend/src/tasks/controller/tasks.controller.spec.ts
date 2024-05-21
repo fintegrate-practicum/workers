@@ -16,6 +16,7 @@ describe('TasksController', () => {
           provide: TasksService,
           useValue: {
             createTask: jest.fn(),
+            getAllTasks: jest.fn().mockResolvedValue(dynamicArry),
           },
         },
       ],
@@ -31,7 +32,7 @@ describe('TasksController', () => {
       description: 'efrat',
       managerId: 'Test managerId',
       targetDate: new Date(0),
-      employee: 'efrat',
+      employee: ['123', '234'],
       status: StatusEnum.Completed,
       urgency: 2,
     };
@@ -56,4 +57,48 @@ describe('TasksController', () => {
       );
     });
   });
+<<<<<<< Updated upstream
+=======
+  const managerId = '123';
+  const dynamicArry = [
+    {
+      businessId: 'Test Company',
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: ['123', '234'],
+      status: StatusEnum.Completed,
+      urgency: 2,
+    },
+    {
+      businessId: 'Test Company',
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: ['123', '234'],
+      status: StatusEnum.Completed,
+      urgency: 2,
+    },
+  ];
+  describe('getAllTasks', () => {
+    let result;
+
+    beforeEach(async () => {
+      jest.spyOn(service, 'getAllTasks');
+      result = await controller.getAllTasks(managerId);
+    });
+
+    it('should call service.getAllTasks with managerId', () => {
+      expect(service.getAllTasks).toBeCalledWith(managerId);
+    });
+
+    it('result should be equal to dynamicArry', () => {
+      expect(result).toEqual(dynamicArry);
+    });
+  });
+>>>>>>> Stashed changes
 });
