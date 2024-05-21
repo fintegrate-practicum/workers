@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as amqp from 'amqplib/callback_api';
@@ -19,7 +18,7 @@ export class RabbitPublisherService {
       this.configService.get('RABBITMQ_QUEUE_NAME');
 
     this.connectToRabbitMQ();
-    console.log("connected to rabbit");
+    console.log('connected to rabbit');
   }
 
   async connectToRabbitMQ() {
@@ -28,18 +27,24 @@ export class RabbitPublisherService {
       const username = this.configService.get('AMQP_USERNAME');
       const password = this.configService.get('AMQP_PASSWORD');
 
-      this.connection = await new Promise<amqp.Connection>((resolve, reject) => {
-        amqp.connect(amqpUrl, {
-          username,
-          password,
-        }, (err, conn) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(conn);
-          }
-        });
-      });
+      this.connection = await new Promise<amqp.Connection>(
+        (resolve, reject) => {
+          amqp.connect(
+            amqpUrl,
+            {
+              username,
+              password,
+            },
+            (err, conn) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(conn);
+              }
+            },
+          );
+        },
+      );
 
       this.channel = await this.connection.createChannel();
 
@@ -66,18 +71,18 @@ export class RabbitPublisherService {
   }
 
   async publishMessageToCommunication(message: any): Promise<void> {
-        try {
-          const exchangeName = message.pattern;
-          const messageData = JSON.stringify(message.data);
-    
-          this.channel.publish(
-            exchangeName,
-            'message_type',
-            Buffer.from(messageData),
-          );
-          console.log(`Message published to exchange :  ${exchangeName} `);
-        } catch (error) {
-          console.error(`Message not published with routing key ${error} `);
-        }
-      }
+    try {
+      const exchangeName = message.pattern;
+      const messageData = JSON.stringify(message.data);
+
+      this.channel.publish(
+        exchangeName,
+        'message_type',
+        Buffer.from(messageData),
+      );
+      console.log(`Message published to exchange :  ${exchangeName} `);
+    } catch (error) {
+      console.error(`Message not published with routing key ${error} `);
     }
+  }
+}

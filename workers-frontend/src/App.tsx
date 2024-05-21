@@ -1,14 +1,11 @@
 import './App.css';
-import WorkersShowList from './components/workersShowList';
 
 const App = () => {
   return (
     <>
-    <WorkersShowList/>
+      <h1>hello</h1>
     </>
-
   );
 };
-
 
 export default App;
