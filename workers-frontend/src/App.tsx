@@ -1,21 +1,11 @@
 import './App.css';
-import MessageWindow from './components/messageWindow';
-import WorkersShowList from './components/workersShowList';
-
-const m = {
-  message_content: "aaaaaaa", date_time: Date.now(), read_status: true, status: "kkk"
-
-}
 
 const App = () => {
   return (
     <>
-      <WorkersShowList />
-      <MessageWindow props={m} />
+      <h1>hello</h1>
     </>
-
   );
 };
-
 
 export default App;

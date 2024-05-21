@@ -13,9 +13,9 @@ import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 
-import User from '../user';
-import employee from '../employee';
+import User from '../classes/user';
 import React from 'react';
+import employee from '../classes/employee';
 
 interface WorkerPageProps {
     user: User;

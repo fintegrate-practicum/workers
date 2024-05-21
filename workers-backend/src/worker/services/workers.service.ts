@@ -5,7 +5,6 @@ import { Employee } from '../../schemas/employee.entity';
 
 @Injectable()
 export class WorkersService {
-
   private readonly logger = new Logger(WorkersService.name);
 
   constructor(
@@ -14,7 +13,7 @@ export class WorkersService {
 
   async createEmployee(worker: Employee): Promise<Employee> {
     const newEmployee = new this.employeeModel(worker);
-    return await newEmployee.save()
+    return await newEmployee.save();
   }
 
   async findAllByBusinessId(
