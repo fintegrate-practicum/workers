@@ -3,6 +3,7 @@ import { TasksController } from './tasks.controller';
 import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
+import { StatusEnum } from 'src/schemas/task.entity';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -24,13 +25,15 @@ describe('TasksController', () => {
   });
   describe('create', () => {
     const taskData: CreateTaskDto = {
-      companyName: 'Test Company',
-      managerId: '12345',
+      businessId: 'Test Company',
       taskName: 'Test Task',
-      description: 'efvdvbgtdc',
-      targetDate: '2024-05-10',
-      associatedWithEmployee: 'fgnfdrtyhd',
-      theUrgencyOfTheTask: 2,
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: 'efrat',
+      status: StatusEnum.Completed,
+      urgency: 2,
     };
     it('should call service.createTask with dto', async () => {
       const spy = jest.spyOn(service, 'createTask').mockResolvedValue(taskData);
