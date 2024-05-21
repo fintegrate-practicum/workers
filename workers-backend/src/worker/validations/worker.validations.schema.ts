@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsString, IsEnum, IsMongoId, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsMongoId } from 'class-validator';
 
 export class workerValidationsSchema {
   @IsString()
   @IsNotEmpty()
-  businessId:string
+  businessId: string;
 
   @IsNotEmpty()
   @IsMongoId()
   userId: string;
 
-  workerCode:string
+  workerCode: string;
 
   @IsString()
   @IsNotEmpty()
@@ -19,7 +19,7 @@ export class workerValidationsSchema {
   // @IsNotEmpty()
   // updatedBy: string;
 
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
   roleId: string;
 

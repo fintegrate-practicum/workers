@@ -3,23 +3,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-
 @Injectable()
 export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-  ) { }
-
+  ) {}
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
       const newEmployee = new this.employeeModel(worker);
       return await newEmployee.save();
-    }
-    catch (error) {
-      throw new HttpException('Error creating employee', HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new HttpException(
+        'Error creating employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
   async findAllByBusinessId(
     businessId: string,
     page = 1,
@@ -28,19 +27,19 @@ export class WorkersService {
     try {
       const skip = (page - 1) * limit;
       const query = { businessId };
-
       const employees = await this.employeeModel
         .find(query)
         .skip(skip)
         .limit(limit)
         .exec();
       return employees;
-    }
-    catch (error) {
-      throw new HttpException('Error fetching employees by business ID', HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new HttpException(
+        'Error fetching employees by business ID',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
   async getEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findById(id).exec();
@@ -52,10 +51,12 @@ export class WorkersService {
       if (error.status === HttpStatus.NOT_FOUND) {
         throw error;
       }
-      throw new HttpException('Error fetching employee', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Error fetching employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
   async updateEmployee(
     id: string,
     updatedEmployee: Employee,
@@ -72,10 +73,12 @@ export class WorkersService {
       if (error.status === HttpStatus.NOT_FOUND) {
         throw error;
       }
-      throw new HttpException('Error updating employee', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Error updating employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
   async deleteEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findByIdAndDelete(id).exec();
@@ -87,7 +90,10 @@ export class WorkersService {
       if (error.status === HttpStatus.NOT_FOUND) {
         throw error;
       }
-      throw new HttpException('Error deleting employee', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Error deleting employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

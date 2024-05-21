@@ -8,23 +8,21 @@ import {
   Post,
   ValidationPipe,
   HttpException,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
-import { promises } from 'readline';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
-import { error } from 'console';
 
 @Controller('workers')
 export class WorkersController {
   findAll(arg0: string) {
     throw new Error('Method not implemented.');
   }
-  constructor(private readonly workersService: WorkersService) { }
+  constructor(private readonly workersService: WorkersService) {}
 
   // @Get()
   // async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
@@ -58,23 +56,31 @@ export class WorkersController {
         workerCode: { type: 'string' },
         createdBy: { type: 'string' },
         roleId: { type: 'string' },
-        position: { type: 'string' }
+        position: { type: 'string' },
       },
     },
   })
-
   @Post('')
-  async create(@Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) requestBody: workerValidationsSchema): Promise<Employee> {
+  async create(
+    @Body(
+      new ValidationPipe({
+        exceptionFactory: (errors) =>
+          new HttpException(errors, HttpStatus.BAD_REQUEST),
+      }),
+    )
+    requestBody: workerValidationsSchema,
+  ): Promise<Employee> {
     try {
-      const workerCode = this.generateUniqueNumber()
+      const workerCode = this.generateUniqueNumber();
       requestBody.workerCode = workerCode;
       const result = await this.workersService.createEmployee(requestBody);
-      return result
-    }
-    catch (error) {
-      if (error instanceof HttpException)
-        throw error;
-      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+      return result;
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
   generateUniqueNumber(): string {
