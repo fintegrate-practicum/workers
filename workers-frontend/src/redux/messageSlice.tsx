@@ -1,26 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import task from "../classes/task";
 
-const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
-const businessId = 1; //from auth0
-const res = await axios.get(http + `/tasks?businessId=${businessId}`);
-const { data = {} } = res.data;
-const taskSlice = createSlice({
-    name: "tasks",
-    initialState: data,
-    reducers: {}
-})
+const http = 'http://localhost:3001';
 
-export const { } = taskSlice.actions;
-export const selectTasks = (state: RootState) => state.taskSlice.tasks;
-export default taskSlice.reducer;
-
-export const createTask = createAsyncThunk('', async (_task: task) => {
-
+export const editMessage = createAsyncThunk('', async (id: Number) => {
     try {
-        const response = await axios.post(http + `/tasks/manager/task`, _task)
+        const response = await axios.put(http + `/message/${id}`)
         return response.data
     } catch (error) {
         return error
