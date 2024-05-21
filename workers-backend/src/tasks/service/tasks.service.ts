@@ -11,7 +11,14 @@ export class TasksService {
   ) {}
 
   async createTask(task: CreateTaskDto): Promise<Task> {
-    const newTask = new this.taskModel(task);
+    const taskToSave = {
+      ...task,
+      targetDate: task.targetDate.toJSON(),
+      completionDate: task.completionDate ? task.completionDate.toJSON() : undefined,
+    };
+
+    const newTask = new this.taskModel(taskToSave);
+
     try {
       return await newTask.save();
     } catch (error) {

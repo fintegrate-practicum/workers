@@ -6,7 +6,7 @@ import { TasksService } from '../service/tasks.service';
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
-  @Post('/manager/new-task')
+  @Post('/manager/task')
   async createTask(@Body() task: CreateTaskDto) {
     try {
       return this._taskService.createTask(task);
