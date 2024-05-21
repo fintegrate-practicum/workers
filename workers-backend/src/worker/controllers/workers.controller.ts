@@ -5,11 +5,13 @@ import {
   UseInterceptors,
   Query,
   Body,
+  Put,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
+import { User } from 'src/schemas/user.entity';
 
 @Controller('workers')
 export class WorkersController {
@@ -30,4 +32,9 @@ export class WorkersController {
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
+
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() data: User) { 
+    this.workersService.updateUser(id, data);
+  }  
 }

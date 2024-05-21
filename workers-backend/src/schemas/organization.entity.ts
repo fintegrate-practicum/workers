@@ -35,6 +35,8 @@ export class Organization extends Document {
 
   @Prop()
   establishmentDate: string;
+  
+
 }
 
 export const OrganizationSchema = SchemaFactory.createForClass(Organization);
