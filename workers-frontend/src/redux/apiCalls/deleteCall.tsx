@@ -2,8 +2,6 @@ import axios from "axios";
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { createSlice } from "@reduxjs/toolkit";
 
-
-
 export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
     try {
         const response = await axios.delete(`https://api.example.com/employee/${_num}`)
