@@ -14,7 +14,9 @@ export class TasksService {
     const taskToSave = {
       ...task,
       targetDate: task.targetDate.toJSON(),
-      completionDate: task.completionDate ? task.completionDate.toJSON() : undefined,
+      completionDate: task.completionDate
+        ? task.completionDate.toJSON()
+        : undefined,
     };
 
     const newTask = new this.taskModel(taskToSave);
