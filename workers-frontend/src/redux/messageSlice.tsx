@@ -1,35 +1,28 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
-import { useAppDispatch } from "./hooks";
-import { getAllMessages, updateIsRead } from "./apiCalls/messageCalls";
+import task from "../classes/task";
 
-
-const response = await axios.get('https://localhost:3001/messages');
-const { data = {} } = response.data;
-
-const messageSlice = createSlice({
-    name: "messages",
+const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
+const businessId = 1; //from auth0
+const res = await axios.get(http + `/tasks?businessId=${businessId}`);
+const { data = {} } = res.data;
+const taskSlice = createSlice({
+    name: "tasks",
     initialState: data,
-    reducers: {
-        getAll: (state) => {
-            const dispatch = useAppDispatch()
-            dispatch(getAllMessages())
-            state.message.push()
-        },
-        updateIsRead: (state, action: PayloadAction<number>) => {
-            const dispatch = useAppDispatch();
-            const messageId = action.payload;
-            dispatch(updateIsRead(messageId));
-            // const foundMessage = state.find((message: any) => message.id === messageId);
-            // if (foundMessage) {
-            //     foundMessage.isRead = true;
-            // }
-        }
-    }
-}
-)
+    reducers: {}
+})
 
-export const { getAll } = messageSlice.actions;
-export const selectMessage = (state: RootState) => state.messageSlice.messages
-export default messageSlice.reducer;
+export const { } = taskSlice.actions;
+export const selectTasks = (state: RootState) => state.taskSlice.tasks;
+export default taskSlice.reducer;
+
+export const createTask = createAsyncThunk('', async (_task: task) => {
+
+    try {
+        const response = await axios.post(http + `/tasks/manager/task`, _task)
+        return response.data
+    } catch (error) {
+        return error
+    }
+});
