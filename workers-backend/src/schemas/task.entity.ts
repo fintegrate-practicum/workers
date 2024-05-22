@@ -8,6 +8,8 @@ export enum StatusEnum {
 export type TaskDoc = Task & Document;
 @Schema()
 export class Task {
+  @Prop()
+  emailEmployee: string;
   @Prop({ required: true })
   businessId: string;
   @Prop({ required: true })
