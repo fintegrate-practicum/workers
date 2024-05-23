@@ -18,7 +18,7 @@ export class WorkersController {
 
   @Get()
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
-    return this.workersService.findAllByBusinessId(businessId);
+    return this.workersService.findAll(businessId);
   }
 
   @Get(':id')

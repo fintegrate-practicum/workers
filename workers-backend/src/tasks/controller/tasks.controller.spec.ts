@@ -4,6 +4,7 @@ import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
 import { StatusEnum } from 'src/schemas/task.entity';
+
 describe('TasksController', () => {
   let controller: TasksController;
   let service: TasksService;
@@ -26,10 +27,10 @@ describe('TasksController', () => {
     const taskData: CreateTaskDto = {
       businessId: 'Test Company',
       taskName: 'Test Task',
-      completionDate: 'Test completionDate',
+      completionDate: new Date(0),
       description: 'efrat',
       managerId: 'Test managerId',
-      targetDate: '2024-05-10',
+      targetDate: new Date(0),
       employee: 'efrat',
       status: StatusEnum.Completed,
       urgency: 2,

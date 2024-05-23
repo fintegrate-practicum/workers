@@ -17,7 +17,7 @@ export class Task {
   @Prop({ required: true })
   description: string;
   @Prop({ required: true })
-  targetDate: string;
+  targetDate: Date;
   @Prop({ required: true })
   employee: string;
   @Prop({ required: true })
@@ -25,6 +25,6 @@ export class Task {
   @Prop({ required: true, enum: StatusEnum, default: StatusEnum.ToDo })
   status: StatusEnum;
   @Prop({ default: null })
-  completionDate: string;
+  completionDate: Date;
 }
 export const TaskSchema = SchemaFactory.createForClass(Task);
