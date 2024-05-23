@@ -5,11 +5,12 @@ import task from "../classes/task";
 
 const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
 const businessId = 1; //from auth0
-const res = await axios.get(http + `/tasks?businessId=${businessId}`);
-const { data = {} } = res.data;
+// const res = await axios.get(http + `/tasks?businessId=${businessId}`);
+// const { data = {} } = res.data;
 const taskSlice = createSlice({
     name: "tasks",
-    initialState: data,
+    // initialState: data,
+    initialState: null,
     reducers: {}
 })
 

@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
-import { Message } from 'src/schemas/message.entity';
+import { Controller, Param, Put } from '@nestjs/common';
 import { MessagesService } from '../service/messages.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger'; // Import Swagger decorators
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('message')
 @Controller('message')

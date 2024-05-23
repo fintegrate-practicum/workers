@@ -1,20 +1,31 @@
-const MessageWindow = (props: any) => {
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import messageSlice, { editMessage } from "../redux/messageSlice";
+import { RootState, AppDispatch } from "../redux/store";
 
-  console.log(props.read_status);
+const MessageWindow = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const id = useSelector((state: RootState) => state.messageSlice.data); // נניח שהמשתנה id נמצא ב state של ההודעה ב Redux
+  const isUpdateSuccess = useSelector((state: RootState) => state.messageSlice.isUpdateSuccess); // נניח שהמשתנה isUpdateSuccess מציין האם העדכון הצליח ב Redux
 
-
+  useEffect(() => {
+    const updateMessage = async () => {
+      try {
+        await dispatch(editMessage(id)); // שליחת הפעולה ל־Redux
+      } catch (error) {
+        console.error("Error editing message:", error);
+      }
+    };
+    if (isUpdateSuccess) {
+      updateMessage();
+    }
+  }, [dispatch, id, isUpdateSuccess]);
   return (
-    <div style={{ backgroundColor: props.read_status ? "gray" : "white" }}>
-      <p>{props.message_content}</p>
-      <h3>message from: {props.sender_id}</h3>
-      <h5>sent on: {props.date_time}</h5>
-      {/* {props.status}: */}
+    <div>
+      {id}
+      {/* כאן אתה יכול להשתמש במשתנים מ־Redux כרצונך */}
     </div>
-  )
-}
-export default MessageWindow
+  );
+};
 
-
-
-
-
+export default MessageWindow;
