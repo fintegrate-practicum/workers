@@ -34,6 +34,7 @@ const employeeSlice = createSlice({
                 employee.position = actions.payload.position;
             }
         }
+        
     }
 })
 

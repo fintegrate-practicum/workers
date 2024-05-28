@@ -51,7 +51,6 @@ export class WorkersService {
 
   async activateEmployee(id: string): Promise<Employee> {
     try {
-      // Find the employee by id and update their 'active' status to true
       const updatedEmployee = await this.employeeModel
         .findByIdAndUpdate(id, { active: true }, { new: true })
         .exec();
@@ -62,9 +61,8 @@ export class WorkersService {
 
       return updatedEmployee;
     } catch (error) {
-      // Handle the error appropriately
       console.error('Error activating employee:', error);
-      throw error; // Re-throw the error if you want it to propagate
+      throw error; 
     }
   }
 }

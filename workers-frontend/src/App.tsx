@@ -4,11 +4,10 @@ import WorkersShowList from './components/workersShowList';
 const App = () => {
   return (
     <>
-    <WorkersShowList/>
-    </>
 
+      <WorkersShowList />
+    </>
   );
 };
-
 
 export default App;

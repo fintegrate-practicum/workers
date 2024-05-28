@@ -10,7 +10,7 @@ describe('WorkersController', () => {
   let service: WorkersService;
 
   const mockEmployee: Employee = {
-    _id: '60d9c6f3f9b5b61710f0f4f4', // Example ObjectId
+    _id: '60d9c6f3f9b5b61710f0f4f4',
     userId: new Types.ObjectId(),
     businessId: 123,
     code: 'EMP001',
@@ -47,7 +47,6 @@ describe('WorkersController', () => {
 
   describe('activateEmployee', () => {
     it('should activate an employee successfully', async () => {
-      // Adjust the mock return value to match the expected activated employee
       const activatedEmployee = { ...mockEmployee, active: true };
       mockWorkersService.activateEmployee.mockResolvedValueOnce(activatedEmployee);
 
