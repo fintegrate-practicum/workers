@@ -15,10 +15,6 @@ export class workerValidationsSchema {
   @IsNotEmpty()
   createdBy: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // updatedBy: string;
-
   @IsMongoId()
   @IsNotEmpty()
   roleId: string;

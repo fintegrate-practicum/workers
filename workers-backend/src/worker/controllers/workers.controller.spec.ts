@@ -41,7 +41,6 @@ describe('WorkersController', () => {
       ...requestBody,
     };
 
-    jest.spyOn(controller, 'generateUniqueNumber').mockReturnValueOnce('12345');
     jest
       .spyOn(workersService, 'createEmployee')
       .mockResolvedValueOnce(createdEmployee as unknown as Employee);
