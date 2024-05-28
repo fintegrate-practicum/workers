@@ -1,28 +1,18 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+import {  createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
-import { useAppDispatch } from "./hooks";
-import { getAllMessages } from "./apiCalls/messageCalls";
-
-
-const response = await axios.get('https://api.example.com/messages');
-const {data = {}} = response.data;
-
+const http='http://localhost:3001/'
+const res =await axios.get(`${http}message/664c4ced63112b0c0f736930`)
+const { data = {} } = res.data;
 const messageSlice = createSlice({
     name: "messages",
     initialState: data,
-    reducers: {
-        getAll: (state ) => {
-            const dispatch = useAppDispatch()
-            dispatch(getAllMessages())
-            state.messages.push()
-        }
-        
-        }
-    }
-)
+    reducers: {}
+})
 
-export const {getAll} = messageSlice.actions;
-export const selectMessage= (state: RootState) => state.messageSlice.messages
+export const { } = messageSlice.actions;
+export const selectMessage = (state: RootState) => state.messageSlice.messages;
 export default messageSlice.reducer;
+
 

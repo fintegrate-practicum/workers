@@ -1,14 +1,13 @@
 import './App.css';
-import WorkersShowList from './components/workersShowList';
-
+import MessageList from './components/messageList';
 const App = () => {
   return (
     <>
-    <WorkersShowList/>
+      <MessageList/>
+      
     </>
-
+    
   );
 };
-
 
 export default App;

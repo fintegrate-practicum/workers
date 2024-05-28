@@ -4,11 +4,14 @@ import { WorkersController } from '../controllers/workers.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
 import { Department, DepartmentSchema } from 'src/schemas/department.entity';
-import { Organization, OrganizationSchema } from 'src/schemas/organization.entity';
+import {
+  Organization,
+  OrganizationSchema,
+} from 'src/schemas/organization.entity';
 import { Project, ProjectSchema } from 'src/schemas/project.entity';
 import { Role, RoleSchema } from 'src/schemas/role.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
-
+import { Message,MessageSchema } from 'src/schemas/message.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -18,9 +21,10 @@ import { User, UserSchema } from 'src/schemas/user.entity';
       { name: Project.name, schema: ProjectSchema },
       { name: Role.name, schema: RoleSchema },
       { name: User.name, schema: UserSchema },
+      { name: Message.name, schema: MessageSchema },
     ]),
   ],
   providers: [WorkersService],
   controllers: [WorkersController],
 })
-export class WorkersModule { }
+export class WorkersModule {}

@@ -7,13 +7,6 @@ import { ObjectId } from 'mongoose';
 @Controller('message')
 export class MessagesController {
     constructor(private readonly _messageService: MessagesService) { }
-
-    // @Put('/manager/:managerId/new-message')
-    // async createMessage(@Param('managerId') managerId: string, @Body() message: Message) {
-    //     const res = await this._messageService.createMessage(message);
-    //     return res;
-    // }
-  
     @Get('/:id')
     async getMessagesByEmployeeId(@Param('id') id: string) {
         const messages = await this._messageService.getMessagesByEmployeeId(id);
