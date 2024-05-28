@@ -8,9 +8,12 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
+  
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
       const newEmployee = new this.employeeModel(worker);
+      const workerCode = this.generateUniqueNumber();
+      newEmployee.workerCode = workerCode;
       return await newEmployee.save();
     } catch (error) {
       throw new HttpException(
@@ -19,6 +22,7 @@ export class WorkersService {
       );
     }
   }
+
   async findAllByBusinessId(
     businessId: string,
     page = 1,
@@ -40,6 +44,7 @@ export class WorkersService {
       );
     }
   }
+
   async getEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findById(id).exec();
@@ -57,6 +62,7 @@ export class WorkersService {
       );
     }
   }
+
   async updateEmployee(
     id: string,
     updatedEmployee: Employee,
@@ -79,6 +85,7 @@ export class WorkersService {
       );
     }
   }
+
   async deleteEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findByIdAndDelete(id).exec();
@@ -95,5 +102,11 @@ export class WorkersService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+  
+  generateUniqueNumber(): string {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
+    return `${timestamp}${random}`; // Concatenate timestamp and random number
   }
 }
