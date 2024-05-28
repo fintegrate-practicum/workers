@@ -6,14 +6,14 @@ import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {
+  @Prop()
+  businessId: string;
+
   @Prop({ type: Types.ObjectId, ref: 'user' })
   userId: Types.ObjectId;
 
   @Prop()
-  businessId: number;
-
-  @Prop()
-  code: string;
+  workerCode: string;
 
   @Prop()
   createdBy: string;
