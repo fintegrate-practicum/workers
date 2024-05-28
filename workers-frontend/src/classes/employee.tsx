@@ -1,22 +1,16 @@
-export enum RoleEnum {
-    'secretary',
-    'cleaner',
-    'deliveryPerson',
-    'developer',
-    'tester',
-    'maneger',
-    'owner',
-}
+import { Types } from "mongoose";
+import { EmployeeRole } from "./enum/employeeRole.enum";
+
 class employee {
 
-    userId!: string;
+    userId!: Types.ObjectId;
     businessId!: string;
     code!: string;
     createdBy!: string;
     updatedBy!: string;
-    role!: RoleEnum;
+    role!: EmployeeRole;
 
-    constructor(userId: string, businessId: string, code: string, createdBy: string, updatedBy: string, role: RoleEnum) {
+    constructor(userId: Types.ObjectId, businessId: string, code: string, createdBy: string, updatedBy: string, role: EmployeeRole) {
         this.userId = userId
         this.businessId = businessId
         this.code = code

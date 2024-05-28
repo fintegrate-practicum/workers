@@ -8,7 +8,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { createTask } from '../../redux/taskSlice';
 import { useAppDispatch } from '../../redux/hooks';
-import Task, { StatusEnum } from '../../classes/task';
+import {  Types } from 'mongoose';
+import { TaskStatus } from '../../classes/enum/taskStatus.enum';
+import Task from '../../classes/task';
 
 export default function AddTaskBtn() {
   const [open, setOpen] = React.useState(false);
@@ -17,7 +19,7 @@ export default function AddTaskBtn() {
   const [taskName, setTaskName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [targetDate, setTargetDate] = React.useState(new Date(0));
-  const [employee, setEmployee] = React.useState<string[]>([]);
+  const [employee, setEmployee] = React.useState<Types.ObjectId[]>([]);
   const [urgency, setUrgency] = React.useState(0);
 
   const dispatch = useAppDispatch();
@@ -27,15 +29,16 @@ export default function AddTaskBtn() {
 
   const handleClose = () => {
     const task: Task = {
-      "businessId": businessId,
-      "managerId": managerId,
-      "taskName": taskName,
-      "description": description,
-      "targetDate": targetDate,
-      "employee": employee,
-      "urgency": urgency,
-      "status": StatusEnum.ToDo,
-      "completionDate": new Date(0)
+      
+      businessId: businessId,
+      managerId: managerId,
+      taskName: taskName,
+      description: description,
+      targetDate: targetDate,
+      employee: employee,
+      urgency: urgency,
+      status: TaskStatus.ToDo,
+      completionDate: new Date(0)
     }
     dispatch(createTask(task));
     setOpen(false);
@@ -47,8 +50,18 @@ export default function AddTaskBtn() {
 
   const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const employeeArray = value.split(',').map(item => item.trim());
-    setEmployee(employeeArray);
+    // const employeeArray = value.split(',').map(item => new Types.ObjectId(item.trim()));
+    // setEmployee(employeeArray);
+    // וידוא והמרה של כל איבר במערך ל-ObjectId
+const employeeArray = value.split(',').map(item => {
+  const trimmed = item.trim();
+  if (Types.ObjectId.isValid(trimmed)) {
+    return new Types.ObjectId(trimmed);
+  }
+  console.warn(`Invalid ObjectId: ${trimmed}`);
+  return null;
+}).filter(item => item !== null) as Types.ObjectId[];
+
   };
   return (
     <React.Fragment>

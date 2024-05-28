@@ -5,7 +5,10 @@ import {
   IsString,
   IsEnum,
   IsDate,
+  IsArray,
 } from 'class-validator';
+import { Types } from 'mongoose';
+import { RoleEnum } from 'src/enum/employee.enum';
 import { StatusEnum } from 'src/schemas/task.entity';
 export class CreateTaskDto {
   @ApiProperty({
@@ -45,11 +48,18 @@ export class CreateTaskDto {
   targetDate: Date;
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: ['123', '234'],
+    example: [
+      {
+        userId: '664cba7ee786ab5c121aa40b',
+      },
+      {
+        userId: '123765434567hgfdfghjkhgfgh',
+      },
+    ],
   })
   @IsNotEmpty()
-  @IsString()
-  employee: string[];
+  @IsArray()
+  employee: Types.ObjectId[];
   @ApiProperty({
     description: 'The urgency level of the task',
     example: 1,

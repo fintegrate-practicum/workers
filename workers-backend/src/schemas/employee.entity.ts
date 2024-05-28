@@ -1,14 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-export enum RoleEnum {
-  'secretary',
-  'cleaner',
-  'deliveryPerson',
-  'developer',
-  'tester',
-  'maneger',
-  'owner',
-}
+import { RoleEnum } from 'src/enum/employee.enum';
+
 @Schema({ timestamps: true })
 export class Employee extends Document {
   @Prop({ type: Types.ObjectId, ref: 'user' })

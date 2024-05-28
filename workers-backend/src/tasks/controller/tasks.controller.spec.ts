@@ -4,6 +4,7 @@ import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
 import { StatusEnum } from 'src/schemas/task.entity';
+import { Types } from 'mongoose';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -29,10 +30,10 @@ describe('TasksController', () => {
       businessId: 'Test Company',
       taskName: 'Test Task',
       completionDate: new Date(0),
-      description: 'efrat',
+      description: 'description',
       managerId: 'Test managerId',
       targetDate: new Date(0),
-      employee: ['123', '234'],
+      employee: new Types.ObjectId['123'](),
       status: StatusEnum.Completed,
       urgency: 2,
     };
@@ -57,8 +58,6 @@ describe('TasksController', () => {
       );
     });
   });
-<<<<<<< Updated upstream
-=======
   const managerId = '123';
   const dynamicArry = [
     {
@@ -100,5 +99,4 @@ describe('TasksController', () => {
       expect(result).toEqual(dynamicArry);
     });
   });
->>>>>>> Stashed changes
 });

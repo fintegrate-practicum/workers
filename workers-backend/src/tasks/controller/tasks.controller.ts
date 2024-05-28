@@ -13,10 +13,20 @@ import { TasksService } from '../service/tasks.service';
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
-  @Get('/manager/:managerId/all-tasks')
-  async getAllTasks(@Param('managerId') managerId: string) {
-    const tasks = await this._taskService.getAllTasks(managerId);
-    return tasks;
+  @Get('/manager/:businessId/:managerId')
+  async getAllManagerTasks(
+    @Param('businessId') businessId: string,
+    @Param('managerId') managerId: string,
+  ) {
+    try {
+      const tasks = await this._taskService.getAllManagerTasks(
+        businessId,
+        managerId,
+      );
+      return tasks;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Post('/manager/task')

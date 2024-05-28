@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 export enum StatusEnum {
   ToDo = 1,
   InProgress = 2,
@@ -11,15 +11,15 @@ export class Task {
   @Prop({ required: true })
   businessId: string;
   @Prop({ required: true })
-  taskName: string;
-  @Prop({ required: true })
   managerId: string;
+  @Prop({ required: true })
+  taskName: string;
   @Prop({ required: true })
   description: string;
   @Prop({ required: true })
   targetDate: Date;
   @Prop({ required: true })
-  employee: string[];
+  employee: ObjectId[];
   @Prop({ required: true })
   urgency: number;
   @Prop({ required: true, enum: StatusEnum, default: StatusEnum.ToDo })

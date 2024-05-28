@@ -4,9 +4,10 @@ import axios from "axios";
 import task from "../classes/task";
 
 const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
-const managerId = '1234managet'; //from auth0
+const managerId = '2'; //from auth0
+const businessId = '2'; //from auth0
 
-const response = await axios.get(`${http}/tasks/manager/${managerId}/all-tasks`);
+const response = await axios.get(`${http}/tasks/manager/${businessId}/${managerId}`);
 
 const { data = {} } = response.data;
 
@@ -33,7 +34,7 @@ export const getAllTasks = createAsyncThunk(
     '/getAllTasks',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(http + 'tasks/manager/rrr/all-tasks');
+            const response = await axios.get(http + 'tasks/manager/2/2');
             return response.data;
         }
         catch (error) {
