@@ -2,22 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
 import employee from "../classes/employee";
-
 const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
 const businessId = 1; //from auth0
 const res = await axios.get(http+`/workers?businessId=${businessId}`);
 const { data = {} } = res.data;
-
 const employeeSlice = createSlice({
     name: "employees",
     initialState: data,
     reducers: {}
 })
-
 export const { } = employeeSlice.actions;
 export const selectEmployees = (state: RootState) => state.employeeSlice.employees
 export default employeeSlice.reducer;
-
 export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
     try {
         const response = await axios.post(http+'/workers', _employee)
@@ -26,7 +22,6 @@ export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
         return error
     }
 });
-
 export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
     try {
         const response = await axios.delete(http+`/workers/${_num}`)
@@ -35,12 +30,12 @@ export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
         return error
     }
 });
-
-export const editEmployee = createAsyncThunk('', async (_employee: employee) => {
+export const editEmployee = createAsyncThunk('employees/edit', async (_employee: any) => {
+    console.log(_employee);
     try {
-        const response = await axios.put(http+`/workers/${_employee.userId}`, _employee)
-        return response.data
+      const response = await axios.put(`${http}/workers/${_employee.userId}`, _employee);
+      return response.data;
     } catch (error) {
-        return error
+      return error;
     }
-});
+  });

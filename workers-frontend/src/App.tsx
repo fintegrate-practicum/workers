@@ -1,12 +1,15 @@
 import './App.css';
-import WorkersShowList from './components/workersShowList'
+import Tami from './components/Tami';
+import WelcomeMessage from './components/WelcomeMessage';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App = () => {
   return (
-    <>
-      <h1>hello</h1>
-      <WorkersShowList/>
-    </>
+     <Router>
+      <Routes>
+        <Route path='/' element={  <WelcomeMessage/>}></Route>
+        <Route path='Tami' element={  <Tami/>}></Route>
+      </Routes>
+    </Router>
   );
 };
-
 export default App;
