@@ -18,7 +18,7 @@ export class Organization extends Document {
   @Prop()
   phone: string;
 
-  @Prop()
+  @Prop({ type: Object })
   address: {
     city: string;
     street: string;

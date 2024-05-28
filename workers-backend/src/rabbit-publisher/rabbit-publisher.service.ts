@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as amqp from 'amqplib';
+import * as amqp from 'amqplib/callback_api';
 
 @Injectable()
 export class RabbitPublisherService {
@@ -18,33 +18,56 @@ export class RabbitPublisherService {
       this.configService.get('RABBITMQ_QUEUE_NAME');
 
     this.connectToRabbitMQ();
+    console.log('connected to rabbit');
   }
 
   async connectToRabbitMQ() {
-    const amqpUrl = `amqp://${this.configService.get('AMQP_HOST')}:${this.configService.get('AMQP_PORT')}`;
-    const username = this.configService.get('AMQP_USERNAME');
-    const password = this.configService.get('AMQP_PASSWORD');
+    try {
+      const amqpUrl = `amqp://${this.configService.get('AMQP_HOST')}:${this.configService.get('AMQP_PORT')}`;
+      const username = this.configService.get('AMQP_USERNAME');
+      const password = this.configService.get('AMQP_PASSWORD');
 
-    this.connection = await amqp.connect(amqpUrl, {
-      username,
-      password,
-    });
+      this.connection = await new Promise<amqp.Connection>(
+        (resolve, reject) => {
+          amqp.connect(
+            amqpUrl,
+            {
+              username,
+              password,
+            },
+            (err, conn) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(conn);
+              }
+            },
+          );
+        },
+      );
 
-    this.channel = await this.connection.createChannel();
+      this.channel = await this.connection.createChannel();
 
-    await this.initializeRabbitMQ();
+      await this.initializeRabbitMQ();
+    } catch (error) {
+      console.error('Error connecting to RabbitMQ:', error);
+    }
   }
 
   async initializeRabbitMQ(): Promise<void> {
-    await this.channel.assertExchange(this.nameExchange, 'direct', {
-      durable: false,
-    });
-    await this.channel.assertQueue(this.nameQueue, { durable: true });
-    await this.channel.bindQueue(
-      this.nameQueue,
-      this.nameExchange,
-      'message_type',
-    );
+    try {
+      await this.channel.assertExchange(this.nameExchange, 'direct', {
+        durable: false,
+      });
+      await this.channel.assertQueue(this.nameQueue, { durable: true });
+      await this.channel.bindQueue(
+        this.nameQueue,
+        this.nameExchange,
+        'message_type',
+      );
+    } catch (error) {
+      console.error('Error initializing RabbitMQ:', error);
+    }
   }
 
   async publishMessageToCommunication(message: any): Promise<void> {

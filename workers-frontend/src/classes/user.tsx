@@ -1,5 +1,5 @@
 class User {
-
+    
     name!:string;
     registeredAt!: Date;
     lastLogin!: Date;

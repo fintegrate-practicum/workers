@@ -1,10 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 @Injectable()
 export class WorkersService {
+  private readonly logger = new Logger(WorkersService.name);
+
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
@@ -21,6 +24,11 @@ export class WorkersService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+  async findAll(businessId: string): Promise<Employee[]> {
+    const query = { businessId };
+    const employees = await this.employeeModel.find(query).exec();
+    return employees;
   }
 
   async findAllByBusinessId(

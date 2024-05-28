@@ -24,8 +24,9 @@ export class WorkersController {
 
   constructor(private readonly workersService: WorkersService) {}
 
-  findAll(arg0: string) {
-    throw new Error('Method not implemented.');
+  @Get()
+  async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
+    return this.workersService.findAll(businessId);
   }
   
   @Get('employee/:id')
