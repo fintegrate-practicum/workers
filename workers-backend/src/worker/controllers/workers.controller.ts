@@ -28,7 +28,7 @@ export class WorkersController {
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
-  
+
   @Get('employee/:id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
@@ -60,13 +60,12 @@ export class WorkersController {
       },
     },
   })
-
   @Post('')
   async create(
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
-          Logger.log('error validation! '+errors);
+          Logger.log('error validation! ' + errors);
           return new HttpException(errors, HttpStatus.BAD_REQUEST);
         },
       }),
@@ -75,7 +74,7 @@ export class WorkersController {
   ): Promise<Employee> {
     try {
       const result = await this.workersService.createEmployee(requestBody);
-      this.logger.log("good");
+      this.logger.log('good');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {

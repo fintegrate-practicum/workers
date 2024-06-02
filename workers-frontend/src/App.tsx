@@ -1,10 +1,8 @@
-import './App.css';
-import WorkersShowList from './components/workersShowList'
+import "./App.css";
 const App = () => {
   return (
     <>
       <h1>hello</h1>
-      <WorkersShowList/>
     </>
   );
 };

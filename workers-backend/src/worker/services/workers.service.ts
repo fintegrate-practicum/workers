@@ -11,7 +11,7 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
-  
+
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
       const newEmployee = new this.employeeModel(worker);
@@ -111,7 +111,7 @@ export class WorkersService {
       );
     }
   }
-  
+
   generateUniqueNumber(): string {
     const timestamp = new Date().getTime(); // Get current timestamp
     const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
