@@ -1,6 +1,6 @@
 import { Body, Controller, Post, BadRequestException } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
-import { TasksService } from '../service/tasks.service';
+import { TasksService } from '../service/TasksService';
 import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
 
 
@@ -19,4 +19,6 @@ export class TasksController {
       throw new BadRequestException(error.message);
     }
   }
+
+  
 }

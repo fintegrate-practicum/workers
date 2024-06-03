@@ -5,6 +5,7 @@ import { Employee } from '../schemas/employee.entity';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
+  static getEmployee: any;
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
@@ -16,6 +17,7 @@ export class WorkersService {
   }
 
   async findAll(): Promise<Employee[]> {
+   
     return this.employeeModel.find().exec();
   }
 

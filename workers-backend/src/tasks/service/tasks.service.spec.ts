@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TasksService } from './tasks.service';
+import { TasksService } from './TasksService';
 import { getModelToken } from '@nestjs/mongoose';
 import { Task } from '../../schemas/task.entity';
 import { Model } from 'mongoose';

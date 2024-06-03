@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Types } from 'mongoose';
+
 import {
   IsNotEmpty,
   IsNumber,
@@ -10,11 +12,11 @@ import { StatusEnum } from 'src/schemas/task.entity';
 export class CreateTaskDto {
   @ApiProperty({
     description: 'ID of the employee',
-    example: 'employee1234',
+    example: 'employee123',
   })
   @IsNotEmpty()
-  @IsString()
-  employeeId: string;
+  // @IsString()
+  employeeId: Types.ObjectId;
   @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
