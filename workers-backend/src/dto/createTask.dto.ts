@@ -9,6 +9,13 @@ import {
 import { StatusEnum } from 'src/schemas/task.entity';
 export class CreateTaskDto {
   @ApiProperty({
+    description: 'ID of the employee',
+    example: 'employee1234',
+  })
+  @IsNotEmpty()
+  @IsString()
+  employeeId: string;
+  @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
   })
