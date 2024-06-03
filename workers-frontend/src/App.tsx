@@ -1,10 +1,11 @@
 import './App.css';
+import MessagesAdmin from './components/sendingMessage';
 
 const App = () => {
   return (
     <>
-      <h1>hello</h1>
-    </>
+    <MessagesAdmin></MessagesAdmin>
+     </>
   );
 };
 
