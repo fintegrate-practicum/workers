@@ -17,7 +17,6 @@ export class WorkersService {
   }
 
   async findAll(): Promise<Employee[]> {
-   
     return this.employeeModel.find().exec();
   }
 

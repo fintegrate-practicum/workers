@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
-import { TasksService } from '../service/TasksService';
+import { TasksService } from '../service/tasks.service';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { BadRequestException } from '@nestjs/common';
 import { StatusEnum } from 'src/schemas/task.entity';

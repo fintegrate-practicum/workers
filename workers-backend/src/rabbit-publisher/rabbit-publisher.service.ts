@@ -6,7 +6,7 @@ import * as amqp from 'amqplib/callback_api';
 export class RabbitPublisherService {
   private connection: amqp.Connection;
   private channel: amqp.Channel;
-  private readonly nameExchange: string = 'message_exchange';
+  private readonly nameExchange: string = 'message_queue';
   private readonly nameQueue: string = 'message_queue';
 
   constructor(private configService: ConfigService) {
@@ -57,7 +57,7 @@ export class RabbitPublisherService {
   async initializeRabbitMQ(): Promise<void> {
     try {
       await this.channel.assertExchange(this.nameExchange, 'direct', {
-        durable: false,
+        durable:false,
       });
       await this.channel.assertQueue(this.nameQueue, { durable: true });
       await this.channel.bindQueue(
@@ -73,7 +73,7 @@ export class RabbitPublisherService {
   async publishMessageToCommunication(message: any): Promise<void> {
     try {
       const exchangeName = message.pattern;
-      const messageData = JSON.stringify(message.data);
+      const messageData = JSON.stringify(message);
 
       this.channel.publish(
         exchangeName,

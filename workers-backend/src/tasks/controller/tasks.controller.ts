@@ -1,15 +1,10 @@
 import { Body, Controller, Post, BadRequestException } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
-import { TasksService } from '../service/TasksService';
-import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
-
+import { TasksService } from '../service/tasks.service';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(
-    private readonly _taskService: TasksService,
-    private readonly rabbitPublisherService: RabbitPublisherService,
-  ) {}
+  constructor(private readonly _taskService: TasksService) {}
 
   @Post('/manager/task')
   async createTask(@Body() task: CreateTaskDto) {
@@ -19,6 +14,4 @@ export class TasksController {
       throw new BadRequestException(error.message);
     }
   }
-
-  
 }

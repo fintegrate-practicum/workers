@@ -1,6 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Types } from 'mongoose';
-
 import {
   IsNotEmpty,
   IsNumber,
@@ -15,8 +13,8 @@ export class CreateTaskDto {
     example: 'employee123',
   })
   @IsNotEmpty()
-  // @IsString()
-  employeeId: Types.ObjectId;
+  @IsString()
+  employeeId: string;
   @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
