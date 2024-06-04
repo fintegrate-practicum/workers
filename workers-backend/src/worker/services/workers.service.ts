@@ -126,7 +126,8 @@ export class WorkersService {
       if (!updatedEmployee) {
         throw new Error('Employee not found');
       }
-
+      
+      this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {
       console.error('Error activating employee:', error);

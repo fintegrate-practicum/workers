@@ -37,7 +37,7 @@ export class WorkersController {
       if (!employee) {
         throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
       }
-      employee.active = true;
+
       return employee;
     } catch (error) {
       console.error('Error activating employee:', error.message);
