@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
-
+ 
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
