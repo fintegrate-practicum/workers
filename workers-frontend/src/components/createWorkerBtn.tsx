@@ -126,7 +126,7 @@ const CreateWorkerBtn = () => {
                             id="role"
                             name="role"
                             label="Role"
-                            type="string"
+                            type="text"
                             fullWidth
                             variant="standard"
                         />

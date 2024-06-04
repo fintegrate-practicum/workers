@@ -3,18 +3,26 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
-import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { RoleEnum, workerValidationsSchema } from '../validations/worker.validations.schema';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-  ) {}
-  
+  ) { }
+
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
-      const newEmployee = new this.employeeModel(worker);
+      const roleValue = RoleEnum[worker.role as unknown as keyof typeof RoleEnum];
+
+      if (roleValue === undefined) {
+        throw new Error(`Invalid role: ${worker.role}`);
+      }
+      const newEmployee = new this.employeeModel({
+        ...worker,
+        role: roleValue,
+      });
       const workerCode = this.generateUniqueNumber();
       newEmployee.code = workerCode;
       return await newEmployee.save();
@@ -33,7 +41,7 @@ export class WorkersService {
       }
     }
   }
-  
+
   async findAll(businessId: string): Promise<Employee[]> {
     const query = { businessId };
     const employees = await this.employeeModel.find(query).exec();
@@ -120,7 +128,7 @@ export class WorkersService {
       );
     }
   }
-  
+
   generateUniqueNumber(): string {
     const timestamp = new Date().getTime(); // Get current timestamp
     const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999

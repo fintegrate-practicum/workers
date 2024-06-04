@@ -1,13 +1,13 @@
 import { IsNotEmpty, IsString, IsEnum, IsMongoId } from 'class-validator';
 
 export enum RoleEnum {
-  secretary = 'secretary',
-  cleaner = 'cleaner',
-  deliveryPerson = 'deliveryPerson',
-  developer = 'developer',
-  tester = 'tester',
-  manager = 'manager',
-  owner = 'owner',
+  secretary = 1,
+  cleaner = 2,
+  deliveryPerson = 4,
+  developer = 8,
+  tester = 16,
+  manager = 32,
+  owner = 64,
 }
 
 export class workerValidationsSchema {
@@ -16,7 +16,7 @@ export class workerValidationsSchema {
   businessId: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsMongoId()
   userId: string;
 
   @IsNotEmpty()
@@ -33,5 +33,5 @@ export class workerValidationsSchema {
 
   @IsNotEmpty()
   @IsEnum(RoleEnum)
-  role: RoleEnum;
+  role: number;
 }
