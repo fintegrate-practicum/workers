@@ -53,8 +53,9 @@ export class WorkersController {
       properties: {
         businessId: { type: 'string' },
         userId: { type: 'string' },
-        workerCode: { type: 'string' },
+        code: { type: 'string' },
         createdBy: { type: 'string' },
+        updatedBy: { type: 'string' },
         role: { type: 'string' },
       },
     },
@@ -65,25 +66,29 @@ export class WorkersController {
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
-          Logger.log('error validation! '+errors);
-          return new HttpException(errors, HttpStatus.BAD_REQUEST);
+          return new HttpException(
+            { message: 'Validation error', error: errors },
+            HttpStatus.BAD_REQUEST
+          );
         },
-      }),
+      })
     )
-    requestBody: workerValidationsSchema,
+    requestBody: workerValidationsSchema
   ): Promise<Employee> {
     try {
       const result = await this.workersService.createEmployee(requestBody);
-      this.logger.log("good");
+      this.logger.log('Employee created successfully');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
+      this.logger.error('Error creating employee:', error);
       throw new HttpException(
         'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
+  
 }
