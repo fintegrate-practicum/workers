@@ -17,7 +17,7 @@ export class WorkersService {
       const roleValue = RoleEnum[worker.role as unknown as keyof typeof RoleEnum];
 
       if (roleValue === undefined) {
-        throw new Error(`Invalid role: ${worker.role}`);
+        throw new HttpException(`Invalid role: ${worker.role}`, HttpStatus.BAD_REQUEST);
       }
       const newEmployee = new this.employeeModel({
         ...worker,

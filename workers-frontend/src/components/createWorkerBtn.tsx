@@ -15,11 +15,12 @@ const CreateWorkerBtn = () => {
 
     const [open, setOpen] = React.useState(false);
 
+    const dispatch = useAppDispatch();
+
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const dispatch = useAppDispatch();
 
     const handleClose = () => {
         const employee: employee = {
@@ -132,7 +133,7 @@ const CreateWorkerBtn = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button  onClick={() => setOpen(false)}>Cancel</Button>
                         <Button type="submit">Save</Button>
                     </DialogActions>
                 </Dialog>
