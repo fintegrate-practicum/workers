@@ -23,6 +23,7 @@ import { useAppSelector } from "../redux/hooks";
 import ItemDetailToWorker from "./itemDetailToWorker";
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
+import CreateWorkerBtn from "./createWorkerBtn";
 
 const WorkersShowList = () => {
   const employees = useAppSelector((state) => state.employeeSlice);
@@ -44,6 +45,7 @@ const WorkersShowList = () => {
 
   return (
     <>
+    <CreateWorkerBtn />
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         <GenericList
           title={"workers list"}

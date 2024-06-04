@@ -3,7 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Mongoose, Types } from 'mongoose';
 import { AppModule } from 'src/app.module';
-
+export enum RoleEnum {
+  'secretary',
+  'cleaner',
+  'deliveryPerson',
+  'developer',
+  'tester',
+  'maneger',
+  'owner',
+}
 @Schema({ timestamps: true })
 export class Employee extends Document {
   @Prop()
@@ -13,7 +21,7 @@ export class Employee extends Document {
   userId: Types.ObjectId;
 
   @Prop()
-  workerCode: string;
+  code: string;
 
   @Prop()
   createdBy: string;
@@ -21,21 +29,8 @@ export class Employee extends Document {
   @Prop()
   updatedBy: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'role' })
-  roleId: Types.ObjectId;
-
-  @Prop({
-    enum: [
-      'secretary',
-      'cleaner',
-      'deliveryPerson',
-      'developer',
-      'tester',
-      'maneger',
-      'owner',
-    ],
-  })
-  position: string;
+  @Prop()
+  role: RoleEnum;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

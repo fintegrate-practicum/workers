@@ -55,8 +55,7 @@ export class WorkersController {
         userId: { type: 'string' },
         workerCode: { type: 'string' },
         createdBy: { type: 'string' },
-        roleId: { type: 'string' },
-        position: { type: 'string' },
+        role: { type: 'string' },
       },
     },
   })
