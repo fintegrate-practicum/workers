@@ -26,7 +26,6 @@ describe('WorkersController', () => {
     activateEmployee: jest.fn(),
   };
 
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WorkersController],
@@ -51,24 +50,36 @@ describe('WorkersController', () => {
   describe('activateEmployee', () => {
     it('should activate an employee successfully', async () => {
       const activatedEmployee = { ...mockEmployee, active: true };
-      mockWorkersService.activateEmployee.mockResolvedValueOnce(activatedEmployee);
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
 
-      const result = await controller.activateEmployee('60d9c6f3f9b5b61710f0f4f4');
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
 
       expect(result).toEqual(activatedEmployee);
       expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith('60d9c6f3f9b5b61710f0f4f4');
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
     });
 
     it('should activate an employee successfully', async () => {
       const activatedEmployee = { ...mockEmployee, active: true };
-      mockWorkersService.activateEmployee.mockResolvedValueOnce(activatedEmployee);
-    
-      const result = await controller.activateEmployee('60d9c6f3f9b5b61710f0f4f4');
-    
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
+
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+
       expect(result).toEqual(activatedEmployee);
       expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith('60d9c6f3f9b5b61710f0f4f4');
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
     });
     workersService = module.get<WorkersService>(WorkersService);
   });

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';import { InjectModel } from '@nestjs/mongoose';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
@@ -10,7 +11,6 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
-
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
@@ -93,7 +93,6 @@ export class WorkersService {
     }
   }
 
- 
   async deleteEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findByIdAndDelete(id).exec();
@@ -111,14 +110,13 @@ export class WorkersService {
       );
     }
   }
-  
+
   generateUniqueNumber(): string {
     const timestamp = new Date().getTime(); // Get current timestamp
     const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
     return `${timestamp}${random}`; // Concatenate timestamp and random number
   }
 
- 
   async activateEmployee(id: string): Promise<Employee> {
     try {
       const updatedEmployee = await this.employeeModel
@@ -132,7 +130,7 @@ export class WorkersService {
       return updatedEmployee;
     } catch (error) {
       console.error('Error activating employee:', error);
-      throw error; 
+      throw error;
     }
   }
 }

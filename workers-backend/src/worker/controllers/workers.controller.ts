@@ -14,7 +14,7 @@ import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
-import { ApiTags, ApiOperation, ApiBody,  } from '@nestjs/swagger'; // Import Swagger decorators
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
 @ApiTags('Workers')
@@ -34,17 +34,20 @@ export class WorkersController {
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
     try {
       const employee = await this.workersService.activateEmployee(id);
-  if (!employee) {
+      if (!employee) {
         throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
       }
       employee.active = true;
       return employee;
     } catch (error) {
       console.error('Error activating employee:', error.message);
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
+
   @Get(':id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
@@ -76,13 +79,12 @@ export class WorkersController {
       },
     },
   })
-
   @Post('')
   async create(
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
-          Logger.log('error validation! '+errors);
+          Logger.log('error validation! ' + errors);
           return new HttpException(errors, HttpStatus.BAD_REQUEST);
         },
       }),
@@ -91,7 +93,7 @@ export class WorkersController {
   ): Promise<Employee> {
     try {
       const result = await this.workersService.createEmployee(requestBody);
-      this.logger.log("good");
+      this.logger.log('good');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {
