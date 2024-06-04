@@ -1,34 +1,23 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
-import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { User } from 'src/schemas/user.entity';
+import { promises } from 'dns';
+
 @Injectable()
 export class WorkersService {
+
   private readonly logger = new Logger(WorkersService.name);
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-  ) {}
-  
-  async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
-    try {
-      const newEmployee = new this.employeeModel(worker);
-      const workerCode = this.generateUniqueNumber();
-      newEmployee.workerCode = workerCode;
-      return await newEmployee.save();
-    } catch (error) {
-      throw new HttpException(
-        'Error creating employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-  async findAll(businessId: string): Promise<Employee[]> {
-    const query = { businessId };
-    const employees = await this.employeeModel.find(query).exec();
-    return employees;
+    @InjectModel('User') private readonly userModel: Model<User>
+  ) { }
+
+  async createEmployee(worker: Employee): Promise<Employee> {
+    const newEmployee = new this.employeeModel(worker);
+    return await newEmployee.save()
   }
 
   async findAllByBusinessId(
@@ -36,85 +25,67 @@ export class WorkersService {
     page = 1,
     limit = 10,
   ): Promise<Employee[]> {
-    try {
-      const skip = (page - 1) * limit;
-      const query = { businessId };
-      const employees = await this.employeeModel
-        .find(query)
-        .skip(skip)
-        .limit(limit)
-        .exec();
-      return employees;
-    } catch (error) {
-      throw new HttpException(
-        'Error fetching employees by business ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const skip = (page - 1) * limit;
+    const query = { businessId };
+
+    const employees = await this.employeeModel
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    return employees;
   }
 
   async getEmployee(id: string): Promise<Employee> {
-    try {
-      const employee = await this.employeeModel.findById(id).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error fetching employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.employeeModel.findById(id).exec();
   }
 
   async updateEmployee(
     id: string,
     updatedEmployee: Employee,
   ): Promise<Employee> {
-    try {
-      const employee = await this.employeeModel
-        .findByIdAndUpdate(id, updatedEmployee, { new: true })
-        .exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
+    return await this.employeeModel
+      .findByIdAndUpdate(id, updatedEmployee, { new: true })
+      .exec();
+
+  }
+  async updateUser(
+    id: string,
+    updateUser: User,
+  ): Promise<User> {
+    if (updateUser.phone.length < 9)
+      throw new HttpException("invalid phone", HttpStatus.BAD_REQUEST);
+    if (updateUser.name.length < 3)
+      throw new HttpException('invalid name', HttpStatus.BAD_REQUEST)
+    if (updateUser.address.city.length < 3)
       throw new HttpException(
-        'Error updating employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'invalid address city name',
+        HttpStatus.BAD_REQUEST,
       );
-    }
+    if (updateUser.address.street.length < 3)
+      throw new HttpException(
+        'invalid address-street-name',
+        HttpStatus.BAD_REQUEST,
+      );
+    if (updateUser.address.num < 1)
+      throw new HttpException('invalid address-num', HttpStatus.BAD_REQUEST);
+    const updatedUser = await this.userModel
+      .findOneAndUpdate({ id }, updateUser, { new: true })
+      .exec();
+
+    if (!updatedUser)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    return updateUser;
   }
 
   async deleteEmployee(id: string): Promise<Employee> {
-    try {
-      const employee = await this.employeeModel.findByIdAndDelete(id).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error deleting employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.employeeModel.findByIdAndDelete(id).exec();
   }
-  
-  generateUniqueNumber(): string {
-    const timestamp = new Date().getTime(); // Get current timestamp
-    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
-    return `${timestamp}${random}`; // Concatenate timestamp and random number
-  }
+
+
+
 }
+
+
+
