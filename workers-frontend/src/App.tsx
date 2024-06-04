@@ -1,11 +1,10 @@
 import './App.css';
-import WorkersShowList from './components/workersShowList';
-
+import WorkersShowList from './components/workersShowList'
 const App = () => {
   return (
     <>
-
-      <WorkersShowList />
+      <h1>hello</h1>
+      <WorkersShowList/>
     </>
   );
 };

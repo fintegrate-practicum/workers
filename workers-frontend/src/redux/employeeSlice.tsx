@@ -1,43 +1,46 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import axios from "axios";
 import employee from "../classes/employee";
-import { useAppDispatch } from "./hooks";
-import {addEmployee} from './apiCalls/postCall'
-import {deleteEmployee} from "./apiCalls/deleteCall";
-import {editEmployee} from './apiCalls/putCall'
 
-const res = await axios.get('http://localhost:3001/workers?businessId=1');
-const {data = {}} = res.data;
-
+const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
+const businessId = 1; //from auth0
+const res = await axios.get(http+`/workers?businessId=${businessId}`);
+const { data = {} } = res.data;
 
 const employeeSlice = createSlice({
     name: "employees",
     initialState: data,
-    reducers: {
-        add: (state, actions: PayloadAction<employee>) => {
-            const dispatch = useAppDispatch()
-            dispatch(addEmployee(actions.payload))
-            state.employees.push(actions.payload)
-        },
-        remove: (state, actions: PayloadAction<number>) => {
-            const dispatch = useAppDispatch()
-            dispatch(deleteEmployee(actions.payload))
-            state.employees = state.employees.filter((employee: employee) => employee.userId !== actions.payload)
-        },
-        update: (state, actions: PayloadAction<employee>) => {
-            const dispatch = useAppDispatch()
-            dispatch(editEmployee(actions.payload))
-            const employee = state.employees.find((employee: employee) => employee.userId === actions.payload.userId)
-            if(employee !== undefined){
-                employee.updatedBy = actions.payload.updatedBy;
-                employee.position = actions.payload.position;
-            }
-        }
-        
-    }
+    reducers: {}
 })
 
-export const {add, remove, update} = employeeSlice.actions;
+export const { } = employeeSlice.actions;
 export const selectEmployees = (state: RootState) => state.employeeSlice.employees
 export default employeeSlice.reducer;
+
+export const addEmployee = createAsyncThunk('', async (_employee: employee) => {
+    try {
+        const response = await axios.post(http+'/workers', _employee)
+        return response.data
+    } catch (error) {
+        return error
+    }
+});
+
+export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
+    try {
+        const response = await axios.delete(http+`/workers/${_num}`)
+        return response.data
+    } catch (error) {
+        return error
+    }
+});
+
+export const editEmployee = createAsyncThunk('', async (_employee: employee) => {
+    try {
+        const response = await axios.put(http+`/workers/${_employee.userId}`, _employee)
+        return response.data
+    } catch (error) {
+        return error
+    }
+});
