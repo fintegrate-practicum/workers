@@ -19,12 +19,21 @@ export class WorkersService {
       newEmployee.code = workerCode;
       return await newEmployee.save();
     } catch (error) {
-      throw new HttpException(
-        'Error creating employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error.name === 'ValidationError') {
+        throw new HttpException(
+          { message: 'Validation error', error: error.errors },
+          HttpStatus.BAD_REQUEST
+        );
+      } else {
+        this.logger.error('Error creating employee:', error);
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
     }
   }
+  
   async findAll(businessId: string): Promise<Employee[]> {
     const query = { businessId };
     const employees = await this.employeeModel.find(query).exec();
