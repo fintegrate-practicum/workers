@@ -48,7 +48,7 @@ export class TasksService {
     const message = {
       pattern: 'message_queue',
       data: {
-        to: 'efrat1574@gmail.com',
+        to: foundUser.userEmail,
         subject: newTask.taskName,
         type: 'email',
         kindSubject: 'newTask',
