@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
@@ -24,22 +25,26 @@ export class WorkersController {
 
   constructor(private readonly workersService: WorkersService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
   
+  @UseGuards(AuthGuard('jwt'))
   @Get('employee/:id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('data')
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('company/:companyId')
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
@@ -61,6 +66,7 @@ export class WorkersController {
     },
   })
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('')
   async create(
     @Body(
@@ -88,3 +94,9 @@ export class WorkersController {
     }
   }
 }
+
+
+function AuthGuard(arg0: string): Function | import("@nestjs/common").CanActivate {
+  throw new Error('Function not implemented.');
+}
+
