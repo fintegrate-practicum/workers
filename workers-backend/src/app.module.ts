@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
+import { UserModule } from './user/module/users.module';
+
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 
@@ -15,6 +17,7 @@ import { TransformDataStructure } from './transformDataStructure/convertData';
       isGlobal: true,
     }),
     WorkersModule,
+    UserModule,
     TasksModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

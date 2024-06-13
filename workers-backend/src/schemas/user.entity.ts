@@ -4,6 +4,9 @@ import { Document } from 'mongoose';
 @Schema()
 export class User extends Document {
   @Prop()
+  auth0_user_id: String;
+  
+  @Prop()
   registeredAt: Date;
 
   @Prop()
