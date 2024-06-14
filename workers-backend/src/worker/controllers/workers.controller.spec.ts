@@ -1,13 +1,13 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { HttpException, HttpStatus } from '@nestjs/common';
-// import { WorkersService } from '../services/workers.service';
-// import { WorkersController } from '../controllers/workers.controller';
-// import { Employee } from '../../schemas/employee.entity';
-// import { Types } from 'mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { WorkersService } from '../services/workers.service';
+import { WorkersController } from '../controllers/workers.controller';
+import { Employee } from '../../schemas/employee.entity';
+import { Types } from 'mongoose';
 
-// describe('WorkersController', () => {
-//   let controller: WorkersController;
-//   let service: WorkersService;
+describe('WorkersController', () => {
+  let controller: WorkersController;
+  let service: WorkersService;
 
   const mockEmployee = {
     _id: '60d9c6f3f9b5b61710f0f4f4',
@@ -22,9 +22,9 @@
     position: 'developer',
   };
 
-//   const mockWorkersService = {
-//     activateEmployee: jest.fn(),
-//   };
+  const mockWorkersService = {
+    activateEmployee: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,12 +56,12 @@
 //         '60d9c6f3f9b5b61710f0f4f4',
 //       );
 
-      expect(result).toEqual(activatedEmployee);
-      expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-    });
+    //   expect(result).toEqual(activatedEmployee);
+    //   expect(result.active).toBe(true);
+    //   expect(service.activateEmployee).toHaveBeenCalledWith(
+    //     '60d9c6f3f9b5b61710f0f4f4',
+    //   );
+    // });
 
 //   it('should create a new employee', async () => {
 //     const requestBody: workerValidationsSchema = {
@@ -83,8 +83,8 @@
 //       .mockResolvedValueOnce(createdEmployee as unknown as Employee);
 //     const result = await controller.create(requestBody);
 
-    expect(result).toEqual(createdEmployee);
-  });
+  //   expect(result).toEqual(createdEmployee);
+  // });
     it('should activate an employee successfully', async () => {
       const activatedEmployee = { ...mockEmployee, active: true };
       mockWorkersService.activateEmployee.mockResolvedValueOnce(
