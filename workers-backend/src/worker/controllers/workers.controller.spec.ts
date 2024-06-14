@@ -9,7 +9,7 @@ describe('WorkersController', () => {
   let controller: WorkersController;
   let service: WorkersService;
 
-  const mockEmployee: Employee = {
+  const mockEmployee = {
     _id: '60d9c6f3f9b5b61710f0f4f4',
     userId: new Types.ObjectId(),
     businessId: 123,
@@ -20,7 +20,7 @@ describe('WorkersController', () => {
     active: false,
     signupTime: new Date(),
     position: 'developer',
-  } as Employee;
+  };
 
   const mockWorkersService = {
     activateEmployee: jest.fn(),
@@ -32,13 +32,11 @@ describe('WorkersController', () => {
       providers: [
         {
           provide: WorkersService,
-          useValue: {
-            createEmployee: jest.fn(),
-          },
+          useValue: mockWorkersService,
         },
       ],
     }).compile();
-
+  
     controller = module.get<WorkersController>(WorkersController);
     service = module.get<WorkersService>(WorkersService);
   });
@@ -65,25 +63,6 @@ describe('WorkersController', () => {
       );
     });
 
-    it('should activate an employee successfully', async () => {
-      const activatedEmployee = { ...mockEmployee, active: true };
-      mockWorkersService.activateEmployee.mockResolvedValueOnce(
-        activatedEmployee,
-      );
-
-      const result = await controller.activateEmployee(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-
-      expect(result).toEqual(activatedEmployee);
-      expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-    });
-    workersService = module.get<WorkersService>(WorkersService);
-  });
-
   it('should create a new employee', async () => {
     const requestBody: workerValidationsSchema = {
       businessId: '123456',
@@ -106,6 +85,24 @@ describe('WorkersController', () => {
 
     expect(result).toEqual(createdEmployee);
   });
+    it('should activate an employee successfully', async () => {
+      const activatedEmployee = { ...mockEmployee, active: true };
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
+
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+
+      expect(result).toEqual(activatedEmployee);
+      expect(result.active).toBe(true);
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+    });
+  });
+
 
   it('should handle errors during employee creation', async () => {
     const requestBody: workerValidationsSchema = {
