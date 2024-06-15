@@ -5,7 +5,6 @@ import { createMessage, getMessage } from '../redux/messageSlice';
 
 const MessagesAdmin: React.FC = () => {
   const dispatch = useDispatch();
-  const messages = useSelector(state => state.messageSlice);
   const [newMessage, setNewMessage] = useState({
     sender_id: '',
     receiver_id: '',

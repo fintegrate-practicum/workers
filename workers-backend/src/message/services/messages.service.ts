@@ -11,15 +11,6 @@ export class MessagesService {
     @InjectModel(Message.name) private readonly messageModel: Model<Message>,
   ) {}
 
-  async updateMessage(message: Message): Promise<Message> {
-    try {
-      return await this.messageModel.findByIdAndUpdate(message._id, message, { new: true }).exec();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
   async addMessage(message: Message): Promise<Message> {
     try {
       if (message) {
@@ -33,12 +24,4 @@ export class MessagesService {
     }
   }
 
-  async getMessages(): Promise<Message[]> {
-    try {
-      return await this.messageModel.find().exec();
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
 }

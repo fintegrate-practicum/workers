@@ -1,44 +1,36 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { Message } from 'src/schemas/message.entity';
 import { MessagesService } from '../services/messages.service';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { Types } from 'mongoose';
 
 @ApiTags('message')
 @Controller('message')
 export class MessagesController {
     constructor(private readonly messageService: MessagesService) { }
 
-    @Put('/')
-    async updateMessage(@Body() message: Message) {
-        const updatedMessage = await this.messageService.updateMessage(message);
-        return updatedMessage;
-    }
-    
-    @Get('/')
-    async getAllMessage(){
-        return await this.messageService.getMessages();
-    }
-    
     @Post('/')
     @ApiBody({
         schema: {
             type: 'object',
             properties: {
-                userId: { type: 'string' },
-                businessId: { type: 'number' },
-                code: { type: 'string' },
-                createdBy: { type: 'string' },
-                updatedBy: { type: 'string' },
-                roleId: { type: 'string' },
-                active: { type: 'boolean' },
-                signupTime: { type: 'string', format: 'date-time' },
-                position: { type: 'string' }
+                message_id: { type: 'number' },
+                business_id: { type: 'string' },
+                sender_id: { type: 'string', format: 'uuid' },
+                receiver_id: { type: 'string', format: 'uuid' },
+                message_content: { type: 'string' },
+                date_time: { type: 'string', format: 'date-time' },
+                read_status: { type: 'boolean' },
+                status: { type: 'string' }
             }
         }
     })
     async postMessage(@Body() message: Message) {
-        const addMessage = await this.messageService.addMessage(message);
-        return addMessage;
+        try {
+            const addMessage = await this.messageService.addMessage(message);
+            return addMessage;
+        } catch (err) {
+            throw new Error(`Error adding message: ${err.message}`);
+        }
     }
-
 }

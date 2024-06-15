@@ -9,6 +9,9 @@ export class Message extends Document {
   @Prop()
   message_id: number;
 
+  @Prop()
+  business_id: string;
+
   @Prop({ type: Types.ObjectId, ref: 'Employee' })
   sender_id: Types.ObjectId;
 
