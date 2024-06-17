@@ -6,10 +6,14 @@ import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {
+  @Prop()
+  businessId: string;
+
   @Prop({ type: Types.ObjectId, ref: 'user' })
   userId: Types.ObjectId;
 
   @Prop()
+
   nameEmployee: string;
 
   @Prop()
@@ -17,6 +21,9 @@ export class Employee extends Document {
 
   @Prop()
   code: string;
+
+  workerCode: string;
+
 
   @Prop()
   createdBy: string;
@@ -26,6 +33,12 @@ export class Employee extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'role' })
   roleId: Types.ObjectId;
+
+  @Prop({ default: false })
+  active: boolean;
+
+  @Prop()
+  signupTime: Date;
 
   @Prop({
     enum: [
