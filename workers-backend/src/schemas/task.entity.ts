@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import { Document, ObjectId,Types } from 'mongoose';
 export enum StatusEnum {
   ToDo = 1,
   InProgress = 2,
@@ -8,8 +8,8 @@ export enum StatusEnum {
 export type TaskDoc = Task & Document;
 @Schema()
 export class Task {
-  @Prop({ required: true })
-  employeeId: string;
+  @Prop({type: Types.ObjectId, required: true })
+  employeeId: ObjectId;
   @Prop({ required: true })
   businessId: string;
   @Prop({ required: true })
