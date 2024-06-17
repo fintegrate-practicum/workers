@@ -15,10 +15,10 @@ import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
-
+@ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
@@ -32,7 +32,27 @@ export class WorkersController {
   }
   
   @UseGuards(AuthGuard('jwt'))
-  @Get('employee/:id')
+  @ApiOperation({ summary: 'Activate an employee' })
+  @Post(':id/activate')
+  async activateEmployee(@Param('id') id: string): Promise<Employee> {
+    try {
+      const employee = await this.workersService.activateEmployee(id);
+      if (!employee) {
+        throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
+      }
+
+      return employee;
+    } catch (error) {
+      console.error('Error activating employee:', error.message);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
@@ -72,7 +92,7 @@ export class WorkersController {
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
-          Logger.log('error validation! '+errors);
+          Logger.log('error validation! ' + errors);
           return new HttpException(errors, HttpStatus.BAD_REQUEST);
         },
       }),
@@ -81,7 +101,7 @@ export class WorkersController {
   ): Promise<Employee> {
     try {
       const result = await this.workersService.createEmployee(requestBody);
-      this.logger.log("good");
+      this.logger.log('good');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {
@@ -94,7 +114,6 @@ export class WorkersController {
     }
   }
 }
-
 
 function AuthGuard(arg0: string): Function | import("@nestjs/common").CanActivate {
   throw new Error('Function not implemented.');
