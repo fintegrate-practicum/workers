@@ -31,7 +31,7 @@ export class CreateTaskDto {
   taskName: string;
   @ApiProperty({
     description: 'Id to the manager',
-    example: '1234managet',
+    example: 'employee123',
   })
   @IsNotEmpty()
   @IsString()
