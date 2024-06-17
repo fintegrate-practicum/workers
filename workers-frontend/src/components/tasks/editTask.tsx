@@ -12,7 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useAppDispatch } from "../../redux/hooks";
 import { UpdateTaskEmployeeDTO } from "../../dto/updateTaskEmployeeDto";
-import { editTaskEmployee, editTaskManager } from "../../redux/taskSlice";
+import { editTask } from "../../redux/taskSlice";
 import employee from "../../classes/employee";
 import { UpdateTaskManagerDTO } from "../../dto/updateTaskManagerDto";
 import { Types } from "mongoose";
@@ -27,6 +27,7 @@ const EditTask = (props: {
   targetDate: Date;
   employee: string[];
 }) => {
+  
   const dispatch = useAppDispatch();
   const [open, setOpen] = React.useState(false);
   const [taskId, setTaskId] = React.useState(props.taskId);
@@ -39,10 +40,10 @@ const EditTask = (props: {
   const [employee, setEmployee] = React.useState(props.employee);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as TaskStatus);
+    setStatus(event.target.value as unknown as TaskStatus);
   };
 
-  function handleClickOpen() {
+  const handleClickOpen=() => {
     setOpen(true);
   }
 
@@ -56,16 +57,17 @@ const EditTask = (props: {
     setEmployee(employeeArray);
   };
 
+  //auth0דימוי אוביקט מתוך ה 
   const newEmployee: employee = {
     userId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
-    businessId: "2",
+    businessId:  new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     code: "EMP123",
     createdBy: "adminUserId",
     updatedBy: "adminUserId",
-    role: EmployeeRole.cleaner,
+    role: EmployeeRole.manager,
   };
 
-  return (
+  return (    
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
         edit task
@@ -77,17 +79,13 @@ const EditTask = (props: {
           component: "form",
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            console.log("on sub");
-
-            if (newEmployee.role !== EmployeeRole.manager) {
+            if (newEmployee.role !== EmployeeRole.manager){
               const updateTaskForEmployee: UpdateTaskEmployeeDTO = {
                 description: description,
                 status: status,
               };
-              console.log(updateTaskForEmployee);
-
-              dispatch(
-                editTaskEmployee({ taskId, updateTask: updateTaskForEmployee })
+              dispatch(    
+                editTask({ taskId, updateTask: updateTaskForEmployee,employeeType:'employee' })
               );
             } else {
               const updateTaskForManager: UpdateTaskManagerDTO = {
@@ -96,10 +94,9 @@ const EditTask = (props: {
                 status: status,
                 targetDate: new Date(targetDate),
                 employee: employee,
-              };
-              console.log(updateTaskForManager);
+              }
               dispatch(
-                editTaskManager({ taskId, updateTask: updateTaskForManager })
+                editTask({ taskId, updateTask: updateTaskForManager ,employeeType:'manager'})
               );
             }
             handleClose();

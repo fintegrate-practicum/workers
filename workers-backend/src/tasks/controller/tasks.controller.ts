@@ -7,18 +7,20 @@ import {
   Put,
   Delete,
   Param,
+  Headers,
 } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { TasksService } from '../service/tasks.service';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
+import { Types } from 'mongoose';
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
   @Get('/manager/:businessId/:managerId')
   async getAllManagerTasks(
-    @Param('businessId') businessId: string,
+    @Param('businessId') businessId: Types.ObjectId,
     @Param('managerId') managerId: string,
   ) {
     try {
@@ -41,28 +43,23 @@ export class TasksController {
     }
   }
 
-  @Put('employee/task/:id')
-  async updateTaskEmployee(
-    @Param('id') taskId: string,
-    @Body() updatedTask: UpdateTaskEmployeeDto,
+  @Put('task/:id')
+  async updateTask(
+  @Param('id') taskId: string,
+  @Body() updatedTask: UpdateTaskManagerDto | UpdateTaskEmployeeDto,
+  @Headers('employee-type') employeeType: string,
   ) {
-    try {
-      return this._taskService.updateTaskEmployee(taskId, updatedTask);
-    } catch (error) {
-      throw new BadRequestException(error.message);
+  try {
+    if (employeeType === 'manager') {
+      return this._taskService.updateTask(taskId, updatedTask as UpdateTaskManagerDto);
+    } else if (employeeType === 'employee') {
+      return this._taskService.updateTask(taskId, updatedTask as UpdateTaskEmployeeDto);
+    } else {
+      throw new BadRequestException('Invalid role type');
     }
+  } catch (error) {
+    throw new BadRequestException(error.message);
   }
-
-  @Put('manager/task/:id')
-  async updateTaskManager(
-    @Param('id') taskId: string,
-    @Body() updatedTask: UpdateTaskManagerDto,
-  ) {
-    try {
-      return this._taskService.updateTaskManager(taskId, updatedTask);
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
   }
 
   @Delete('/manager/task/:id')

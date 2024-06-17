@@ -1,4 +1,4 @@
-export enum EmployeeRole {
+export enum EmployeeRole{
   "secretary",
   "cleaner",
   "deliveryPerson",

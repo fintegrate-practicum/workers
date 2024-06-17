@@ -1,8 +1,7 @@
 import { Types } from 'mongoose';
 import {  TaskStatus } from './enum/taskStatus.enum';
 export default class Task {
-    taskId!:string;
-    businessId!: string;
+    businessId!: Types.ObjectId;
     managerId!: string;
     taskName!: string;
     description!: string;

@@ -3,8 +3,8 @@ import { RootState } from "./store";
 import axios from "axios";
 import employee from "../classes/employee";
 
-const http = 'http://localhost:3001';//process.env.REACT_APP_HTTP;
-const businessId = 1; //from auth0
+const http = import.meta.env.VITE_HTTP;
+const businessId = import.meta.env.VITE_BUSINESSID;
 const res = await axios.get(http+`/workers?businessId=${businessId}`);
 const { data = {} } = res.data;
 
@@ -15,7 +15,7 @@ const employeeSlice = createSlice({
 })
 
 export const { } = employeeSlice.actions;
-export const selectEmployees = (state: RootState) => state.employeeSlice.employees
+export const selectEmployees = (state :RootState) => state.employeeSlice.employees
 export default employeeSlice.reducer;
 
 export const addEmployee = createAsyncThunk('', async (_employee: employee) => {

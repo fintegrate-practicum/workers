@@ -4,11 +4,9 @@ import { TaskStatus } from 'src/enum/taskStatus.enum';
 
 export type TaskDoc = Task & Document;
 @Schema()
-export class Task {
+export class Task { 
   @Prop({ required: true })
-  taskId: string;
-  @Prop({ required: true })
-  businessId: string;
+  businessId: Types.ObjectId;
   @Prop({ required: true })
   managerId: string;
   @Prop({ required: true })

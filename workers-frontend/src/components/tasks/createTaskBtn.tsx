@@ -14,30 +14,28 @@ import { TaskStatus } from "../../classes/enum/taskStatus.enum";
 
 export default function AddTaskBtn() {
   const [open, setOpen] = React.useState(false);
-  const businessId = "1"; //from auth0
-  const managerId = "1"; //from auth0
+  const businessId =  new Types.ObjectId(process.env.VITE_BUSINESSID);
+  const managerId = process.env.VITE_MANAGERID ? process.env.VITE_MANAGERID : 'companyName';
   const [taskName, setTaskName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [targetDate, setTargetDate] = React.useState(new Date(0));
   const [employee, setEmployee] = React.useState<Types.ObjectId[]>([]);
   const [urgency, setUrgency] = React.useState(0);
-  const [taskId, setTaskId] = React.useState("");
-
   const dispatch = useAppDispatch();
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+   
     const task: Task = {
-      taskId: taskId,
-      businessId: businessId,
-      managerId: managerId,
-      taskName: taskName,
-      description: description,
-      targetDate: targetDate,
-      employee: employee,
-      urgency: urgency,
+      businessId,
+      managerId,
+      taskName,
+      description,
+      targetDate,
+      employee,
+      urgency,
       status: TaskStatus.ToDo,
       completionDate: new Date(0),
     };
@@ -51,7 +49,6 @@ export default function AddTaskBtn() {
 
   const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
     const employeeArray = value
       .split(",")
       .map((item) => {
@@ -62,7 +59,7 @@ export default function AddTaskBtn() {
         console.warn(`Invalid ObjectId: ${trimmed}`);
         return null;
       })
-      .filter((item) => item !== null) as Types.ObjectId[];
+      .filter(item => !!item) as Types.ObjectId[];
   };
   return (
     <React.Fragment>

@@ -11,19 +11,13 @@ import { Types } from 'mongoose';
 import { TaskStatus } from '../enum/taskStatus.enum';
 export class CreateTaskDto {
   @ApiProperty({
-    description: 'ID of the task',
-    example: '123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  taskId: string;
-  @ApiProperty({
+    
     description: 'ID of the company',
     example: 'company123',
   })
   @IsNotEmpty()
   @IsString()
-  businessId: string;
+  businessId: Types.ObjectId;
   @ApiProperty({
     description: 'Name of the task',
     example: 'Develop new feature',

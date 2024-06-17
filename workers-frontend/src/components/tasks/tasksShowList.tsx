@@ -12,7 +12,7 @@ const TasksShowList = () => {
 
   const newEmployee: employee = {
     userId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
-    businessId: "company123",
+    businessId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     code: "EMP123",
     createdBy: "adminUserId",
     updatedBy: "adminUserId",
@@ -20,7 +20,6 @@ const TasksShowList = () => {
   };
   let filteredTasks = tasks;
   if (newEmployee.role !== EmployeeRole.manager) {
-    console.log("Filtering tasks for userId:" + newEmployee.userId);
     filteredTasks = tasks.filter((task) => {
       return task.employee.filter((emp) => {
         return emp === newEmployee.userId;
