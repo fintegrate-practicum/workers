@@ -25,15 +25,15 @@ export class WorkersController {
 
   constructor(private readonly workersService: WorkersService) {}
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
+  @UseGuards(AuthGuard("jwt"))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
   
-  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
+  @UseGuards(AuthGuard("jwt"))
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
     try {
       const employee = await this.workersService.activateEmployee(id);
@@ -51,21 +51,21 @@ export class WorkersController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @UseGuards(AuthGuard("jwt"))
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('data')
+  @UseGuards(AuthGuard("jwt"))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('company/:companyId')
+  @UseGuards(AuthGuard("jwt"))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -86,8 +86,8 @@ export class WorkersController {
     },
   })
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('')
+  @UseGuards(AuthGuard("jwt"))
   async create(
     @Body(
       new ValidationPipe({
