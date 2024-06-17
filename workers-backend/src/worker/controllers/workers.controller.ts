@@ -18,6 +18,7 @@ import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
+import { AuthGuard } from "@nestjs/passport";
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
@@ -115,6 +116,3 @@ export class WorkersController {
   }
 }
 
-function AuthGuard(arg0: string): Function | import("@nestjs/common").CanActivate {
-  throw new Error('Function not implemented.');
-}
