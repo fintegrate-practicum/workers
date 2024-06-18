@@ -12,8 +12,10 @@ import {
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
-import { Request, Response, response } from 'express';
-import { User } from 'src/schemas/user.entity';
+import { Request, Response } from 'express';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 
 @Controller('workers')
 export class WorkersController {
@@ -23,8 +25,8 @@ export class WorkersController {
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAllByBusinessId(businessId);
   }
-
-  @Get(':id')
+  
+  @Get('employee/:id')
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
@@ -35,22 +37,46 @@ export class WorkersController {
     res.json({ message: 'Original data' });
   }
 
-  @Put(':id')
-  updateUser(@Param('id') id: string, @Body() data: User) {
+  @Get('company/:companyId')
+  async get(@Param('companyId') id: string): Promise<Employee[]> {
+    const result = await this.workersService.findAllByBusinessId(id);
+    return result;
+  }
+
+  @ApiOperation({ summary: 'Add a new employee' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        businessId: { type: 'string' },
+        userId: { type: 'string' },
+        workerCode: { type: 'string' },
+        createdBy: { type: 'string' },
+        roleId: { type: 'string' },
+        position: { type: 'string' },
+      },
+    },
+  })
+
+  @Post('')
+  async create(
+    @Body(
+      new ValidationPipe({
+        exceptionFactory: (errors) => {
+          Logger.log('error validation! '+errors);
+          return new HttpException(errors, HttpStatus.BAD_REQUEST);
+        },
+      }),
+    )
+    requestBody: workerValidationsSchema,
+  ): Promise<Employee> {
     try {
-      const Response = this.workersService.updateUser(
-        id, data,
-      );
-      if (!response) {
-        throw new HttpException("user not found",
-          HttpStatus.BAD_REQUEST);
-      } return response;
+      const result = await this.workersService.createEmployee(requestBody);
+      this.logger.log("good");
+      return result;
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     this.workersService.updateUser(id, data);
   }
 }
-
-
-

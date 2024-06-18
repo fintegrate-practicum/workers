@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { User } from 'src/schemas/user.entity';
-import { promises } from 'dns';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
 
 @Injectable()
 export class WorkersService {
@@ -15,9 +15,26 @@ export class WorkersService {
     @InjectModel('User') private readonly userModel: Model<User>
   ) { }
 
-  async createEmployee(worker: Employee): Promise<Employee> {
-    const newEmployee = new this.employeeModel(worker);
-    return await newEmployee.save()
+
+
+  async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
+    try {
+      const newEmployee = new this.employeeModel(worker);
+      const workerCode = this.generateUniqueNumber();
+      newEmployee.workerCode = workerCode;
+      return await newEmployee.save();
+    } catch (error) {
+      throw new HttpException(
+        'Error creating employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async findAll(businessId: string): Promise<Employee[]> {
+    const query = { businessId };
+    const employees = await this.employeeModel.find(query).exec();
+    return employees;
   }
 
   async findAllByBusinessId(
@@ -39,7 +56,6 @@ export class WorkersService {
   async getEmployee(id: string): Promise<Employee> {
     return await this.employeeModel.findById(id).exec();
   }
-
   async updateEmployee(
     id: string,
     updatedEmployee: Employee,
@@ -49,13 +65,10 @@ export class WorkersService {
       .exec();
 
   }
-  async updateUser(
-    id: string,
-    updateUser: User,
-  ): Promise<User> {
+  async updateUser(userId: string, updateUser: User): Promise<User> {
     if (updateUser.phone.length < 9)
-      throw new HttpException("invalid phone", HttpStatus.BAD_REQUEST);
-    if (updateUser.name.length < 3)
+      throw new HttpException('invalid phone', HttpStatus.BAD_REQUEST);
+    if (updateUser.userName.length < 3)
       throw new HttpException('invalid name', HttpStatus.BAD_REQUEST)
     if (updateUser.address.city.length < 3)
       throw new HttpException(
@@ -70,7 +83,7 @@ export class WorkersService {
     if (updateUser.address.num < 1)
       throw new HttpException('invalid address-num', HttpStatus.BAD_REQUEST);
     const updatedUser = await this.userModel
-      .findOneAndUpdate({ id }, updateUser, { new: true })
+      .findOneAndUpdate({ userId }, updateUser, { new: true })
       .exec();
 
     if (!updatedUser)
@@ -81,6 +94,45 @@ export class WorkersService {
 
   async deleteEmployee(id: string): Promise<Employee> {
     return await this.employeeModel.findByIdAndDelete(id).exec();
+    try {
+      const employee = await this.employeeModel.findByIdAndDelete(id).exec();
+      if (!employee) {
+        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+      }
+      return employee;
+    } catch (error) {
+      if (error.status === HttpStatus.NOT_FOUND) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error deleting employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  generateUniqueNumber(): string {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
+    return `${timestamp}${random}`; // Concatenate timestamp and random number
+  }
+
+  async activateEmployee(id: string): Promise<Employee> {
+    try {
+      const updatedEmployee = await this.employeeModel
+        .findByIdAndUpdate(id, { active: true }, { new: true })
+        .exec();
+
+      if (!updatedEmployee) {
+        throw new Error('Employee not found');
+      }
+      
+      this.logger.log('The status will change successfully');
+      return updatedEmployee;
+    } catch (error) {
+      console.error('Error activating employee:', error);
+      throw error;
+    }
   }
 }
 

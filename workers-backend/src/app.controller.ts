@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 
 @Controller()
