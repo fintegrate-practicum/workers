@@ -12,6 +12,13 @@ import { RoleEnum } from 'src/enum/employee.enum';
 import { StatusEnum } from 'src/schemas/task.entity';
 export class CreateTaskDto {
   @ApiProperty({
+    description: 'ID of the employee',
+    example: 'employee123',
+  })
+  @IsNotEmpty()
+  @IsString()
+  employeeId: string;
+  @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
   })
@@ -27,7 +34,7 @@ export class CreateTaskDto {
   taskName: string;
   @ApiProperty({
     description: 'Id to the manager',
-    example: '1234managet',
+    example: 'employee123',
   })
   @IsNotEmpty()
   @IsString()
