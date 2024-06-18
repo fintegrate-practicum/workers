@@ -7,7 +7,7 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 import { WorkersModule } from './worker/module/workers.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-import { MessagesModule } from './message/module/message.model';
+import { MessagesModule } from './message/module/messages.module';
 import { UsersModule } from './user/module/users.module';
 
 @Module({
