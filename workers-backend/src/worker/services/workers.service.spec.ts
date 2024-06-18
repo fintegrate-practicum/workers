@@ -54,7 +54,6 @@ describe('WorkersService', () => {
         .spyOn(model, 'create')
         .mockResolvedValueOnce([mockEmployee[0]] as any);
       const newEmployee = new Employee({
-        userId: '1',
         createdBy: 'John Doe',
         code: '123',
         updatedBy: 'Admin',

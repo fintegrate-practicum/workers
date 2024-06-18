@@ -11,7 +11,6 @@ import { Types } from 'mongoose';
 import { TaskStatus } from '../enum/taskStatus.enum';
 export class CreateTaskDto {
   @ApiProperty({
-    
     description: 'ID of the company',
     example: 'company123',
   })
@@ -27,7 +26,7 @@ export class CreateTaskDto {
   taskName: string;
   @ApiProperty({
     description: 'Id to the manager',
-    example: '1234managet',
+    example: 'employee123',
   })
   @IsNotEmpty()
   @IsString()
@@ -48,14 +47,7 @@ export class CreateTaskDto {
   targetDate: Date;
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: [
-      {
-        userId: '664cba7ee786ab5c121aa40b',
-      },
-      {
-        userId: '123765434567hgfdfghjkhgfgh',
-      },
-    ],
+    example: ['664cba7ee786ab5c121aa40b', '123765434567hgfdfghjkhgfgh'],
   })
   @IsNotEmpty()
   @IsArray()
@@ -83,4 +75,11 @@ export class CreateTaskDto {
   })
   @IsDate()
   completionDate: Date;
+  @ApiProperty({
+    description: 'Link to task',
+    example: 'http://localhost:3001/api#/Workers/WorkersController_create',
+  })
+  @IsNotEmpty()
+  @IsString()
+  directLink: string;
 }

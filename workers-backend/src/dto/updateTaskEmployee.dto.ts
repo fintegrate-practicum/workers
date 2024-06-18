@@ -19,6 +19,3 @@ export class UpdateTaskEmployeeDto {
   @IsEnum(TaskStatus)
   status: TaskStatus;
 }
-
-
-

@@ -35,7 +35,7 @@ describe('TasksController', () => {
 
   describe('createTask', () => {
     const taskData: CreateTaskDto = {
-      businessId: new Types.ObjectId('123') ,
+      businessId: new Types.ObjectId('123'),
       taskName: 'Test Task',
       completionDate: new Date(0),
       description: 'description',
@@ -67,11 +67,11 @@ describe('TasksController', () => {
     });
   });
   const managerId = '2';
-  const businessId =  new Types.ObjectId('123');
+  const businessId = new Types.ObjectId('123');
 
   const dynamicArry = [
     {
-      businessId:  new Types.ObjectId('123'),
+      businessId: new Types.ObjectId('123'),
       taskName: 'Test Task',
       completionDate: new Date(0),
       description: 'efrat',
@@ -82,7 +82,7 @@ describe('TasksController', () => {
       urgency: 2,
     },
     {
-      businessId:  new Types.ObjectId('123'),
+      businessId: new Types.ObjectId('123'),
       taskName: 'Test Task',
       completionDate: new Date(0),
       description: 'efrat',
@@ -117,7 +117,7 @@ describe('TasksController', () => {
         employee: new Types.ObjectId['123'](),
         status: TaskStatus.InProgress,
       };
-  
+
       it('should call service.updateTask with manager DTO', async () => {
         const mockTask = {
           ...taskData,
@@ -132,13 +132,13 @@ describe('TasksController', () => {
         expect(result).toEqual(mockTask);
       });
     });
-  
+
     describe('updateTask with employee role', () => {
       const taskData: UpdateTaskEmployeeDto = {
         status: TaskStatus.InProgress,
         description: 'new description',
       };
-  
+
       it('should call service.updateTask with employee DTO', async () => {
         const mockTask = {
           ...taskData,
@@ -157,9 +157,8 @@ describe('TasksController', () => {
       });
     });
   });
-  
+
   describe('deleteTask', () => {
-    
     it('should call service.deleteTask with taskId', async () => {
       const mockTask = {
         businessId: new Types.ObjectId('123'),

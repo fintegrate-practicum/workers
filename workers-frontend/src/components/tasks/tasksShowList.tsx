@@ -11,18 +11,18 @@ const TasksShowList = () => {
   const tasks: Task[] = useAppSelector((state) => state.taskSlice);
 
   const newEmployee: employee = {
-    userId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
+    _id:new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     businessId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     code: "EMP123",
     createdBy: "adminUserId",
     updatedBy: "adminUserId",
-    role: EmployeeRole.manager,
+    role: new EmployeeRole("cleaner",true,"clean room"),
   };
   let filteredTasks = tasks;
-  if (newEmployee.role !== EmployeeRole.manager) {
+  if (newEmployee.role.type !=='manager') {
     filteredTasks = tasks.filter((task) => {
       return task.employee.filter((emp) => {
-        return emp === newEmployee.userId;
+        return emp === newEmployee._id;
       });
     });
   }

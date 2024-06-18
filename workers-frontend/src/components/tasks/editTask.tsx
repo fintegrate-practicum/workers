@@ -59,12 +59,11 @@ const EditTask = (props: {
 
   //auth0דימוי אוביקט מתוך ה 
   const newEmployee: employee = {
-    userId: new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     businessId:  new Types.ObjectId("664cba7ee786ab5c121aa40b"),
     code: "EMP123",
     createdBy: "adminUserId",
     updatedBy: "adminUserId",
-    role: EmployeeRole.manager,
+    role: new EmployeeRole("manager",true,"ffff"),
   };
 
   return (    
@@ -79,7 +78,7 @@ const EditTask = (props: {
           component: "form",
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            if (newEmployee.role !== EmployeeRole.manager){
+            if (newEmployee.role.type !=='manager'){
               const updateTaskForEmployee: UpdateTaskEmployeeDTO = {
                 description: description,
                 status: status,
@@ -105,7 +104,7 @@ const EditTask = (props: {
       >
         <DialogTitle>edit task</DialogTitle>
         <DialogContent>
-          {newEmployee.role === EmployeeRole.manager && (
+          {newEmployee.role.type == 'manager' && (
             <>
               <br />
               <TextField

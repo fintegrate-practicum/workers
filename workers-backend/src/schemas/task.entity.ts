@@ -4,7 +4,7 @@ import { TaskStatus } from 'src/enum/taskStatus.enum';
 
 export type TaskDoc = Task & Document;
 @Schema()
-export class Task { 
+export class Task {
   @Prop({ required: true })
   businessId: Types.ObjectId;
   @Prop({ required: true })
@@ -23,5 +23,7 @@ export class Task {
   status: TaskStatus;
   @Prop({ default: null })
   completionDate: Date;
+  @Prop({ default: null })
+  directLink: string;
 }
 export const TaskSchema = SchemaFactory.createForClass(Task);

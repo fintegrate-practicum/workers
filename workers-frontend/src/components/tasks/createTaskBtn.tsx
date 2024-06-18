@@ -14,8 +14,8 @@ import { TaskStatus } from "../../classes/enum/taskStatus.enum";
 
 export default function AddTaskBtn() {
   const [open, setOpen] = React.useState(false);
-  const businessId =  new Types.ObjectId(process.env.VITE_BUSINESSID);
-  const managerId = process.env.VITE_MANAGERID ? process.env.VITE_MANAGERID : 'companyName';
+  const businessId =  new Types.ObjectId(import.meta.env.VITE_BUSINESSID);
+  const managerId = import.meta.env.VITE_MANAGERID ? import.meta.env.VITE_MANAGERID : 'companyName';
   const [taskName, setTaskName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [targetDate, setTargetDate] = React.useState(new Date(0));

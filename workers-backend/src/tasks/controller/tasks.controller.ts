@@ -35,6 +35,7 @@ export class TasksController {
   }
 
   @Post('/manager/task')
+  @UseGuards(AuthGuard('jwt'))
   async createTask(@Body() task: CreateTaskDto) {
     try {
       return this._taskService.createTask(task);
@@ -45,21 +46,27 @@ export class TasksController {
 
   @Put('task/:id')
   async updateTask(
-  @Param('id') taskId: string,
-  @Body() updatedTask: UpdateTaskManagerDto | UpdateTaskEmployeeDto,
-  @Headers('employee-type') employeeType: string,
+    @Param('id') taskId: string,
+    @Body() updatedTask: UpdateTaskManagerDto | UpdateTaskEmployeeDto,
+    @Headers('employee-type') employeeType: string,
   ) {
-  try {
-    if (employeeType === 'manager') {
-      return this._taskService.updateTask(taskId, updatedTask as UpdateTaskManagerDto);
-    } else if (employeeType === 'employee') {
-      return this._taskService.updateTask(taskId, updatedTask as UpdateTaskEmployeeDto);
-    } else {
-      throw new BadRequestException('Invalid role type');
+    try {
+      if (employeeType === 'manager') {
+        return this._taskService.updateTask(
+          taskId,
+          updatedTask as UpdateTaskManagerDto,
+        );
+      } else if (employeeType === 'employee') {
+        return this._taskService.updateTask(
+          taskId,
+          updatedTask as UpdateTaskEmployeeDto,
+        );
+      } else {
+        throw new BadRequestException('Invalid role type');
+      }
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
-  } catch (error) {
-    throw new BadRequestException(error.message);
-  }
   }
 
   @Delete('/manager/task/:id')

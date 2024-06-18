@@ -22,14 +22,7 @@ export class UpdateTaskManagerDto {
 
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: [
-      {
-        userId: '664cba7ee786ab5c121aa40b',
-      },
-      {
-        userId: '123765434567hgfdfghjkhgfgh',
-      },
-    ],
+    example: ['664cba7ee786ab5c121aa40b', '123765434567hgfdfghjkhgfgh'],
   })
   @IsNotEmpty()
   @IsArray()

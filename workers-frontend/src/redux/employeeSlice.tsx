@@ -38,7 +38,7 @@ export const deleteEmployee = createAsyncThunk('', async (_num: number) => {
 
 export const editEmployee = createAsyncThunk('', async (_employee: employee) => {
     try {
-        const response = await axios.put(http+`/workers/${_employee.userId}`, _employee)
+        const response = await axios.put(http+`/workers/${_employee._id}`, _employee)
         return response.data
     } catch (error) {
         return error
