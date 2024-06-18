@@ -16,7 +16,7 @@ export class WorkersService {
     try {
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
-      newEmployee.workerCode = workerCode;
+      newEmployee.code = workerCode;
       return await newEmployee.save();
     } catch (error) {
       throw new HttpException(
@@ -126,7 +126,7 @@ export class WorkersService {
       if (!updatedEmployee) {
         throw new Error('Employee not found');
       }
-      
+
       this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {

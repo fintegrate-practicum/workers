@@ -15,6 +15,7 @@ describe('TasksService', () => {
         {
           provide: getModelToken(Task.name),
           useValue: {
+            findAll: jest.fn(),
             new: jest.fn().mockResolvedValue({ save: jest.fn() }),
             create: jest.fn(),
           },

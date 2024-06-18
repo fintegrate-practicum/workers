@@ -4,11 +4,13 @@ import taskSlice from "./taskSlice";
 import messageSlice from "./messageSlice";
 
 const store = configureStore({
+
     reducer: {
         employeeSlice,
         taskSlice,
         messageSlice
     }
+
 })
 
 export type RootState = ReturnType<typeof store.getState>

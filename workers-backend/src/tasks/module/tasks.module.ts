@@ -10,7 +10,6 @@ import { UserService } from 'src/user/services/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from 'src/user/module/users.module';
 
-
 @Module({
   imports: [
     UserModule,
