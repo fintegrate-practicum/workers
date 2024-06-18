@@ -11,7 +11,7 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
-  
+
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
       const newEmployee = new this.employeeModel(worker);
@@ -70,7 +70,6 @@ export class WorkersService {
       );
     }
   }
-
   async updateEmployee(
     id: string,
     updatedEmployee: Employee,
@@ -111,10 +110,28 @@ export class WorkersService {
       );
     }
   }
-  
+
   generateUniqueNumber(): string {
     const timestamp = new Date().getTime(); // Get current timestamp
     const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
     return `${timestamp}${random}`; // Concatenate timestamp and random number
+  }
+
+  async activateEmployee(id: string): Promise<Employee> {
+    try {
+      const updatedEmployee = await this.employeeModel
+        .findByIdAndUpdate(id, { active: true }, { new: true })
+        .exec();
+
+      if (!updatedEmployee) {
+        throw new Error('Employee not found');
+      }
+      
+      this.logger.log('The status will change successfully');
+      return updatedEmployee;
+    } catch (error) {
+      console.error('Error activating employee:', error);
+      throw error;
+    }
   }
 }

@@ -28,8 +28,7 @@ describe('MessagesService', () => {
 
   it('should update message as read', async () => {
     const messageId = 'testId';
-    const updatedMessage = { _id: 'testId', read_status: true }; // Mocked updated message object
-
+    const updatedMessage = { _id: 'testId', read_status: true };
     const result = await service.updateMessageIsRead(messageId);
 
     expect(mockMessageModel.findByIdAndUpdate).toBeCalledWith(messageId, { read_status: true });
