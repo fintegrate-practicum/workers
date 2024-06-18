@@ -1,29 +1,30 @@
 import { IsNotEmpty, IsString, IsEnum, IsMongoId } from 'class-validator';
 export enum RoleEnum {
-  'secretary',
-  'cleaner',
-  'deliveryPerson',
-  'developer',
-  'tester',
-  'maneger',
-  'owner',
-} 
+  secretary = 1,
+  cleaner = 2,
+  deliveryPerson = 4,
+  developer = 8,
+  tester = 16,
+  manager = 32,
+  owner = 64,
+}
 export class workerValidationsSchema {
-
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   businessId: string;
-
-  // @IsNotEmpty()
+  @IsNotEmpty()
   @IsMongoId()
   userId: string;
-
-  code: string;
-
+  @IsNotEmpty()
   @IsString()
+  code: string;
   @IsNotEmpty()
+  @IsString()
   createdBy: string;
-
   @IsNotEmpty()
-  role: RoleEnum;
+  @IsString()
+  updatedBy: string;
+  @IsNotEmpty()
+  @IsEnum(RoleEnum)
+  role: number;
 }
