@@ -15,6 +15,7 @@ import { MessagesModule } from './message/module/message.model';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TasksModule,
     WorkersModule,
     MessagesModule,
      MongooseModule.forRootAsync({
