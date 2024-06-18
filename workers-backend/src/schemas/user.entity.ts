@@ -14,6 +14,9 @@ export class User extends Document {
   userEmail: string;
 
   @Prop()
+  auth0_user_id: String;
+  
+  @Prop()
   registeredAt: Date;
 
   @Prop()

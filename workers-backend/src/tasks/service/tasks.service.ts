@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
 import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
-import { UsersService } from 'src/user/services/users.service';
+import { UserService } from 'src/user/services/users.service';
 import { User } from 'src/schemas/user.entity';
 import { Message } from 'src/interface/message.interface';
 
@@ -13,7 +13,7 @@ export class TasksService {
   constructor(
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
     private readonly rabbitPublisherService: RabbitPublisherService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
   ) {}
 
   public readonly logger = new Logger(TasksService.name);
