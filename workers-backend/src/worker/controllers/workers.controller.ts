@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
@@ -17,6 +18,7 @@ import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
+import { AuthGuard } from "@nestjs/passport";
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
@@ -25,12 +27,14 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Get()
+  @UseGuards(AuthGuard("jwt"))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
-
+  
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
+  @UseGuards(AuthGuard("jwt"))
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
     try {
       const employee = await this.workersService.activateEmployee(id);
@@ -49,17 +53,20 @@ export class WorkersController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard("jwt"))
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
 
   @Get('data')
+  @UseGuards(AuthGuard("jwt"))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
+  @UseGuards(AuthGuard("jwt"))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -79,7 +86,9 @@ export class WorkersController {
       },
     },
   })
+
   @Post('')
+  @UseGuards(AuthGuard("jwt"))
   async create(
     @Body(
       new ValidationPipe({
@@ -106,3 +115,4 @@ export class WorkersController {
     }
   }
 }
+
