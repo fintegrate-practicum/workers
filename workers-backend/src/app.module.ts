@@ -7,6 +7,7 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 import { WorkersModule } from './worker/module/workers.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
+import { MessagesModule } from './message/module/messages.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TransformDataStructure } from './transformDataStructure/convertData';
     }),
     WorkersModule,
     TasksModule,
+    MessagesModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
