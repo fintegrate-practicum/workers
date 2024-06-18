@@ -25,13 +25,13 @@ export class TasksService {
     ]);
 
     if (!user) {
-      this.logger.log('User not found.');
+      throw new Error('User not found');
     } else {
       this.logger.log('User found:', user);
     }
 
     if (!manager) {
-      this.logger.log('Manager not found.');
+      throw new Error('Manager not found');
     } else {
       this.logger.log('manager found:', manager);
     }
