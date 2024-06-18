@@ -5,10 +5,11 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
+
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { UsersModule } from './user/module/users.module';
+import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
@@ -16,10 +17,11 @@ import { UsersModule } from './user/module/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    UserModule,
     TasksModule,
     WorkersModule,
     MessagesModule,
-    UsersModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
