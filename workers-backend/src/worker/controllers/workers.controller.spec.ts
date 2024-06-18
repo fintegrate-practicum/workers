@@ -1,119 +1,136 @@
-import { Test } from '@nestjs/testing';
-import { WorkersController } from '../controllers/workers.controller';
+import { Test, TestingModule } from '@nestjs/testing';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
-import { TransformDataStructure } from '../../transformDataStructure/convertData';
+import { WorkersController } from '../controllers/workers.controller';
 import { Employee } from '../../schemas/employee.entity';
-import { Request, Response } from 'express';
-import { ContextType, ExecutionContext, Type } from '@nestjs/common';
-import { of } from 'rxjs';
-import { RpcArgumentsHost, WsArgumentsHost } from '@nestjs/common/interfaces';
+import { Types } from 'mongoose';
 
 describe('WorkersController', () => {
-  let workersController: WorkersController;
-  let workersService: WorkersService;
-  let interceptor: TransformDataStructure;
-  const errors: any[] = [];
-  let req: Partial<Request> = {};
-  let res: Partial<Response<any, Record<string, any>>> = {};
+  let controller: WorkersController;
+  let service: WorkersService;
+
+  const mockEmployee: Employee = {
+    _id: '60d9c6f3f9b5b61710f0f4f4',
+    userId: new Types.ObjectId(),
+    businessId: 123,
+    code: 'EMP001',
+    createdBy: 'admin',
+    updatedBy: 'admin',
+    roleId: new Types.ObjectId(),
+    active: false,
+    signupTime: new Date(),
+    position: 'developer',
+  } as Employee;
+
+  const mockWorkersService = {
+    activateEmployee: jest.fn(),
+  };
 
   beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [WorkersController],
-      providers: [WorkersService, TransformDataStructure],
+      providers: [
+        {
+          provide: WorkersService,
+          useValue: {
+            createEmployee: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    workersController = moduleRef.get<WorkersController>(WorkersController);
-    workersService = moduleRef.get<WorkersService>(WorkersService);
-    interceptor = moduleRef.get<TransformDataStructure>(TransformDataStructure);
+    controller = module.get<WorkersController>(WorkersController);
+    service = module.get<WorkersService>(WorkersService);
+  });
 
-    req = {
-      body: { message: 'Original data' },
-      statusCode: 200,
-    };
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
 
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+  describe('activateEmployee', () => {
+    it('should activate an employee successfully', async () => {
+      const activatedEmployee = { ...mockEmployee, active: true };
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
 
-    describe('findAll', () => {
-      it('should return an array of workers', async () => {
-        const workersList: Employee[] = [
-          new Employee({
-            userId: '1',
-            createdBy: 'John Doe',
-            code: '123',
-            updatedBy: 'Admin',
-            roleId: '456',
-            position: 'Developer',
-          }),
-          new Employee({
-            userId: '2',
-            createdBy: 'Alice Smith',
-            code: '456',
-            updatedBy: 'Manager',
-            roleId: '789',
-            position: 'Designer',
-          }),
-        ];
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
 
-        jest
-          .spyOn(workersService, 'findAllByBusinessId')
-          .mockResolvedValue(workersList);
-        const result = await workersController.findAll('businessId');
-
-        expect(result).toEqual(workersList);
-      });
+      expect(result).toEqual(activatedEmployee);
+      expect(result.active).toBe(true);
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
     });
 
-    it('should transform the data structure and send it as a JSON response', async () => {
-      const context: ExecutionContext = {
-        switchToHttp: jest.fn().mockReturnValue({
-          getRequest: () => req as Request,
-          getResponse: () => res as Response,
-        }),
-        getClass: function <T = any>(): Type<T> {
-          throw new Error('Function not implemented.');
-        },
-        getHandler: function (): Function {
-          throw new Error('Function not implemented.');
-        },
-        getArgs: function <T extends any[] = any[]>(): T {
-          throw new Error('Function not implemented.');
-        },
-        getArgByIndex: function <T = any>(index: number): T {
-          throw new Error('Function not implemented.');
-        },
-        switchToRpc: function (): RpcArgumentsHost {
-          throw new Error('Function not implemented.');
-        },
-        switchToWs: function (): WsArgumentsHost {
-          throw new Error('Function not implemented.');
-        },
-        getType: function <TContext extends string = ContextType>(): TContext {
-          throw new Error('Function not implemented.');
-        },
-      };
+    it('should activate an employee successfully', async () => {
+      const activatedEmployee = { ...mockEmployee, active: true };
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
 
-      const next = {
-        handle: jest.fn().mockReturnValue(
-          of({
-            data: {},
-            Status: 200,
-          }),
-        ),
-      };
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
 
-      interceptor.intercept(context, next).subscribe({
-        next: (data) => {
-          try {
-            expect(res).toHaveProperty('status');
-            expect(res).toHaveProperty('json');
-          } catch (err) {
-            errors.push(err);
-          }
-        },
-      });
+      expect(result).toEqual(activatedEmployee);
+      expect(result.active).toBe(true);
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
     });
+    workersService = module.get<WorkersService>(WorkersService);
+  });
+
+  it('should create a new employee', async () => {
+    const requestBody: workerValidationsSchema = {
+      businessId: '123456',
+      userId: '123456789012345678901234',
+      createdBy: 'John Doe',
+      roleId: '123456789012345678901234',
+      position: 'developer',
+      workerCode: '12345',
+    };
+
+    const createdEmployee = {
+      _id: 'someId',
+      ...requestBody,
+    };
+
+    jest
+      .spyOn(workersService, 'createEmployee')
+      .mockResolvedValueOnce(createdEmployee as unknown as Employee);
+    const result = await controller.create(requestBody);
+
+    expect(result).toEqual(createdEmployee);
+  });
+
+  it('should handle errors during employee creation', async () => {
+    const requestBody: workerValidationsSchema = {
+      businessId: '123456',
+      userId: '123456789012345678901234',
+      createdBy: 'John Doe',
+      roleId: '123456789012345678901234',
+      position: 'developer',
+      workerCode: '12345', // Mocked workerCode value
+    };
+
+    const errorMessage = 'Internal server error';
+
+    jest
+      .spyOn(workersService, 'createEmployee')
+      .mockRejectedValueOnce(
+        new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR),
+      );
+
+    try {
+      await controller.create(requestBody);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.message).toBe(errorMessage);
+      expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   });
 });

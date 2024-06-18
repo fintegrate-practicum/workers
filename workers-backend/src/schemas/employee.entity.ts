@@ -1,19 +1,24 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Mongoose, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {
+  @Prop()
+  businessId: string;
+
   @Prop({ type: Types.ObjectId, ref: 'user' })
   userId: Types.ObjectId;
 
   @Prop()
-  businessId: number;
-
+  nameEmployee: string;
   @Prop()
   code: string;
+
+  @Prop()
+  workerCode: string;
 
   @Prop()
   createdBy: string;
@@ -23,6 +28,12 @@ export class Employee extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'role' })
   roleId: Types.ObjectId;
+
+  @Prop({ default: false })
+  active: boolean;
+
+  @Prop()
+  signupTime: Date;
 
   @Prop({
     enum: [

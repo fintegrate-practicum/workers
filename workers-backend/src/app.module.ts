@@ -8,6 +8,7 @@ import { WorkersModule } from './worker/module/workers.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/message.model';
+import { UsersModule } from './user/module/users.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { MessagesModule } from './message/module/message.model';
     TasksModule,
     WorkersModule,
     MessagesModule,
-     MongooseModule.forRootAsync({
+    UsersModule,
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_CONNECTION,

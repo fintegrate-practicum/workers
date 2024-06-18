@@ -3,11 +3,18 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  IsDateString,
   IsEnum,
+  IsDate,
 } from 'class-validator';
 import { StatusEnum } from 'src/schemas/task.entity';
 export class CreateTaskDto {
+  @ApiProperty({
+    description: 'ID of the employee',
+    example: 'employee123',
+  })
+  @IsNotEmpty()
+  @IsString()
+  employeeId: string;
   @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
@@ -24,7 +31,7 @@ export class CreateTaskDto {
   taskName: string;
   @ApiProperty({
     description: 'Id to the manager',
-    example: '1234managet',
+    example: 'employee123',
   })
   @IsNotEmpty()
   @IsString()
@@ -41,11 +48,11 @@ export class CreateTaskDto {
     example: '2024-12-31',
   })
   @IsNotEmpty()
-  @IsDateString()
-  targetDate: string;
+  @IsDate()
+  targetDate: Date;
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: 'moshe',
+    example: '2024-05-10',
   })
   @IsNotEmpty()
   @IsString()
@@ -70,6 +77,6 @@ export class CreateTaskDto {
     example: '2024-12-31',
     required: false,
   })
-  @IsDateString()
-  completionDate: string;
+  @IsDate()
+  completionDate: Date;
 }
