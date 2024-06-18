@@ -1,20 +1,28 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from '../../schemas/user.entity';
+import { Model, Mongoose } from 'mongoose';
+import { Employee } from 'src/schemas/employee.entity';
+import { User, UserSchema } from 'src/schemas/user.entity';
+
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(
-    @InjectModel('User') private readonly employeeModel: Model<User>,
-  ) {}
+    @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
 
+  ) {}
+  async findOneByUserId(userId: string): Promise<User | undefined> {
+    const user = await this.userModel.findOne({ userId }).exec();
+    return user;
+  }
 
   async getUser(auth0_user_id: string): Promise<User> {
     try {
-      const user = await this.employeeModel.findOne({ auth0_user_id }).exec();
+      const user = await this.userModel.findOne({ auth0_user_id }).exec();
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
@@ -31,3 +39,6 @@ export class UserService {
   }
   
 }
+
+
+
