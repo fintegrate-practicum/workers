@@ -7,15 +7,12 @@ import { workerValidationsSchema } from '../validations/worker.validations.schem
 
 @Injectable()
 export class WorkersService {
-
   private readonly logger = new Logger(WorkersService.name);
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-    @InjectModel('User') private readonly userModel: Model<User>
-  ) { }
-
-
+    @InjectModel('User') private readonly userModel: Model<User>,
+  ) {}
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
@@ -63,13 +60,12 @@ export class WorkersService {
     return await this.employeeModel
       .findByIdAndUpdate(id, updatedEmployee, { new: true })
       .exec();
-
   }
   async updateUser(userId: string, updateUser: User): Promise<User> {
     if (updateUser.phone.length < 9)
       throw new HttpException('invalid phone', HttpStatus.BAD_REQUEST);
     if (updateUser.userName.length < 3)
-      throw new HttpException('invalid name', HttpStatus.BAD_REQUEST)
+      throw new HttpException('invalid name', HttpStatus.BAD_REQUEST);
     if (updateUser.address.city.length < 3)
       throw new HttpException(
         'invalid address city name',
@@ -126,7 +122,7 @@ export class WorkersService {
       if (!updatedEmployee) {
         throw new Error('Employee not found');
       }
-      
+
       this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {
@@ -135,6 +131,3 @@ export class WorkersService {
     }
   }
 }
-
-
-
