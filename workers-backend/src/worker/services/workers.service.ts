@@ -12,7 +12,7 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
     @InjectModel('User') private readonly userModel: Model<User>,
-  ) {}
+  ) { }
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
@@ -41,13 +41,16 @@ export class WorkersService {
   ): Promise<Employee[]> {
     const skip = (page - 1) * limit;
     const query = { businessId };
-
-    const employees = await this.employeeModel
-      .find(query)
-      .skip(skip)
-      .limit(limit)
-      .exec();
-    return employees;
+    try {
+      const employees = await this.employeeModel
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .exec();
+      return employees;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async getEmployee(id: string): Promise<Employee> {
@@ -78,14 +81,18 @@ export class WorkersService {
       );
     if (updateUser.address.num < 1)
       throw new HttpException('invalid address-num', HttpStatus.BAD_REQUEST);
-    const updatedUser = await this.userModel
-      .findOneAndUpdate({ userId }, updateUser, { new: true })
-      .exec();
+    try {
+      const updatedUser = await this.userModel
+        .findOneAndUpdate({ userId }, updateUser, { new: true })
+        .exec();
 
-    if (!updatedUser)
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      if (!updatedUser)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    return updateUser;
+      return updateUser;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async deleteEmployee(id: string): Promise<Employee> {
