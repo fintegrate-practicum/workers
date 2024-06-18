@@ -53,4 +53,5 @@ export class WorkersService {
   async deleteEmployee(id: string): Promise<Employee> {
     return await this.employeeModel.findByIdAndDelete(id).exec();
   }
+
 }
