@@ -13,7 +13,7 @@ export class Employee extends Document {
   nameEmployee: string;
 
   @Prop()
-  businessId: number;
+  businessId: string;
 
   @Prop()
   code: string;
