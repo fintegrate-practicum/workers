@@ -8,16 +8,16 @@ export class User extends Document {
   }
   @Prop()
   userId: string;
+  
   @Prop()
   userName: string;
+  
   @Prop()
   userEmail: string;
-
+  
   @Prop()
-  userName: string;
-  @Prop()
-  userEmail: string;
-
+  auth0_user_id: String;
+  
   @Prop()
   registeredAt: Date;
 

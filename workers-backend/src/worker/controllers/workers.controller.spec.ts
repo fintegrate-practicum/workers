@@ -25,6 +25,7 @@ describe('WorkersController', () => {
     } as unknown as Role,
   } as unknown as Employee;
 
+
   const mockWorkersService = {
     activateEmployee: jest.fn(),
   };
@@ -35,13 +36,11 @@ describe('WorkersController', () => {
       providers: [
         {
           provide: WorkersService,
-          useValue: {
-            createEmployee: jest.fn(),
-          },
+          useValue: mockWorkersService,
         },
       ],
     }).compile();
-
+  
     controller = module.get<WorkersController>(WorkersController);
     service = module.get<WorkersService>(WorkersService);
   });
@@ -68,25 +67,6 @@ describe('WorkersController', () => {
       );
     });
 
-    it('should activate an employee successfully', async () => {
-      const activatedEmployee = { ...mockEmployee, active: true };
-      mockWorkersService.activateEmployee.mockResolvedValueOnce(
-        activatedEmployee,
-      );
-
-      const result = await controller.activateEmployee(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-
-      expect(result).toEqual(activatedEmployee);
-      expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-    });
-    workersService = module.get<WorkersService>(WorkersService);
-  });
-
   it('should create a new employee', async () => {
     const requestBody: workerValidationsSchema = {
       businessId: '123456',
@@ -108,6 +88,24 @@ describe('WorkersController', () => {
 
     expect(result).toEqual(createdEmployee);
   });
+    it('should activate an employee successfully', async () => {
+      const activatedEmployee = { ...mockEmployee, active: true };
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
+
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+
+      expect(result).toEqual(activatedEmployee);
+      expect(result.active).toBe(true);
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+    });
+  });
+
 
   it('should handle errors during employee creation', async () => {
     const requestBody: workerValidationsSchema = {
