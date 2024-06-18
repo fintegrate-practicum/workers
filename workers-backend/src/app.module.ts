@@ -7,7 +7,7 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 import { WorkersModule } from './worker/module/workers.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-import { UsersModule } from './user/module/users.module';
+import { MessagesModule } from './message/module/message.model';
 
 @Module({
   imports: [
@@ -15,10 +15,10 @@ import { UsersModule } from './user/module/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    WorkersModule,
     TasksModule,
-    UsersModule,
-    MongooseModule.forRootAsync({
+    WorkersModule,
+    MessagesModule,
+     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_CONNECTION,

@@ -16,10 +16,11 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@nestjs/mongoose": "^10.0.6",
     "@reduxjs/toolkit": "^2.2.3",
     "@types/react-redux": "^7.1.33",
     "axios": "^1.6.8",
-    "mongoose": "^8.4.0",
+    "dotenv": "^16.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",
@@ -29,7 +30,6 @@
     "styled-components": "^6.1.9"
   },
   "devDependencies": {
-    "@eslint/js": "^9.2.0",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -42,5 +42,10 @@
     "eslint-plugin-storybook": "^0.8.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
