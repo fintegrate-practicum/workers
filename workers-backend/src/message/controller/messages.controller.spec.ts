@@ -13,7 +13,7 @@ describe('MessagesController', () => {
                 {
                     provide: MessagesService,
                     useValue: {
-                        updateMessageIsRead: jest.fn().mockResolvedValue({ message_id: '1', read_status: true }),
+                        updateMessageIsRead: jest.fn().mockResolvedValue({ _id: '1', read_status: true }),
                     },
                 },
             ],
@@ -29,7 +29,7 @@ describe('MessagesController', () => {
 
     it('should call updateMessageIsRead and return the result', async () => {
         const id = '1';
-        const result = { message_id: '1', read_status: true };
+        const result = { _id: '1', read_status: true };
 
         expect(await messagesController.updateMessageIsRead(id)).toEqual(result);
         expect(messagesService.updateMessageIsRead).toHaveBeenCalledWith(id);
