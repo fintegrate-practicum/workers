@@ -3,11 +3,7 @@ import { Document, Types } from 'mongoose';
 
 @Schema()
 export class User extends Document {
-  findOneByUserId(userId: string) {
-    throw new Error('Method not implemented.');
-  }
-  @Prop()
-  userId: string;
+  
   
   @Prop()
   userName: string;

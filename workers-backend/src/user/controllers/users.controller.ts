@@ -21,7 +21,9 @@ import {
     constructor(private readonly workersService: UserService) {}
     @Get(':id')
     getWorker(@Param('id') auth0_user_id: string) {
-      return this.workersService.getUser(auth0_user_id);
+      console.log(auth0_user_id);
+      
+      return this.workersService.findOneByUserId(auth0_user_id);
     }
   }
   
