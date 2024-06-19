@@ -4,7 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { Model, Types } from 'mongoose';
 import { EMPTY } from 'rxjs';
-import { RoleValidationSchema } from '../validations/worker.validationSchema';
+import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 
 describe('WorkersService', () => {

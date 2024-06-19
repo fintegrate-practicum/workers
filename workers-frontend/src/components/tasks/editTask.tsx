@@ -136,7 +136,7 @@ const EditTask = (props: {
                 onChange={handleEmployeeChange}
                 value={employee.join(", ")}
                 autoFocus
-                required
+                // required
                 margin="dense"
                 id="employee"
                 name="employee"

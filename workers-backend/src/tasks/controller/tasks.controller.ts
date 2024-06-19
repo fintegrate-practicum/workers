@@ -20,24 +20,21 @@ import { AuthGuard } from '@nestjs/passport';
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
-  // @Get('/manager/:businessId/:managerId')
-  // async getAllManagerTasks(
-  //   @Param('businessId') businessId: Types.ObjectId,
-  //   @Param('managerId') managerId: string,
-  // ) {
-  //   try {
-  //     const tasks = await this._taskService.getAllManagerTasks(
-  //       businessId,
-  //       managerId,
-  //     );
-  //     return tasks;
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+  @Get('/manager/:businessId/:managerId')
+  async getAllManagerTasks(
+    @Param('managerId') managerId: string,
+  ) {
+    try {
+      const tasks = await this._taskService.getAllTasks(
+        managerId,
+      );
+      return tasks;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 
   @Post('/manager/task')
-  // @UseGuards(AuthGuard('jwt'))
   async createTask(@Body() task: CreateTaskDto) {
     try {
       return this._taskService.createTask(task);
