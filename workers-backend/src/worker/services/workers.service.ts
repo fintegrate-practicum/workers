@@ -134,4 +134,5 @@ export class WorkersService {
       throw error;
     }
   }
+
 }
