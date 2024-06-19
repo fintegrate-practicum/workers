@@ -3,8 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
-import {  workerValidationsSchema } from '../validations/worker.validations.schema';
-import { RoleValidationSchema } from '../validations/workRole.validationSchema';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
@@ -15,34 +14,17 @@ export class WorkersService {
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
-      const roleValue = RoleValidationSchema[worker.role as unknown as keyof typeof RoleValidationSchema];
-
-      if (roleValue === undefined) {
-        throw new HttpException(`Invalid role: ${worker.role}`, HttpStatus.BAD_REQUEST);
-      }
-      const newEmployee = new this.employeeModel({
-        ...worker,
-        role: roleValue,
-      });
+      const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
       newEmployee.code = workerCode;
       return await newEmployee.save();
     } catch (error) {
-      if (error.name === 'ValidationError') {
-        throw new HttpException(
-          { message: 'Validation error', error: error.errors },
-          HttpStatus.BAD_REQUEST
-        );
-      } else {
-        this.logger.error('Error creating employee:', error);
-        throw new HttpException(
-          'Internal server error',
-          HttpStatus.INTERNAL_SERVER_ERROR
-        );
-      }
+      throw new HttpException(
+        'Error creating employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
   async findAll(businessId: string): Promise<Employee[]> {
     const query = { businessId };
     const employees = await this.employeeModel.find(query).exec();
@@ -153,3 +135,21 @@ export class WorkersService {
     }
   }
 }
+  // async activateEmployee(id: string): Promise<Employee> {
+  //   try {
+  //     const updatedEmployee = await this.employeeModel
+  //       .findByIdAndUpdate(id, { active: true }, { new: true })
+  //       .exec();
+
+  //     if (!updatedEmployee) {
+  //       throw new Error('Employee not found');
+  //     }
+
+  //     this.logger.log('The status will change successfully');
+  //     return updatedEmployee;
+  //   } catch (error) {
+  //     console.error('Error activating employee:', error);
+  //     throw error;
+  //   }
+//    }
+// }
