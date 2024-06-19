@@ -15,11 +15,11 @@ import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; 
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Role } from 'src/schemas/employeeRole.entity';
+
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
@@ -81,14 +81,15 @@ export class WorkersController {
         code: { type: 'string' },
         createdBy: { type: 'string' },
         updateBy: { type: 'string' },
-        // role: {
-        //   type: 'object',
-        //   properties: {
-        //     type: { type: 'string' },
-        //     active: { type: 'boolean' },
-        //     description: { type: 'string' },
-        //   },
-        // },
+        nameEmployee: { type: 'string' },
+        role: {
+          type: 'object',
+          properties: {
+            type: { type: 'string' },
+            active: { type: 'boolean' },
+            description: { type: 'string' },
+          },
+        },
       },
     },
   })

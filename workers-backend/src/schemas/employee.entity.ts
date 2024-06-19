@@ -3,6 +3,9 @@ import { Document, Types } from 'mongoose';
 import { Role } from './employeeRole.entity';
 @Schema({ timestamps: true })
 export class Employee extends Document {
+  active(active: any) {
+    throw new Error('Method not implemented.');
+  }
   @Prop()
   businessId: Types.ObjectId;
 

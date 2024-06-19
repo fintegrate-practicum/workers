@@ -5,7 +5,6 @@ import task from "../classes/task";
 import {  UpdateTaskEmployeeDTO } from "../dto/updateTaskEmployeeDto";
 import { UpdateTaskManagerDTO } from "../dto/updateTaskManagerDto";
 interface EditTaskArgs {
-  
     taskId: string;
     updateTask: UpdateTaskManagerDTO | UpdateTaskEmployeeDTO;
     employeeType: string; 
