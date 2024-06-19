@@ -1,13 +1,15 @@
 import './App.css';
-import AddTaskBtn from './components/tasks/createTaskBtn';
 import WorkersShowList from './components/workersShowList'
+import "./App.css";
+
+
 const App = () => {
-  return (
+  return (  
     <>
-      <h1>hello</h1>
-      <WorkersShowList/>
+    <h1>Hello</h1>
+    <WorkersShowList />
     </>
+
   );
 };
-
-export default App;
+export default App

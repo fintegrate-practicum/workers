@@ -1,24 +1,13 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { AppModule } from 'src/app.module';
-export enum RoleEnum {
-  'secretary',
-  'cleaner',
-  'deliveryPerson',
-  'developer',
-  'tester',
-  'maneger',
-  'owner',
-}
+import { Role } from './employeeRole.entity';
 @Schema({ timestamps: true })
 export class Employee extends Document {
   @Prop()
-  businessId: string;
+  businessId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'user' })
-  userId: Types.ObjectId;
+  @Prop()
+  nameEmployee: string;
 
   @Prop()
   code: string;
@@ -30,28 +19,7 @@ export class Employee extends Document {
   updatedBy: string;
 
   @Prop()
-  role: RoleEnum;
-  @Prop({ type: Types.ObjectId, ref: 'role' })
-  roleId: Types.ObjectId;
-
-  @Prop({ default: false })
-  active: boolean;
-
-  @Prop()
-  signupTime: Date;
-
-  @Prop({
-    enum: [
-      'secretary',
-      'cleaner',
-      'deliveryPerson',
-      'developer',
-      'tester',
-      'maneger',
-      'owner',
-    ],
-  })
-  position: string;
+  role: Role;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

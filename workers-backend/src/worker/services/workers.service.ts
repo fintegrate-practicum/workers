@@ -3,7 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
-import { RoleEnum, workerValidationsSchema } from '../validations/worker.validations.schema';
+import {  workerValidationsSchema } from '../validations/worker.validations.schema';
+import { RoleValidationSchema } from '../validations/workRole.validationSchema';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
@@ -14,7 +15,7 @@ export class WorkersService {
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
-      const roleValue = RoleEnum[worker.role as unknown as keyof typeof RoleEnum];
+      const roleValue = RoleValidationSchema[worker.role as unknown as keyof typeof RoleValidationSchema];
 
       if (roleValue === undefined) {
         throw new HttpException(`Invalid role: ${worker.role}`, HttpStatus.BAD_REQUEST);
@@ -143,7 +144,7 @@ export class WorkersService {
       if (!updatedEmployee) {
         throw new Error('Employee not found');
       }
-      
+
       this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {

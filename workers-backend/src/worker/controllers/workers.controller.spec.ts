@@ -4,23 +4,27 @@ import { WorkersService } from '../services/workers.service';
 import { WorkersController } from '../controllers/workers.controller';
 import { Employee } from '../../schemas/employee.entity';
 import { Types } from 'mongoose';
+import { Role } from '../../schemas/employeeRole.entity';
+import { DESTRUCTION } from 'dns';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { RoleValidationSchema } from '../validations/workRole.validationSchema';
 
 describe('WorkersController', () => {
   let controller: WorkersController;
   let service: WorkersService;
 
   const mockEmployee: Employee = {
-    _id: '60d9c6f3f9b5b61710f0f4f4',
-    userId: new Types.ObjectId(),
-    businessId: 123,
+    businessId: '123',
     code: 'EMP001',
     createdBy: 'admin',
     updatedBy: 'admin',
-    roleId: new Types.ObjectId(),
-    active: false,
-    signupTime: new Date(),
-    position: 'developer',
-  } as Employee;
+    role: {
+      type: 'aa',
+      activate: false,
+      description: 'developer',
+    } as unknown as Role,
+  } as unknown as Employee;
+
 
   const mockWorkersService = {
     activateEmployee: jest.fn(),
@@ -32,13 +36,11 @@ describe('WorkersController', () => {
       providers: [
         {
           provide: WorkersService,
-          useValue: {
-            createEmployee: jest.fn(),
-          },
+          useValue: mockWorkersService,
         },
       ],
     }).compile();
-
+  
     controller = module.get<WorkersController>(WorkersController);
     service = module.get<WorkersService>(WorkersService);
   });
@@ -65,29 +67,9 @@ describe('WorkersController', () => {
       );
     });
 
-    it('should activate an employee successfully', async () => {
-      const activatedEmployee = { ...mockEmployee, active: true };
-      mockWorkersService.activateEmployee.mockResolvedValueOnce(
-        activatedEmployee,
-      );
-
-      const result = await controller.activateEmployee(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-
-      expect(result).toEqual(activatedEmployee);
-      expect(result.active).toBe(true);
-      expect(service.activateEmployee).toHaveBeenCalledWith(
-        '60d9c6f3f9b5b61710f0f4f4',
-      );
-    });
-    workersService = module.get<WorkersService>(WorkersService);
-  });
-
   it('should create a new employee', async () => {
     const requestBody: workerValidationsSchema = {
       businessId: '123456',
-      userId: '123456789012345678901234',
       createdBy: 'John Doe',
       roleId: '123456789012345678901234',
       position: 'developer',
@@ -106,15 +88,31 @@ describe('WorkersController', () => {
 
     expect(result).toEqual(createdEmployee);
   });
+    it('should activate an employee successfully', async () => {
+      const activatedEmployee = { ...mockEmployee, active: true };
+      mockWorkersService.activateEmployee.mockResolvedValueOnce(
+        activatedEmployee,
+      );
+
+      const result = await controller.activateEmployee(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+
+      expect(result).toEqual(activatedEmployee);
+      expect(result.active).toBe(true);
+      expect(service.activateEmployee).toHaveBeenCalledWith(
+        '60d9c6f3f9b5b61710f0f4f4',
+      );
+    });
+  });
+
 
   it('should handle errors during employee creation', async () => {
     const requestBody: workerValidationsSchema = {
-      businessId: '123456',
-      userId: '123456789012345678901234',
-      createdBy: 'John Doe',
-      roleId: '123456789012345678901234',
-      position: 'developer',
-      workerCode: '12345', // Mocked workerCode value
+      businessId: '',
+      workerCode: '',
+      createdBy: '',
+      role: new RoleValidationSchema(),
     };
 
     const errorMessage = 'Internal server error';
