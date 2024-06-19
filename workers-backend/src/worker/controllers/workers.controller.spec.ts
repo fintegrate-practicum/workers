@@ -71,9 +71,9 @@ describe('WorkersController', () => {
     const requestBody: workerValidationsSchema = {
       businessId: '123456',
       createdBy: 'John Doe',
-      roleId: '123456789012345678901234',
-      position: 'developer',
-      workerCode: '12345',
+      code: 'bb',
+      updateBy: 'aa',
+      role: new RoleValidationSchema
     };
 
     const createdEmployee = {
@@ -110,9 +110,10 @@ describe('WorkersController', () => {
   it('should handle errors during employee creation', async () => {
     const requestBody: workerValidationsSchema = {
       businessId: '',
-      workerCode: '',
+      code: '',
       createdBy: '',
       role: new RoleValidationSchema(),
+      updateBy: ''
     };
 
     const errorMessage = 'Internal server error';
