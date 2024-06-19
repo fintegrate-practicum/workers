@@ -4,7 +4,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import CallIcon from '@mui/icons-material/Call';
 import AddIcon from '@mui/icons-material/Add';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import User from '../classes/user';
+import User from  '../classes/user';
 
 export default function SidebarWorkerDetails(props: User) {
     const [state, setState] = React.useState(false);
