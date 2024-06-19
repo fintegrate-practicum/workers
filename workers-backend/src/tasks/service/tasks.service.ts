@@ -24,7 +24,9 @@ export class TasksService {
   ) {}
 
   public readonly logger = new Logger(TasksService.name);
-
+  async getAllTasks(managerId: string): Promise<Task[]> {
+    return await this.taskModel.find({ managerId }).exec();
+  }
   async createTask(task: CreateTaskDto) {
     const employees = await Promise.all(
       task.employee.map((id) =>

@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 import { Role } from '../../schemas/employeeRole.entity';
 import { DESTRUCTION } from 'dns';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-import { RoleValidationSchema } from '../validations/worker.validationSchema';
+import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
 
 describe('WorkersController', () => {
   let controller: WorkersController;
