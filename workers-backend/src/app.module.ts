@@ -2,15 +2,17 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
-// import { AdminModule } from './admin/module/admin.module';
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
 import { env } from 'process';
-// import { AuthzModule } from './auth/authz.module';
 import { AuthzModule } from './authz/authz.module';
+
+import { TasksModule } from './tasks/module/tasks.module';
+import { TransformDataStructure } from './transformDataStructure/convertData';
+import { MessagesModule } from './message/module/messages.module';
+import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { AuthzModule } from './authz/authz.module';
       isGlobal: true,
     }),
     WorkersModule,
-    // AdminModule,
+    UserModule,
+    TasksModule,
+    MessagesModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule,WorkersModule,AuthzModule ],
       useFactory: async (config: ConfigService) => ({

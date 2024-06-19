@@ -4,26 +4,34 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { Model, Types } from 'mongoose';
 import { EMPTY } from 'rxjs';
+import { RoleValidationSchema } from '../validations/worker.validationSchema';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
 
 describe('WorkersService', () => {
   let workersService: WorkersService;
   let model: Model<Employee>;
   const mockEmployee: Employee[] = [
     new Employee({
-      userId: '1',
-      createdBy: 'John Doe',
-      code: '123',
-      updatedBy: 'Admin',
-      roleId: '456',
-      position: 'Developer',
+      businessId: '123',
+      code: 'EMP001',
+      createdBy: 'admin',
+      updatedBy: 'admin',
+      role: {
+        type: 'aa',
+        activate: false,
+        description: 'developer',
+      },
     }),
     new Employee({
-      userId: '2',
-      createdBy: 'Alice Smith',
-      code: '456',
-      updatedBy: 'Manager',
-      roleId: '789',
-      position: 'Designer',
+      businessId: '123',
+      code: 'EMP001',
+      createdBy: 'admin',
+      updatedBy: 'admin',
+      role: {
+        type: 'aa',
+        activate: false,
+        description: 'developer',
+      },
     }),
   ];
 
@@ -53,14 +61,13 @@ describe('WorkersService', () => {
       jest
         .spyOn(model, 'create')
         .mockResolvedValueOnce([mockEmployee[0]] as any);
-      const newEmployee = new Employee({
-        userId: '1',
+      const newEmployee : workerValidationsSchema = {
+        businessId: '123456',
         createdBy: 'John Doe',
-        code: '123',
-        updatedBy: 'Admin',
-        roleId: '456',
-        position: 'Developer',
-      });
+        code: 'bb',
+        updateBy: 'aa',
+        role: new RoleValidationSchema
+      };
       const result = await workersService.createEmployee(newEmployee);
       expect(result).toEqual(mockEmployee[0]);
     });

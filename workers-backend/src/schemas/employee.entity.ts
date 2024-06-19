@@ -1,16 +1,16 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Mongoose, Types } from 'mongoose';
-import { AppModule } from 'src/app.module';
-
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { Role } from './employeeRole.entity';
 @Schema({ timestamps: true })
 export class Employee extends Document {
-  @Prop({ type: Types.ObjectId, ref: 'user' })
-  userId: Types.ObjectId;
+  active(active: any) {
+    throw new Error('Method not implemented.');
+  }
+  @Prop()
+  businessId: Types.ObjectId;
 
   @Prop()
-  businessId: number;
+  nameEmployee: string;
 
   @Prop()
   code: string;
@@ -21,21 +21,8 @@ export class Employee extends Document {
   @Prop()
   updatedBy: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'role' })
-  roleId: Types.ObjectId;
-
-  @Prop({
-    enum: [
-      'secretary',
-      'cleaner',
-      'deliveryPerson',
-      'developer',
-      'tester',
-      'maneger',
-      'owner',
-    ],
-  })
-  position: string;
+  @Prop()
+  role: Role;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

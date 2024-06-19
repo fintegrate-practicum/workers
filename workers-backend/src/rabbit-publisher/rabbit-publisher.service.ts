@@ -73,7 +73,7 @@ export class RabbitPublisherService {
   async publishMessageToCommunication(message: any): Promise<void> {
     try {
       const exchangeName = message.pattern;
-      const messageData = JSON.stringify(message.data);
+      const messageData = JSON.stringify(message);
 
       this.channel.publish(
         exchangeName,
