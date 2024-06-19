@@ -1,12 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import employeeSlice from "./employeeSlice";
-import apiSlice from "./reducers";
+import taskSlice from "./taskSlice";
+import messageSlice from "./messageSlice";
 
 const store = configureStore({
-    reducer:{
+
+    reducer: {
         employeeSlice,
-        apiSlice
+        taskSlice,
+        messageSlice
     }
+
 })
 
 export type RootState = ReturnType<typeof store.getState>

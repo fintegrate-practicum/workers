@@ -3,6 +3,7 @@ class User {
     userName!:string;
     userEmail!: string;
     auth0_user_id!:string;
+
     registeredAt!: Date;
     lastLogin!: Date;
     mobile!: string;    
