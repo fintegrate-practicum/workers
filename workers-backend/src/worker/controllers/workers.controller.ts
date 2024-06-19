@@ -28,7 +28,7 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
@@ -59,14 +59,14 @@ export class WorkersController {
   }
 
   @Get('data')
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -99,29 +99,25 @@ export class WorkersController {
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
-          return new HttpException(
-            { message: 'Validation error', error: errors },
-            HttpStatus.BAD_REQUEST
-          );
+          Logger.log('error validation! ' + errors);
+          return new HttpException(errors, HttpStatus.BAD_REQUEST);
         },
-      })
+      }),
     )
-    requestBody: workerValidationsSchema
+    requestBody: workerValidationsSchema,
   ): Promise<Employee> {
     try {
       const result = await this.workersService.createEmployee(requestBody);
-      this.logger.log('Employee created successfully');
+      this.logger.log('good');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-      this.logger.error('Error creating employee:', error);
       throw new HttpException(
         'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
-  
 }
