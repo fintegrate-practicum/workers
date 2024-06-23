@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
-import { passportJwtSecret } from "jwks-rsa";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { passportJwtSecret } from 'jwks-rsa';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,19 +18,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       //   audience: process.env.AUTH0_AUDIENCE,
       issuer: `${process.env.AUTH0_ISSUER_BASE_URL}`,
-      algorithms: ["RS256"],
+      algorithms: ['RS256'],
     };
     super(config);
   }
 
   async validate(payload: any) {
     const { aud, sub } = payload;
-    if (typeof aud !== "string" && aud.length > 0) {
+    if (typeof aud !== 'string' && aud.length > 0) {
       if (!aud.includes(process.env.AUTH0_AUDIENCE)) {
-        throw new HttpException("Invalid audience.", HttpStatus.UNAUTHORIZED);
+        throw new HttpException('Invalid audience.', HttpStatus.UNAUTHORIZED);
       }
     } else if (aud !== process.env.AUTH0_AUDIENCE) {
-      throw new HttpException("Invalid audience.", HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid audience.', HttpStatus.UNAUTHORIZED);
     }
     return { id: sub };
   }

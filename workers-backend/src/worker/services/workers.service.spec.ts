@@ -61,12 +61,12 @@ describe('WorkersService', () => {
       jest
         .spyOn(model, 'create')
         .mockResolvedValueOnce([mockEmployee[0]] as any);
-      const newEmployee : workerValidationsSchema = {
+      const newEmployee: workerValidationsSchema = {
         businessId: '123456',
         createdBy: 'John Doe',
         code: 'bb',
         updateBy: 'aa',
-        role: new RoleValidationSchema
+        role: new RoleValidationSchema(),
       };
       const result = await workersService.createEmployee(newEmployee);
       expect(result).toEqual(mockEmployee[0]);
