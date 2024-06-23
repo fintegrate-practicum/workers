@@ -14,13 +14,12 @@ export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-
   ) {}
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
     const user = await this.userModel.findById(userId).exec();
     console.log(user);
-    
+
     return user;
   }
 
@@ -41,9 +40,8 @@ export class UserService {
       );
     }
   }
-  
-  async createUser(user: CreateUserDto): Promise<CreateUserDto> {
 
+  async createUser(user: CreateUserDto): Promise<CreateUserDto> {
     const newUser = new this.userModel(user);
     try {
       return await newUser.save();
@@ -51,8 +49,4 @@ export class UserService {
       throw new BadRequestException(error.message);
     }
   }
-
 }
-
-
-

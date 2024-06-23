@@ -21,13 +21,9 @@ export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
   @Get('/manager/:businessId/:managerId')
-  async getAllManagerTasks(
-    @Param('managerId') managerId: string,
-  ) {
+  async getAllManagerTasks(@Param('managerId') managerId: string) {
     try {
-      const tasks = await this._taskService.getAllTasks(
-        managerId,
-      );
+      const tasks = await this._taskService.getAllTasks(managerId);
       return tasks;
     } catch (error) {
       throw new BadRequestException(error.message);

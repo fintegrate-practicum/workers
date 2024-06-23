@@ -4,9 +4,8 @@ import {
   Param,
   UseInterceptors,
   Query,
-  Body,  Delete,
- 
- 
+  Body,
+  Delete,
   Post,
   ValidationPipe,
   HttpException,
@@ -19,7 +18,7 @@ import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
-import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger'; 
+import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
 
@@ -98,7 +97,6 @@ export class WorkersController {
       },
     },
   })
-
   @Post('')
   @UseGuards(AuthGuard('jwt'))
   async create(
@@ -126,5 +124,4 @@ export class WorkersController {
       );
     }
   }
-  
 }

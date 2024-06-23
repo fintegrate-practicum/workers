@@ -16,8 +16,8 @@ export class workerValidationsSchema {
 
   @IsString()
   @IsNotEmpty()
-  nameEmployee:string;
-  
+  nameEmployee: string;
+
   @IsString()
   @IsNotEmpty()
   updateBy: string;

@@ -7,11 +7,11 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(
     private readonly rabbitPublisherService: RabbitPublisherService,
-    private readonly appService: AppService
-  ) {  }
+    private readonly appService: AppService,
+  ) {}
 
   @Get('hello')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   getHello(@Request() req): string {
     console.log(req);
 
