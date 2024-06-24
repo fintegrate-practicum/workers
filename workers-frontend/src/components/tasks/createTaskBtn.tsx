@@ -14,8 +14,8 @@ import { TaskStatus } from "../../classes/enum/taskStatus.enum";
 
 export default function AddTaskBtn() {
   const [open, setOpen] = React.useState(false);
-  const businessId =  new Types.ObjectId(import.meta.env.VITE_BUSINESSID);
-  const managerId = import.meta.env.VITE_MANAGERID ? import.meta.env.VITE_MANAGERID : 'companyName';
+  const businessId = new Types.ObjectId(import.meta.env.VITE_BUSINESSID);
+  const managerId =   import.meta.env.VITE_MANAGERID?import.meta.env.VITE_MANAGERID  : 'companyName';
   const [taskName, setTaskName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [targetDate, setTargetDate] = React.useState(new Date(0));
@@ -38,6 +38,7 @@ export default function AddTaskBtn() {
       urgency,
       status: TaskStatus.ToDo,
       completionDate: new Date(0),
+      directLink: "http://localhost:3001/api#/Workers/WorkersController_create"
     };
     dispatch(createTask(task));
     setOpen(false);
@@ -59,7 +60,9 @@ export default function AddTaskBtn() {
         console.warn(`Invalid ObjectId: ${trimmed}`);
         return null;
       })
-      .filter(item => !!item) as Types.ObjectId[];
+          .filter(item => item!==null) as Types.ObjectId[];
+
+      setEmployee(employeeArray);
   };
   return (
     <React.Fragment>
@@ -126,7 +129,7 @@ export default function AddTaskBtn() {
             onChange={handleEmployeeChange}
             value={employee.join(", ")}
             autoFocus
-            required
+            // required
             margin="dense"
             id="employee"
             name="employee"

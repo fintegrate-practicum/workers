@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import {  TaskStatus } from './enum/taskStatus.enum';
+import { TaskStatus } from './enum/taskStatus.enum';
 export default class Task {
     businessId!: Types.ObjectId;
     managerId!: string;
@@ -10,6 +10,8 @@ export default class Task {
     urgency!: number;
     status!: TaskStatus;
     completionDate!: Date;
+    directLink: string | undefined;
+
 
     constructor() { }
 }

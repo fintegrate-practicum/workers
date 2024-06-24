@@ -5,20 +5,11 @@ import { Message } from '../../schemas/message.entity';
 
 @Injectable()
 export class MessagesService {
-    constructor(
-        @InjectModel(Message.name) private readonly messageModel: Model<Message>,
-    ) { }
+  constructor(
+    @InjectModel(Message.name) private readonly messageModel: Model<Message>,
+  ) {}
 
-    async createMessage(message: Message): Promise<Message> {
-        try {
-            const newMessage = new this.messageModel(message);
-            return await newMessage.save();
-        } catch (error) {
-            throw new InternalServerErrorException('Failed to create message');
-        }
-    }
-
-    async addMessage(message: Message): Promise<Message> {
+  async addMessage(message: Message): Promise<Message> {
         try {
           if (message) {
             const newMessage = new this.messageModel(message);
@@ -31,12 +22,17 @@ export class MessagesService {
         }
       }
       
-    async getMessagesByEmployeeId(id: string): Promise<Message[]> {
-        try {
-            const objectId = new mongoose.Types.ObjectId(id);
-            return await this.messageModel.find({ receiver_id: objectId }).sort({ date_time: -1 }).exec();
-        } catch (error) {
-            throw new InternalServerErrorException('Failed to get messages by employee ID');
-        }
-    }
+  async getMessagesByEmployeeId(id: string): Promise<Message[]> {
+    try {
+      const objectId = new mongoose.Types.ObjectId(id);
+      return await this.messageModel
+        .find({ receiver_id: objectId })
+        .sort({ date_time: -1 })
+        .exec();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to get messages by employee ID',
+      );
+     }
+  }
 }

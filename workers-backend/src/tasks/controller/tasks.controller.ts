@@ -8,26 +8,22 @@ import {
   Delete,
   Param,
   Headers,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { TasksService } from '../service/tasks.service';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { Types } from 'mongoose';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
 
   @Get('/manager/:businessId/:managerId')
-  async getAllManagerTasks(
-    @Param('businessId') businessId: Types.ObjectId,
-    @Param('managerId') managerId: string,
-  ) {
+  async getAllManagerTasks(@Param('managerId') managerId: string) {
     try {
-      const tasks = await this._taskService.getAllManagerTasks(
-        businessId,
-        managerId,
-      );
+      const tasks = await this._taskService.getAllTasks(managerId);
       return tasks;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -35,7 +31,6 @@ export class TasksController {
   }
 
   @Post('/manager/task')
-  @UseGuards(AuthGuard('jwt'))
   async createTask(@Body() task: CreateTaskDto) {
     try {
       return this._taskService.createTask(task);

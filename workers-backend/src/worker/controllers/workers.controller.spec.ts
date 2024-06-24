@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 import { Role } from '../../schemas/employeeRole.entity';
 import { DESTRUCTION } from 'dns';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-import { RoleValidationSchema } from '../validations/worker.validationSchema';
+import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
 
 describe('WorkersController', () => {
   let controller: WorkersController;
@@ -25,7 +25,6 @@ describe('WorkersController', () => {
     } as unknown as Role,
   } as unknown as Employee;
 
-
   const mockWorkersService = {
     activateEmployee: jest.fn(),
   };
@@ -40,7 +39,7 @@ describe('WorkersController', () => {
         },
       ],
     }).compile();
-  
+
     controller = module.get<WorkersController>(WorkersController);
     service = module.get<WorkersService>(WorkersService);
   });
@@ -67,27 +66,27 @@ describe('WorkersController', () => {
       );
     });
 
-  it('should create a new employee', async () => {
-    const requestBody: workerValidationsSchema = {
-      businessId: '123456',
-      createdBy: 'John Doe',
-      roleId: '123456789012345678901234',
-      position: 'developer',
-      workerCode: '12345',
-    };
+    it('should create a new employee', async () => {
+      const requestBody: workerValidationsSchema = {
+        businessId: '123456',
+        createdBy: 'John Doe',
+        code: 'bb',
+        updateBy: 'aa',
+        role: new RoleValidationSchema(),
+      };
 
-    const createdEmployee = {
-      _id: 'someId',
-      ...requestBody,
-    };
+      const createdEmployee = {
+        _id: 'someId',
+        ...requestBody,
+      };
 
-    jest
-      .spyOn(workersService, 'createEmployee')
-      .mockResolvedValueOnce(createdEmployee as unknown as Employee);
-    const result = await controller.create(requestBody);
+      jest
+        .spyOn(workersService, 'createEmployee')
+        .mockResolvedValueOnce(createdEmployee as unknown as Employee);
+      const result = await controller.create(requestBody);
 
-    expect(result).toEqual(createdEmployee);
-  });
+      expect(result).toEqual(createdEmployee);
+    });
     it('should activate an employee successfully', async () => {
       const activatedEmployee = { ...mockEmployee, active: true };
       mockWorkersService.activateEmployee.mockResolvedValueOnce(
@@ -106,13 +105,13 @@ describe('WorkersController', () => {
     });
   });
 
-
   it('should handle errors during employee creation', async () => {
     const requestBody: workerValidationsSchema = {
       businessId: '',
-      workerCode: '',
+      code: '',
       createdBy: '',
       role: new RoleValidationSchema(),
+      updateBy: '',
     };
 
     const errorMessage = 'Internal server error';

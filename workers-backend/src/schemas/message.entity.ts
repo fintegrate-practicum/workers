@@ -28,8 +28,6 @@ export class Message extends Document {
   @Prop()
   status: string;
 }
-
+ 
 export const MessageSchema = SchemaFactory.createForClass(Message);
-
-
  
