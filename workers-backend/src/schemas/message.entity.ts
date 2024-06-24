@@ -1,10 +1,14 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Mongoose, Types } from 'mongoose';
+import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Message extends Document {
+
   @Prop()
-  message_id: number;
+  business_id: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Employee' })
   sender_id: Types.ObjectId;
@@ -24,4 +28,6 @@ export class Message extends Document {
   @Prop()
   status: string;
 }
+ 
 export const MessageSchema = SchemaFactory.createForClass(Message);
+ 

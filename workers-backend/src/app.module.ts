@@ -20,9 +20,10 @@ import { UserModule } from './user/module/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    WorkersModule,
+
     UserModule,
     TasksModule,
+    WorkersModule,
     MessagesModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule, WorkersModule, AuthzModule],
