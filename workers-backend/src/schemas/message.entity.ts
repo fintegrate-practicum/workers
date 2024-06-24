@@ -6,8 +6,6 @@ import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Message extends Document {
-  @Prop()
-  message_id: number;
 
   @Prop()
   business_id: string;
