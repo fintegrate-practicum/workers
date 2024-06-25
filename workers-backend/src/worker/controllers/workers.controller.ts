@@ -5,30 +5,39 @@ import {
   UseInterceptors,
   Query,
   Body,
+  Delete,
   Post,
   ValidationPipe,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+
+import { AuthGuard } from '@nestjs/passport';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
+import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
+
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
   constructor(private readonly workersService: WorkersService) {}
-
+  @ApiBearerAuth()
+  @ApiTags('workers')
+  @UseInterceptors(TransformDataStructure)
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
 
+  @Get('employee/:id')
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
@@ -54,12 +63,14 @@ export class WorkersController {
   }
 
   @Get('data')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
+  @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -71,15 +82,23 @@ export class WorkersController {
       type: 'object',
       properties: {
         businessId: { type: 'string' },
-        userId: { type: 'string' },
-        workerCode: { type: 'string' },
+        code: { type: 'string' },
         createdBy: { type: 'string' },
-        roleId: { type: 'string' },
-        position: { type: 'string' },
+        updateBy: { type: 'string' },
+        nameEmployee: { type: 'string' },
+        role: {
+          type: 'object',
+          properties: {
+            type: { type: 'string' },
+            active: { type: 'boolean' },
+            description: { type: 'string' },
+          },
+        },
       },
     },
   })
   @Post('')
+  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
       new ValidationPipe({

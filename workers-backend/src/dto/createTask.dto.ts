@@ -5,23 +5,18 @@ import {
   IsString,
   IsEnum,
   IsDate,
+  IsArray,
 } from 'class-validator';
-import { StatusEnum } from 'src/schemas/task.entity';
+import { Types } from 'mongoose';
+import { TaskStatus } from '../enum/taskStatus.enum';
 export class CreateTaskDto {
-  @ApiProperty({
-    description: 'ID of the employee',
-    example: 'employee123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  employeeId: string;
   @ApiProperty({
     description: 'ID of the company',
     example: 'company123',
   })
   @IsNotEmpty()
   @IsString()
-  businessId: string;
+  businessId: Types.ObjectId;
   @ApiProperty({
     description: 'Name of the task',
     example: 'Develop new feature',
@@ -52,11 +47,12 @@ export class CreateTaskDto {
   targetDate: Date;
   @ApiProperty({
     description: 'ID of the employee associated with the task',
-    example: '2024-05-10',
+    example: ['664cba7ee786ab5c121aa40b', '123765434567hgfdfghjkhgfgh'],
   })
   @IsNotEmpty()
-  @IsString()
-  employee: string;
+  @IsArray()
+  employee: Types.ObjectId[];
+
   @ApiProperty({
     description: 'The urgency level of the task',
     example: 1,
@@ -66,12 +62,12 @@ export class CreateTaskDto {
   urgency: number;
   @ApiProperty({
     description: 'The status of the task',
-    enum: StatusEnum,
-    example: StatusEnum.ToDo,
+    enum: TaskStatus,
+    example: TaskStatus.ToDo,
   })
   @IsNotEmpty()
-  @IsEnum(StatusEnum)
-  status: StatusEnum;
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
   @ApiProperty({
     description: 'Completion date of the task',
     example: '2024-12-31',
@@ -79,4 +75,11 @@ export class CreateTaskDto {
   })
   @IsDate()
   completionDate: Date;
+  @ApiProperty({
+    description: 'Link to task',
+    example: 'http://localhost:3001/api#/Workers/WorkersController_create',
+  })
+  @IsNotEmpty()
+  @IsString()
+  directLink: string;
 }
