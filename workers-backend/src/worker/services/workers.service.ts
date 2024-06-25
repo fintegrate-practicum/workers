@@ -12,7 +12,7 @@ export class WorkersService {
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
     @InjectModel('User') private readonly userModel: Model<User>,
-  ) { }
+  ) {}
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     try {
@@ -64,6 +64,7 @@ export class WorkersService {
       .findByIdAndUpdate(id, updatedEmployee, { new: true })
       .exec();
   }
+
   async updateUser(userId: string, updateUser: User): Promise<User> {
     if (updateUser.phone.length < 9)
       throw new HttpException('invalid phone', HttpStatus.BAD_REQUEST);

@@ -14,12 +14,10 @@ import {
 } from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
-import { TransformDataStructure } from '../../transformDataStructure/convertData';
-import { Request, Response, response } from 'express';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
-import { AuthGuard } from "@nestjs/passport";
+import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.entity';
 @ApiTags('Workers')
 @Controller('workers')
@@ -29,14 +27,14 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) { }
 
   @Get()
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
 
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
     try {
       const employee = await this.workersService.activateEmployee(id);
@@ -55,20 +53,20 @@ export class WorkersController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
 
   @Get('data')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -88,9 +86,8 @@ export class WorkersController {
       },
     },
   })
-
   @Post('')
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
       new ValidationPipe({
@@ -119,16 +116,20 @@ export class WorkersController {
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() data: User) {
     try {
-      const Response = this.workersService.updateUser(
-        id, data,
-      );
+      const response = this.workersService.updateUser(id, data);
       if (!response) {
-        throw new HttpException("user not found",
-          HttpStatus.BAD_REQUEST);
-      } return response;
+        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      }
+      return response;
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      if (error.status === HttpStatus.BAD_REQUEST) {
+        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      } else if (error.status === HttpStatus.NOT_FOUND) {
+        throw new HttpException('resource not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw error;
+      }
     }
     this.workersService.updateUser(id, data);
-
   }
+}
