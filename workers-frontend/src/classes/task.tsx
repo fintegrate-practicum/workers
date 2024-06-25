@@ -1,20 +1,18 @@
-export enum StatusEnum {
-    ToDo = 1,
-    Open = 2,
-    InProgress = 3,
-    Completed = 4
-}
+import { Types } from 'mongoose';
+import { TaskStatus } from './enum/taskStatus.enum';
 export default class Task {
-
-    businessId!: string;
+    businessId!: Types.ObjectId;
     managerId!: string;
     taskName!: string;
     description!: string;
-    targetDate!: string;
-    employee!: string;
+    targetDate!: Date;
+    employee!: Types.ObjectId[];
     urgency!: number;
-    status!: StatusEnum;
-    completionDate!: string;
+    status!: TaskStatus;
+    completionDate!: Date;
+    directLink: string | undefined;
+
 
     constructor() { }
 }
+
