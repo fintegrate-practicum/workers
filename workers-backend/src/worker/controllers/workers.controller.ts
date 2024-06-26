@@ -5,29 +5,30 @@ import {
   UseInterceptors,
   Query,
   Body,
-  Delete,
   Post,
   ValidationPipe,
   HttpException,
   HttpStatus,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 
-import { AuthGuard } from '@nestjs/passport';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { Logger } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/schemas/user.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
-import { workerValidationsSchema } from '../validations/worker.validations.schema';
-import { Logger } from '@nestjs/common';
 
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
-  constructor(private readonly workersService: WorkersService) {}
+  constructor(private readonly workersService: WorkersService) { }
   @ApiBearerAuth()
   @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
@@ -123,5 +124,24 @@ export class WorkersController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() data: User) {
+    try {
+      const response = this.workersService.updateUser(id, data);
+      if (!response) {
+        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      }
+      return response;
+    } catch (error) {
+      if (error.status === HttpStatus.BAD_REQUEST) {
+        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+      } else if (error.status === HttpStatus.NOT_FOUND) {
+        throw new HttpException('resource not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw error;
+      }
+    }
+    this.workersService.updateUser(id, data);
   }
 }

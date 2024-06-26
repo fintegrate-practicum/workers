@@ -9,10 +9,10 @@ describe('MessagesService', () => {
   let model: Model<Message>;
 
   const mockMessage: Message[] = [
-   new Message ({
+    new Message({
       _id: new Types.ObjectId(),
       message_id: 3,
-      business_id: "12#@%2",
+      business_id: '12#@%2',
       sender_id: new Types.ObjectId(),
       receiver_id: new Types.ObjectId(),
       message_content: 'Test message 3',
@@ -20,10 +20,10 @@ describe('MessagesService', () => {
       read_status: false,
       status: 'new',
     }),
-   new Message ({
+    new Message({
       _id: new Types.ObjectId(),
       message_id: 4,
-      business_id: "12#@%2",
+      business_id: '12#@%2',
       sender_id: new Types.ObjectId(),
       receiver_id: new Types.ObjectId(),
       message_content: 'Test message 4',
@@ -54,11 +54,11 @@ describe('MessagesService', () => {
   describe('addMessage', () => {
     it('should create and return a message', async () => {
       jest
-      .spyOn(model, 'create')
-      .mockResolvedValueOnce([mockMessage[0]] as any);
+        .spyOn(model, 'create')
+        .mockResolvedValueOnce([mockMessage[0]] as any);
       const newMessage = new Message({
         message_id: 3,
-        business_id: "12#@%2",
+        business_id: '12#@%2',
         sender_id: new Types.ObjectId(),
         receiver_id: new Types.ObjectId(),
         message_content: 'Test message 3',

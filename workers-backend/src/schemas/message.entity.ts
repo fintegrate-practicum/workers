@@ -6,7 +6,6 @@ import { AppModule } from 'src/app.module';
 
 @Schema({ timestamps: true })
 export class Message extends Document {
-
   @Prop()
   business_id: string;
 
@@ -28,6 +27,5 @@ export class Message extends Document {
   @Prop()
   status: string;
 }
- 
+
 export const MessageSchema = SchemaFactory.createForClass(Message);
- 
