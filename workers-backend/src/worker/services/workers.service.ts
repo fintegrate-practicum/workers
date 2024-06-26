@@ -72,13 +72,14 @@ export class WorkersService {
       );
     }
   }
-  async updateEmployee(
-    id: string,
+
+  async updateEmployeeByUserId(
+    userId: string,
     updatedEmployee: Employee,
   ): Promise<Employee> {
     try {
       const employee = await this.employeeModel
-        .findByIdAndUpdate(id, updatedEmployee, { new: true })
+        .findOneAndUpdate({ userId }, updatedEmployee, { new: true })
         .exec();
       if (!employee) {
         throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
@@ -92,37 +93,6 @@ export class WorkersService {
         'Error updating employee',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-  }
-
-  async updateUser(userId: string, updateUser: User): Promise<User> {
-    if (updateUser.phone.length < 9)
-      throw new HttpException('invalid phone', HttpStatus.BAD_REQUEST);
-    if (updateUser.userName.length < 3)
-      throw new HttpException('invalid name', HttpStatus.BAD_REQUEST);
-    if (updateUser.address.city.length < 3)
-      throw new HttpException(
-        'invalid address city name',
-        HttpStatus.BAD_REQUEST,
-      );
-    if (updateUser.address.street.length < 3)
-      throw new HttpException(
-        'invalid address-street-name',
-        HttpStatus.BAD_REQUEST,
-      );
-    if (updateUser.address.num < 1)
-      throw new HttpException('invalid address-num', HttpStatus.BAD_REQUEST);
-    try {
-      const updatedUser = await this.userModel
-        .findOneAndUpdate({ userId }, updateUser, { new: true })
-        .exec();
-
-      if (!updatedUser)
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
-      return updateUser;
-    } catch (error) {
-      console.error(error);
     }
   }
 

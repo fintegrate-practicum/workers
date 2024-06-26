@@ -18,7 +18,6 @@ import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/schemas/user.entity';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
@@ -28,7 +27,7 @@ import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
-  constructor(private readonly workersService: WorkersService) { }
+  constructor(private readonly workersService: WorkersService) {}
   @ApiBearerAuth()
   @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
@@ -82,6 +81,7 @@ export class WorkersController {
     schema: {
       type: 'object',
       properties: {
+        userId: { type: 'string' },
         businessId: { type: 'string' },
         code: { type: 'string' },
         createdBy: { type: 'string' },
@@ -99,7 +99,7 @@ export class WorkersController {
     },
   })
   @Post('')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
       new ValidationPipe({
@@ -125,23 +125,23 @@ export class WorkersController {
       );
     }
   }
+
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() data: User) {
+  updateUser(@Param('id') id: string, @Body() user: Employee) {
     try {
-      const response = this.workersService.updateUser(id, data);
+      const response = this.workersService.updateEmployeeByUserId(id, user);
       if (!response) {
-        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+        throw new HttpException('employee not found', HttpStatus.BAD_REQUEST);
       }
       return response;
     } catch (error) {
       if (error.status === HttpStatus.BAD_REQUEST) {
-        throw new HttpException('user not found', HttpStatus.BAD_REQUEST);
+        throw new HttpException('employee not found', HttpStatus.BAD_REQUEST);
       } else if (error.status === HttpStatus.NOT_FOUND) {
-        throw new HttpException('resource not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
       } else {
         throw error;
       }
     }
-    this.workersService.updateUser(id, data);
   }
 }

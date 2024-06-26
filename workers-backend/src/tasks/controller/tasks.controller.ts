@@ -16,6 +16,8 @@ import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { Types } from 'mongoose';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('User')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly _taskService: TasksService) {}
