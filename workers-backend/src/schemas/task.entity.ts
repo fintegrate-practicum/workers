@@ -1,32 +1,29 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId, Types } from 'mongoose';
-export enum StatusEnum {
-  ToDo = 1,
-  InProgress = 2,
-  Completed = 3,
-}
+import { Document, Types } from 'mongoose';
+import { TaskStatus } from 'src/enum/taskStatus.enum';
+
 export type TaskDoc = Task & Document;
 @Schema()
 export class Task {
-  @Prop({ type: Types.ObjectId, required: true })
-  employeeId: ObjectId;
   @Prop({ required: true })
-  businessId: string;
-  @Prop({ required: true })
-  taskName: string;
+  businessId: Types.ObjectId;
   @Prop({ required: true })
   managerId: string;
+  @Prop({ required: true })
+  taskName: string;
   @Prop({ required: true })
   description: string;
   @Prop({ required: true })
   targetDate: Date;
   @Prop({ required: true })
-  employee: string;
+  employee: Types.ObjectId[];
   @Prop({ required: true })
   urgency: number;
-  @Prop({ required: true, enum: StatusEnum, default: StatusEnum.ToDo })
-  status: StatusEnum;
+  @Prop({ required: true, enum: TaskStatus, default: TaskStatus.ToDo })
+  status: TaskStatus;
   @Prop({ default: null })
   completionDate: Date;
+  @Prop({ default: null })
+  directLink: string;
 }
 export const TaskSchema = SchemaFactory.createForClass(Task);

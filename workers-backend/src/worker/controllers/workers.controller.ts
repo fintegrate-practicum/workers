@@ -12,29 +12,35 @@ import {
   UseGuards,
   Put,
 } from '@nestjs/common';
+
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'; // Import Swagger decorators
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.entity';
+import { TransformDataStructure } from '../../transformDataStructure/convertData';
+import { Request, Response } from 'express';
+import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
   constructor(private readonly workersService: WorkersService) { }
-
+  @ApiBearerAuth()
+  @ApiTags('workers')
+  @UseInterceptors(TransformDataStructure)
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
 
+  @Get('employee/:id')
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
-  @UseGuards(AuthGuard('jwt'))
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
     try {
       const employee = await this.workersService.activateEmployee(id);
@@ -53,7 +59,6 @@ export class WorkersController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
   getWorker(@Param('id') id: string) {
     return this.workersService.getEmployee(id);
   }
@@ -78,11 +83,18 @@ export class WorkersController {
       type: 'object',
       properties: {
         businessId: { type: 'string' },
-        userId: { type: 'string' },
-        workerCode: { type: 'string' },
+        code: { type: 'string' },
         createdBy: { type: 'string' },
-        roleId: { type: 'string' },
-        position: { type: 'string' },
+        updateBy: { type: 'string' },
+        nameEmployee: { type: 'string' },
+        role: {
+          type: 'object',
+          properties: {
+            type: { type: 'string' },
+            active: { type: 'boolean' },
+            description: { type: 'string' },
+          },
+        },
       },
     },
   })
