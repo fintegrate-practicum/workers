@@ -21,7 +21,7 @@ export class UsersController {
   constructor(private readonly _userService: UserService) {}
   @Get(':id')
   getWorker(@Param('id') auth0_user_id: string) {
-    return this._userService.findOneByUserId(auth0_user_id);
+    return this._userService.getUser(auth0_user_id);
   }
 
   @Post('')

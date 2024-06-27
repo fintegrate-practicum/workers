@@ -59,7 +59,7 @@ export class WorkersController {
 
   @Get(':id')
   getWorker(@Param('id') id: string) {
-    return this.workersService.getEmployee(id);
+    return this.workersService.getEmployeeByUserId(id);
   }
 
   @Get('data')
@@ -109,10 +109,10 @@ export class WorkersController {
         },
       }),
     )
-    requestBody: workerValidationsSchema,
-  ): Promise<Employee> {
+    @Body()requestBody: workerValidationsSchema,
+  ){
     try {
-      const result = await this.workersService.createEmployee(requestBody);
+      const result =  this.workersService.createEmployee(requestBody);
       this.logger.log('good');
       return result;
     } catch (error) {
