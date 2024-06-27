@@ -4,9 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { User } from 'src/schemas/user.entity';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
+  userModel: any;
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
@@ -70,13 +72,14 @@ export class WorkersService {
       );
     }
   }
-  async updateEmployee(
-    id: string,
+
+  async updateEmployeeByUserId(
+    userId: string,
     updatedEmployee: Employee,
   ): Promise<Employee> {
     try {
       const employee = await this.employeeModel
-        .findByIdAndUpdate(id, updatedEmployee, { new: true })
+        .findOneAndUpdate({ userId }, updatedEmployee, { new: true })
         .exec();
       if (!employee) {
         throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);

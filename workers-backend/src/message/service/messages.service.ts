@@ -10,18 +10,18 @@ export class MessagesService {
   ) {}
 
   async addMessage(message: Message): Promise<Message> {
-        try {
-          if (message) {
-            const newMessage = new this.messageModel(message);
-            return await newMessage.save();
-          }
-          return null;
-        } catch (error) {
-          console.error(error);
-          throw error;
-        }
+    try {
+      if (message) {
+        const newMessage = new this.messageModel(message);
+        return await newMessage.save();
       }
-      
+      return null;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async getMessagesByEmployeeId(id: string): Promise<Message[]> {
     try {
       const objectId = new mongoose.Types.ObjectId(id);
@@ -33,6 +33,6 @@ export class MessagesService {
       throw new InternalServerErrorException(
         'Failed to get messages by employee ID',
       );
-     }
+    }
   }
 }

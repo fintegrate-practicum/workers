@@ -4,6 +4,10 @@ import { RoleValidationSchema } from './worker.roleValidation.schema';
 export class workerValidationsSchema {
   @IsString()
   @IsNotEmpty()
+  userId: string;
+
+  @IsString()
+  @IsNotEmpty()
   businessId: string;
 
   @IsNotEmpty()

@@ -1,20 +1,22 @@
-import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Mongoose } from 'mongoose';
 import { CreateUserDto } from 'src/dto/createUser.dto';
+import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { Employee } from 'src/schemas/employee.entity';
-import { User, UserSchema } from 'src/schemas/user.entity';
+import { User } from 'src/schemas/user.entity';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
 
-  constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
-    @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
-  ) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
     const user = await this.userModel.findById(userId).exec();
@@ -45,6 +47,22 @@ export class UserService {
     const newUser = new this.userModel(user);
     try {
       return await newUser.save();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async updateUser(id: string, user: User): Promise<User> {
+    try {
+      const updatedUser = await this.userModel.findOneAndUpdate(
+        { _id: id },
+        user,
+        { new: true },
+      );
+      if (!updatedUser) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      return updatedUser;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
