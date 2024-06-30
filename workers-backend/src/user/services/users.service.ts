@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { User } from 'src/schemas/user.entity';
@@ -15,7 +15,7 @@ import { User } from 'src/schemas/user.entity';
 export class UserService {
   private readonly logger = new Logger(UserService.name);
 
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
     try {
@@ -30,11 +30,26 @@ export class UserService {
     try {
       const user = await this.userModel.findOne({ userEmail: email }).exec();
       console.log("fsdafs", user);
-      
+
       return user;
     } catch (error) {
       this.logger.error('Failed to find user by email', error.stack);
       throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  async updatAuth0UserId(existingUserByEmail: User, auth0_user_id: string): Promise<User | undefined> {
+    try {
+      if (existingUserByEmail) {
+        if (!existingUserByEmail.auth0_user_id)
+          existingUserByEmail.auth0_user_id = auth0_user_id;
+        console.log(existingUserByEmail.auth0_user_id);
+        await this.updateUser(existingUserByEmail.id, existingUserByEmail);
+
+        return existingUserByEmail;
+      }
+    } catch (error) {
+      this.logger.error('The user has not yet been added to the system Please access the manager', error.stack);
+      throw new HttpException('user not found', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   async createUser(user: CreateUserDto): Promise<User> {
