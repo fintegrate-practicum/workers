@@ -27,7 +27,7 @@ export class UsersController {
 
   @Get(':id')
   getWorker(@Param('id') auth0_user_id: string) {
-    return this._userService.getUser(auth0_user_id);
+    return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
   @Put('jwt')
   @UseGuards(AuthGuard('jwt'))
