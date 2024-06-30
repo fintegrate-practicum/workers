@@ -33,7 +33,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {
     const auth0_user_id = req.user.id;
-    const emailFromHeaders = req.headers['Email'];
+    const emailFromHeaders = req.headers['us'];
     console.log(`User Email: ${emailFromHeaders}`);
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
