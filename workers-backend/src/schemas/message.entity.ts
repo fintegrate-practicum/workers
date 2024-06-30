@@ -27,9 +27,4 @@ export class Message extends Document {
   @Prop()
   status: string;
 }
-<<<<<<< HEAD
 export const MessageSchema = SchemaFactory.createForClass(Message);
-=======
-
-export const MessageSchema = SchemaFactory.createForClass(Message);
->>>>>>> main
