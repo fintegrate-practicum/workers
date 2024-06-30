@@ -29,28 +29,16 @@ export class UsersController {
   getWorker(@Param('id') auth0_user_id: string) {
     return this._userService.findOneByUserId(auth0_user_id);
   }
-
   @Put('jwt')
   @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {
     const auth0_user_id = req.user.id;
     const emailFromHeaders = req.headers['Email'];
-    if (!emailFromHeaders) {
-      throw new BadRequestException('Email not found in headers');
-    }
-    console.log(`User ID: ${auth0_user_id}`);
     console.log(`User Email: ${emailFromHeaders}`);
-    const existingUser = await this._userService.findOneByUserId(auth0_user_id);
-    if (existingUser) {
-      return `User with id ${auth0_user_id} already exists.`;
-    }
-    const existingUserByEmail = await this._userService.findOneByEmail(emailFromHeaders);
-
-    const updatedUser = await this._userService.updatAuth0UserId(existingUserByEmail, auth0_user_id);
-    if (updatedUser) {
-      return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
-    }
+    return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
+  
+
 
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
