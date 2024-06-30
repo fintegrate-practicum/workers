@@ -16,6 +16,12 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
+
+  async findOneByUserId(userId: string): Promise<User | undefined> {
+    const user = await this.userModel.findById(userId).exec();
+    return user;
+  }
+
   async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
     console.log(emailFromHeaders);
     
@@ -23,7 +29,7 @@ export class UserService {
       throw new BadRequestException('Email not found in headers');
     }
   
-    const existingUser = await this.findOneByUserId(auth0_user_id);
+    const existingUser = await this.findOneByUserAuth0Id(auth0_user_id);
     if (existingUser) {
       return `User with id ${auth0_user_id} already exists.`;
     }
@@ -38,7 +44,7 @@ export class UserService {
     return 'User not found and could not be added.';
   }
   
-  async findOneByUserId(userId: string): Promise<User | undefined> {
+  async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
       return user;
@@ -84,7 +90,7 @@ export class UserService {
   async updateUser(id: string, user: UpdateUserDto): Promise<User> {
     try {
       const updatedUser = await this.userModel.findOneAndUpdate(
-        { _id: id },
+        { auth0_user_id: id },
         user,
         { new: true },
       ).exec();

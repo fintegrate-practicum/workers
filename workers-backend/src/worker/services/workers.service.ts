@@ -19,7 +19,7 @@ export class WorkersService {
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
       newEmployee.code = workerCode;
-      return await newEmployee.save();
+      return await newEmployee.save();   
     } catch (error) {
       throw new HttpException(
         'Error creating employee',
@@ -55,9 +55,9 @@ export class WorkersService {
     }
   }
 
-  async getEmployee(id: string): Promise<Employee> {
+  async getEmployeeByUserId(userId: string): Promise<Employee> {
     try {
-      const employee = await this.employeeModel.findById(id).exec();
+      const employee = await this.employeeModel.findOne({ userId }).exec();
       if (!employee) {
         throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
       }
@@ -72,6 +72,8 @@ export class WorkersService {
       );
     }
   }
+  
+  
 
   async updateEmployeeByUserId(
     userId: string,
