@@ -22,28 +22,29 @@ export class UserService {
     return user;
   }
 
+
   async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
-    console.log(emailFromHeaders);
-    
     if (!emailFromHeaders) {
-      throw new BadRequestException('Email not found in headers');
+        throw new BadRequestException('Email not found in headers');
     }
-  
-    const existingUser = await this.findOneByUserAuth0Id(auth0_user_id);
-    if (existingUser) {
-      return `User with id ${auth0_user_id} already exists.`;
+
+    const existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
+    if (existingUserByAuth0Id) {
+        return `User with id ${auth0_user_id} already exists.`;
     }
-  
+
     const existingUserByEmail = await this.findOneByEmail(emailFromHeaders);
-  
-    const updatedUser = await this.updatAuth0UserId(existingUserByEmail, auth0_user_id);
-    if (updatedUser) {
-      return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
+    if (existingUserByEmail) {
+        await this.updatAuth0UserId(existingUserByEmail, auth0_user_id);
+        return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
-  
-    return 'User not found and could not be added.';
-  }
-  
+
+    const newUser = new User(); // יש לוודא יצירת אובייקט משתמש נכון לפי הדגם שלך
+    newUser.auth0_user_id = auth0_user_id;
+    newUser.userEmail = emailFromHeaders;
+    await this.createUser(newUser);
+    return 'User added successfully.';
+}
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
@@ -63,21 +64,25 @@ export class UserService {
       throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  async updatAuth0UserId(existingUserByEmail: User, auth0_user_id: string): Promise<User | undefined> {
-    try {
-      if (existingUserByEmail) {
-        if (!existingUserByEmail.auth0_user_id)
-          existingUserByEmail.auth0_user_id = auth0_user_id;
-        console.log(existingUserByEmail.auth0_user_id);
-        await this.updateUser(existingUserByEmail.id, existingUserByEmail);
 
-        return existingUserByEmail;
-      }
-    } catch (error) {
-      this.logger.error('The user has not yet been added to the system Please access the manager', error.stack);
-      throw new HttpException('user not found', HttpStatus.INTERNAL_SERVER_ERROR);
+  async updatAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
+    if (!existingUserByEmail) {
+        this.logger.error('User with this email does not exist');
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-  }
+
+    try {
+        if (!existingUserByEmail.auth0_user_id) {
+            existingUserByEmail.auth0_user_id = auth0_user_id;
+            console.log(existingUserByEmail.auth0_user_id);
+            await this.updateUser(existingUserByEmail.id, existingUserByEmail);
+            return existingUserByEmail;
+        }
+    } catch (error) {
+        this.logger.error('Failed to update user', error.stack);
+        throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
   async createUser(user: CreateUserDto): Promise<User> {
     const newUser = new this.userModel(user);
     try {
