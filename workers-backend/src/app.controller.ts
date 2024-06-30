@@ -13,9 +13,6 @@ export class AppController {
   @Get('hello')
   @UseGuards(AuthGuard('jwt'))
   getHello(@Request() req): string {
-    console.log(req);
-
-    console.log(req.user.id);
     return this.appService.getHello();
   }
 }

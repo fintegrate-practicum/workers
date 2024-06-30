@@ -20,8 +20,6 @@ export class UserService {
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
     const user = await this.userModel.findById(userId).exec();
-    console.log(user);
-
     return user;
   }
 
@@ -55,7 +53,7 @@ export class UserService {
   async updateUser(id: string, user: User): Promise<User> {
     try {
       const updatedUser = await this.userModel.findOneAndUpdate(
-        { _id: id },
+        { auth0_user_id: id },
         user,
         { new: true },
       );
