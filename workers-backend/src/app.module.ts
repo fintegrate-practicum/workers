@@ -5,10 +5,13 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
-import { MessagesModule } from './message/module/messages.module';
+import { Employee } from './schemas/employee.entity';
+import { env } from 'process';
+import { AuthzModule } from './authz/authz.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-import { UsersModule } from './user/module/users.module';
+import { MessagesModule } from './message/module/messages.module';
+import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
@@ -16,12 +19,14 @@ import { UsersModule } from './user/module/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    UserModule,
+    TasksModule,
     WorkersModule,
     MessagesModule,
     TasksModule,
-    UsersModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_CONNECTION,
       }),
