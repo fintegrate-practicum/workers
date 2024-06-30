@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TasksService } from '../service/tasks.service';
 import { TasksController } from '../controller/tasks.controller';
 import { Task, TaskSchema } from 'src/schemas/task.entity';

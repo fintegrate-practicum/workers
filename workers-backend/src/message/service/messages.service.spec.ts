@@ -14,7 +14,7 @@ describe('MessagesService', () => {
     new Message({
       _id: new Types.ObjectId(),
       message_id: 3,
-      business_id: "12#@%2",
+      business_id: '12#@%2',
       sender_id: new Types.ObjectId(),
       receiver_id: new Types.ObjectId(),
       message_content: 'Test message 3',
@@ -25,7 +25,7 @@ describe('MessagesService', () => {
     new Message({
       _id: new Types.ObjectId(),
       message_id: 4,
-      business_id: "12#@%2",
+      business_id: '12#@%2',
       sender_id: new Types.ObjectId(),
       receiver_id: new Types.ObjectId(),
       message_content: 'Test message 4',
@@ -63,7 +63,7 @@ describe('MessagesService', () => {
         .mockResolvedValueOnce([mockMessage[0]] as any);
       const newMessage = new Message({
         message_id: 3,
-        business_id: "12#@%2",
+        business_id: '12#@%2',
         sender_id: new Types.ObjectId(),
         receiver_id: new Types.ObjectId(),
         message_content: 'Test message 3',

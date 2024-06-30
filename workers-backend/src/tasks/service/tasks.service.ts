@@ -12,7 +12,6 @@ import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
 import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
 import { UserService } from 'src/user/services/users.service';
-import { User } from 'src/schemas/user.entity';
 import { Message } from 'src/interface/message.interface';
 
 @Injectable()

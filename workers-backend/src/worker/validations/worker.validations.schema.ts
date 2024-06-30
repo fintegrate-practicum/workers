@@ -1,7 +1,11 @@
-import { IsNotEmpty, IsString, IsEnum, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsObject, IsString } from 'class-validator';
 import { RoleValidationSchema } from './worker.roleValidation.schema';
 
 export class workerValidationsSchema {
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+
   @IsString()
   @IsNotEmpty()
   businessId: string;
@@ -23,5 +27,6 @@ export class workerValidationsSchema {
   updateBy: string;
 
   @IsNotEmpty()
+  @IsObject()
   role: RoleValidationSchema;
 }
