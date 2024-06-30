@@ -9,12 +9,11 @@ import { Model, Types } from 'mongoose';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
-import { Task } from '../../schemas/task.entity';
+import { Task,TaskDoc } from '../../schemas/task.entity';
 import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
 import { UserService } from 'src/user/services/users.service';
 import { User } from 'src/schemas/user.entity';
 import { Message } from 'src/interface/message.interface';
-
 @Injectable()
 export class TasksService {
   constructor(
@@ -27,6 +26,7 @@ export class TasksService {
   async getAllTasks(managerId: string): Promise<Task[]> {
     return await this.taskModel.find({ managerId }).exec();
   }
+
   async createTask(task: CreateTaskDto) {
     const employees = await Promise.all(
       task.employee.map((id) =>
@@ -51,10 +51,12 @@ export class TasksService {
     }
 
     const newTask = new this.taskModel(task);
-
+    
     try {
-      await newTask.save();
+      const savedTask: TaskDoc = await newTask.save();
       this.logger.log('Task saved successfully.');
+      const taskUrl = `http://localhost:3000/tasks?taskId=${savedTask._id}`;
+
 
       await Promise.all(
         employees.map((user) => {
@@ -62,13 +64,14 @@ export class TasksService {
             pattern: 'message_exchange',
             data: {
               to: user.userEmail,
-              subject: newTask.taskName,
+              subject: savedTask.taskName,
               type: 'email',
               kindSubject: 'newTask',
               name: user.userName,
-              description: newTask.description,
-              date: newTask.targetDate,
+              description: savedTask.description,
+              date: savedTask.targetDate,
               managerName: manager.userName,
+              taskUrl: taskUrl
             },
           };
           return this.rabbitPublisherService.publishMessageToCommunication(
@@ -84,6 +87,7 @@ export class TasksService {
     }
   }
 
+  
   async updateTask(
     taskId: string,
     task: UpdateTaskManagerDto | UpdateTaskEmployeeDto,

@@ -9,5 +9,6 @@ export interface Message {
     description: string;
     date: Date;
     managerName: string;
+    taskUrl?:string;
   };
 }

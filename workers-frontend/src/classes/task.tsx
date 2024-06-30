@@ -10,9 +10,8 @@ export default class Task {
     urgency!: number;
     status!: TaskStatus;
     completionDate!: Date;
-    directLink: string | undefined;
-
-
+    directLink: string | undefined; 
+    _id: any;
     constructor() { }
 }
 
