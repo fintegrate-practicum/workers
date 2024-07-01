@@ -4,9 +4,11 @@ import { Model, Types } from 'mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 
+
 describe('MessagesService', () => {
   let messagesService: MessagesService;
   let model: Model<Message>;
+
 
   const mockMessage: Message[] = [
     new Message({
@@ -42,6 +44,8 @@ describe('MessagesService', () => {
           useValue: {
             create: jest.fn(),
             countDocuments: jest.fn(),
+            findByIdAndUpdate: jest.fn().mockResolvedValue({ _id: 'testId', read_status: true }),
+            findById: jest.fn().mockResolvedValue({ _id: 'testId', read_status: true }),
           },
         },
       ],
@@ -49,6 +53,7 @@ describe('MessagesService', () => {
 
     messagesService = module.get<MessagesService>(MessagesService);
     model = module.get<Model<Message>>(getModelToken('Message'));
+
   });
 
   describe('addMessage', () => {
@@ -69,5 +74,15 @@ describe('MessagesService', () => {
       const result = await messagesService.addMessage(newMessage);
       expect(result).toEqual(mockMessage[0]);
     });
+  });
+
+  it('should update message as read', async () => {
+    const messageId = 'testId';
+    const updatedMessage = { _id: 'testId', read_status: true };
+    const result = await messagesService.updateMessageIsRead(messageId);
+
+    expect(model.findByIdAndUpdate).toBeCalledWith(messageId, { read_status: true });
+    expect(model.findById).toBeCalledWith(messageId);
+    expect(result).toEqual(updatedMessage);
   });
 });
