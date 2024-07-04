@@ -9,7 +9,7 @@ import {
   OrganizationSchema,
 } from 'src/schemas/organization.entity';
 import { Project, ProjectSchema } from 'src/schemas/project.entity';
-import { Role, RoleSchema } from 'src/schemas/employeeRole.entity';
+import { Role, RoleSchema } from 'src/schemas/EmployeeRole.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
 
 @Module({
