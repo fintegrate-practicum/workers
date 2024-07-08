@@ -48,6 +48,12 @@ export class UserService {
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
+      if(!user)
+      {
+        this.logger.error(`user with the id ${userId} was not found`);
+        throw new NotFoundException(`user with the id ${userId} was not found`)
+
+      }
       return user;
     } catch (error) {
       this.logger.error('Failed to find user', error.stack);
