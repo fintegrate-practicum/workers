@@ -32,6 +32,7 @@ export class UsersController {
 }
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
+  
   @Put('jwt')
   @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {

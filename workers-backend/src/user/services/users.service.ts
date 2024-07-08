@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   HttpException,
   HttpStatus,
   NotFoundException,
@@ -94,6 +95,9 @@ export class UserService {
     try {
       return await newUser.save();
     } catch (error) {
+      if (error.code === 11000) { // קוד השגיאה של MongoDB לתנאי ייחודיות
+        throw new ConflictException('User with the given details already exists');
+      }
       throw new BadRequestException(error.message);
     }
   }
