@@ -3,6 +3,7 @@ services:
   dev:
     container_name: nestjs_api_dev
     image: nestjs-api-dev:1.0.0
+    command: sh -c "(curl -sL https://netfree.link/dl/unix-ca.sh | sh ) && export NODE_EXTRA_CA_CERTS=/etc/ca-bundle.crt && npm install && npm start"
     build:
       context: .
       dockerfile: Dockerfile
