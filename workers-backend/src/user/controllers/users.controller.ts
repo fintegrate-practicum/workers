@@ -10,6 +10,7 @@ import {
   Request,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from '../services/users.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -80,7 +81,15 @@ export class UsersController {
       }
       return this._userService.updateUser(id, user);
     } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+      if (error.name== NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else if (error.name== BadRequestException) {
+        throw new BadRequestException(error.message);
+      } else if (error.name== ConflictException) {
+        throw new ConflictException(error.message);
+      } else {
+        throw new InternalServerErrorException('An unexpected error occurred: ' + error.message);
+      }
+      }
   }
 }
