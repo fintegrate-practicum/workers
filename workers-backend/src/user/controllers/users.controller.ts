@@ -27,6 +27,9 @@ export class UsersController {
 
   @Get(':id')
   getWorker(@Param('id') auth0_user_id: string) {
+    if (!auth0_user_id) {
+      throw new BadRequestException('User ID must be provided');
+}
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
   @Put('jwt')
