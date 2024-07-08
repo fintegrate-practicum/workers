@@ -37,7 +37,7 @@ export class UserService {
 
     const existingUserByEmail = await this.findOneByEmail(emailFromHeaders);
     if (existingUserByEmail) {
-        await this.updatAuth0UserId(existingUserByEmail, auth0_user_id);
+        await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
         return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
 
@@ -73,7 +73,7 @@ export class UserService {
     }
   }
 
-  async updatAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
+  async updateAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
     if (!existingUserByEmail) {
         this.logger.error('User with this email does not exist');
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
