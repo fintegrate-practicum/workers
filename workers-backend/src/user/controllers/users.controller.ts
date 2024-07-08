@@ -53,6 +53,9 @@ export class UsersController {
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
     try {
+      if(!user) {
+        throw new BadRequestException('user is null');
+      }
       return this._userService.createUser(user);
     } catch (error) {
       if (error.name === 'ConflictException') {
