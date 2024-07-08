@@ -32,11 +32,17 @@ export class UsersController {
 }
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
+
   @Put('jwt')
   @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {
     const auth0_user_id = req.user.id;
+    if(!auth0_user_id)
+    throw new BadRequestException('Auth0 user ID not provided');
     const emailFromHeaders = req.headers['us'];
+    if(!emailFromHeaders)
+    throw new BadRequestException('user email not provided');
+
     console.log(`User Email: ${emailFromHeaders}`);
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
