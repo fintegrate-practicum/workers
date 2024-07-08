@@ -90,11 +90,17 @@ export class UserService {
             await this.updateUser(existingUserByEmail.id, existingUserByEmail);
             return existingUserByEmail;
         }
+
+    if (!auth0_user_id) {
+      this.logger.error('auth0_user_id is not provided');
+      throw new HttpException('Auth0 user ID must be provided', HttpStatus.BAD_REQUEST);
+  }
     } catch (error) {
         this.logger.error('Failed to update user', error.stack);
         throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
   async createUser(user: CreateUserDto): Promise<User> {
     const newUser = new this.userModel(user);
     try {
