@@ -62,19 +62,22 @@ export class UsersController {
         throw new ConflictException(error.message);
       }
        else if (error.code==400) {
-        throw new BadRequestException('Failed to create user');
+        throw new BadRequestException(error.message ||'Failed to create user');
 
         }  
        throw new InternalServerErrorException('Unexpected error occurred');
 
       }
     }
-   }
+   
   
 
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     try {
+      if(!user) {
+        throw new BadRequestException('user is null');
+      }
       return this._userService.updateUser(id, user);
     } catch (error) {
       throw new BadRequestException(error.message);
