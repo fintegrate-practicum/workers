@@ -45,7 +45,9 @@ export class UsersController {
     try {
       return this._userService.createUser(user);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      if(error)
+      throw 0
+      // throw new BadRequestException(error.message);
     }
   }
 
