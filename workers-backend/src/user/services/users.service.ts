@@ -142,8 +142,16 @@ export class UserService {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
       return updatedUser;
-    } catch (error) {
-      throw new BadRequestException(error.message);
+    } catch(error)
+    {
+      if (error.name === 'ValidationError') {
+        throw new BadRequestException('Validation failed: ' + error.message);
+      } else if (error.code === 11000) { // לדוגמה, אם יש שגיאת ייחודיות
+        throw new ConflictException('Duplicate key error: ' + error.message);
+      } else {
+        throw new InternalServerErrorException('An unexpected error occurred: ' + error.message);
+      }
+  
     }
   }
 }
