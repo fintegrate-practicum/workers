@@ -5,6 +5,7 @@ import {
   HttpStatus,
   InternalServerErrorException,
   NotFoundException,
+  ValidationError,
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -101,9 +102,17 @@ export class UserService {
       }
 
     } catch (error) {
+      if (error.name === 'ValidationError') {
+        this.logger.error('Validation error', error.stack);
+        throw new HttpException('Validation error: ' + error.message, HttpStatus.BAD_REQUEST);
+    } else if (error.name === 'MongoError' && error.code === 11000) {
+        this.logger.error('Duplicate key error', error.stack);
+        throw new HttpException('Duplicate key error: ' + error.message, HttpStatus.CONFLICT);
+    } else {
         this.logger.error('Failed to update user', error.stack);
-        throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException('Error updating user: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 }
 
   async createUser(user: CreateUserDto): Promise<User> {
