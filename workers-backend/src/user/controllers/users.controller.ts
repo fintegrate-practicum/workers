@@ -8,6 +8,8 @@ import {
   Put,
   UseGuards,
   Request,
+  ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from '../services/users.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -42,7 +44,6 @@ export class UsersController {
     const emailFromHeaders = req.headers['us'];
     if(!emailFromHeaders)
     throw new BadRequestException('user email not provided');
-
     console.log(`User Email: ${emailFromHeaders}`);
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
@@ -54,11 +55,19 @@ export class UsersController {
     try {
       return this._userService.createUser(user);
     } catch (error) {
-      if(error)
-      throw 0
-      // throw new BadRequestException(error.message);
+      if (error.name === 'ConflictException') {
+        throw new ConflictException(error.message);
+      }
+       else if (error.code==400) {
+        throw new BadRequestException('Failed to create user');
+
+        }  
+       throw new InternalServerErrorException('Unexpected error occurred');
+
+      }
     }
-  }
+   }
+  
 
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
