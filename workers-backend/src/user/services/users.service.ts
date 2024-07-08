@@ -84,17 +84,19 @@ export class UserService {
     }
 
     try {
-        if (!existingUserByEmail.auth0_user_id) {
+            if (!auth0_user_id) {
+      this.logger.error('auth0_user_id is not provided');
+      throw new HttpException('Auth0 user ID must be provided', HttpStatus.BAD_REQUEST);
+  }
+  
+  if (!existingUserByEmail.auth0_user_id) {
             existingUserByEmail.auth0_user_id = auth0_user_id;
             console.log(existingUserByEmail.auth0_user_id);
             await this.updateUser(existingUserByEmail.id, existingUserByEmail);
             return existingUserByEmail;
         }
 
-    if (!auth0_user_id) {
-      this.logger.error('auth0_user_id is not provided');
-      throw new HttpException('Auth0 user ID must be provided', HttpStatus.BAD_REQUEST);
-  }
+
     } catch (error) {
         this.logger.error('Failed to update user', error.stack);
         throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
