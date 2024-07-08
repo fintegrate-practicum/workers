@@ -95,7 +95,10 @@ export class UserService {
             await this.updateUser(existingUserByEmail.id, existingUserByEmail);
             return existingUserByEmail;
         }
-
+        else {
+          this.logger.error('User already has an Auth0 user ID');
+          throw new HttpException('User already has an Auth0 user ID', HttpStatus.CONFLICT);
+      }
 
     } catch (error) {
         this.logger.error('Failed to update user', error.stack);
