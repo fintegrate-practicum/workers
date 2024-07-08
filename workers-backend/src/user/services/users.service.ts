@@ -3,6 +3,7 @@ import {
   ConflictException,
   HttpException,
   HttpStatus,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
@@ -98,8 +99,12 @@ export class UserService {
       if (error.code === 11000) { 
         throw new ConflictException('User with the given email already exists');
       }
-      throw new BadRequestException(error.message);
-    }
+      else if (error.name === 'ValidationError') { 
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('Unexpected error occurred');
+      }
+      }
   }
 
   async updateUser(id: string, user: UpdateUserDto): Promise<User> {
