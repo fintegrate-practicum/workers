@@ -38,7 +38,6 @@ export class TasksController {
     try {
       return this._taskService.createTask(task);
     } catch (error) {
-      //checkkkkkkk
       throw new BadRequestException(error.message);
     }
   }
@@ -61,7 +60,6 @@ export class TasksController {
           updatedTask as UpdateTaskEmployeeDto,
         );
       } else {
-        //checkkkkkkkkkkkk
         throw new BadRequestException('Invalid role type');
       }
     } catch (error) {
