@@ -34,6 +34,8 @@ export class WorkersController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
+    if(!businessId)
+      throw new HttpException('businessId is required', HttpStatus.BAD_REQUEST);
     return this.workersService.findAll(businessId);
   }
 
@@ -41,6 +43,8 @@ export class WorkersController {
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
+    if(!id)
+      throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
     try {
       const employee = await this.workersService.activateEmployee(id);
       if (!employee) {
@@ -59,19 +63,28 @@ export class WorkersController {
 
   @Get(':id')
   getWorker(@Param('id') id: string) {
-    return this.workersService.getEmployeeByUserId(id);
+    if(!id)
+      throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
+    const employee = this.workersService.getEmployeeByUserId(id);
+    if (!employee)
+      throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
+    return employee;
   }
 
   @Get('data')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
+    if (!req || !res)
+      throw new HttpException('Request and Response are required', HttpStatus.BAD_REQUEST);
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
   @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
+    if(id)
+      throw new HttpException('companyId is required', HttpStatus.BAD_REQUEST); 
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
   }
@@ -109,8 +122,9 @@ export class WorkersController {
         },
       }),
     )
-    @Body()requestBody: workerValidationsSchema,
-  ){
+    @Body()requestBody: workerValidationsSchema,){
+    if(!requestBody)
+      throw new HttpException('Request body is required', HttpStatus.BAD_REQUEST);
     try {
       const result =  this.workersService.createEmployee(requestBody);
       this.logger.log('good');
@@ -128,6 +142,10 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
+    if(!id)
+      throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
+    if(!user)
+      throw new HttpException('User data is required', HttpStatus.BAD_REQUEST);
     try {
       const response = this.workersService.updateEmployeeByUserId(id, user);
       if (!response) {
