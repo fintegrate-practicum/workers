@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   BadRequestException,
+  InternalServerErrorException,
   Get,
   Put,
   Delete,
@@ -20,7 +21,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('User')
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly _taskService: TasksService) {}
+  constructor(private readonly _taskService: TasksService) { }
 
   @Get('/manager/:businessId/:managerId')
   async getAllManagerTasks(@Param('managerId') managerId: string) {
@@ -28,7 +29,7 @@ export class TasksController {
       const tasks = await this._taskService.getAllTasks(managerId);
       return tasks;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -37,6 +38,7 @@ export class TasksController {
     try {
       return this._taskService.createTask(task);
     } catch (error) {
+      //checkkkkkkk
       throw new BadRequestException(error.message);
     }
   }
@@ -59,10 +61,11 @@ export class TasksController {
           updatedTask as UpdateTaskEmployeeDto,
         );
       } else {
+        //checkkkkkkkkkkkk
         throw new BadRequestException('Invalid role type');
       }
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -71,7 +74,9 @@ export class TasksController {
     try {
       return this._taskService.deleteTask(taskId);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
+
+
