@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -20,7 +21,7 @@ export class TasksService {
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
     private readonly rabbitPublisherService: RabbitPublisherService,
     private readonly usersService: UserService,
-  ) {}
+  ) { }
 
   public readonly logger = new Logger(TasksService.name);
   async getAllTasks(managerId: string): Promise<Task[]> {
@@ -37,16 +38,14 @@ export class TasksService {
     const nonExistentEmployees = employees.filter((user) => !user);
     if (nonExistentEmployees.length > 0) {
       this.logger.log('One or more employees not found.');
-      throw new Error('One or more employees not found');
+      throw new NotFoundException('One or more employees not found')
     } else {
       this.logger.log('All employees found:', employees);
     }
 
     if (!manager) {
       this.logger.log('Manager not found.');
-      throw new Error('Manager not found');
-    } else {
-      this.logger.log('Manager found:', manager);
+      throw new NotFoundException('Manager not found');
     }
 
     const newTask = new this.taskModel(task);
@@ -79,7 +78,7 @@ export class TasksService {
       this.logger.log('Messages published');
     } catch (error) {
       this.logger.error('Error creating task or sending messages', error);
-      throw error;
+      throw new InternalServerErrorException('Failed to create task');
     }
   }
 
@@ -110,3 +109,11 @@ export class TasksService {
     return deletedTask;
   }
 }
+
+
+
+
+
+
+
+
