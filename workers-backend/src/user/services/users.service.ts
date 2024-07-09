@@ -1,110 +1,95 @@
 import {
+  Controller,
+  Get,
+  Param,
+  Body,
+  Post,
   BadRequestException,
-  HttpException,
-  HttpStatus,
+  Put,
+  UseGuards,
+  Request,
+  ConflictException,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { UserService } from '../services/users.service';
+import { ApiTags } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { User } from 'src/schemas/user.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { log } from 'console';
 
-@Injectable()
-export class UserService {
-  private readonly logger = new Logger(UserService.name);
+@ApiTags('User')
+@Controller('user')
+export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
 
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
+  constructor(private readonly _userService: UserService) { }
 
-  async findOneByUserId(userId: string): Promise<User | undefined> {
-    const user = await this.userModel.findById(userId).exec();
-    return user;
-  }
-
-
-  async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
-    if (!emailFromHeaders) {
-        throw new BadRequestException('Email not found in headers');
-    }
-
-    const existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
-    if (existingUserByAuth0Id) {
-        return `User with id ${auth0_user_id} already exists.`;
-    }
-
-    const existingUserByEmail = await this.findOneByEmail(emailFromHeaders);
-    if (existingUserByEmail) {
-        await this.updatAuth0UserId(existingUserByEmail, auth0_user_id);
-        return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
-    }
-
-    const newUser = new User(); // יש לוודא יצירת אובייקט משתמש נכון לפי הדגם שלך
-    newUser.auth0_user_id = auth0_user_id;
-    newUser.userEmail = emailFromHeaders;
-    await this.createUser(newUser);
-    return 'User added successfully.';
+  @Get(':id')
+  getWorker(@Param('id') auth0_user_id: string) {
+    if (!auth0_user_id) {
+      throw new BadRequestException('User ID must be provided');
 }
-  async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
-    try {
-      const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
-      return user;
-    } catch (error) {
-      this.logger.error('Failed to find user', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-  async findOneByEmail(email: string): Promise<User | undefined> {
-    try {
-      const user = await this.userModel.findOne({ userEmail: email }).exec();
-
-      return user;
-    } catch (error) {
-      this.logger.error('Failed to find user by email', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
 
-  async updatAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
-    if (!existingUserByEmail) {
-        this.logger.error('User with this email does not exist');
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    try {
-        if (!existingUserByEmail.auth0_user_id) {
-            existingUserByEmail.auth0_user_id = auth0_user_id;
-            console.log(existingUserByEmail.auth0_user_id);
-            await this.updateUser(existingUserByEmail.id, existingUserByEmail);
-            return existingUserByEmail;
-        }
-    } catch (error) {
-        this.logger.error('Failed to update user', error.stack);
-        throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
-  async createUser(user: CreateUserDto): Promise<User> {
-    const newUser = new this.userModel(user);
-    try {
-      return await newUser.save();
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+  @Put('jwt')
+  @UseGuards(AuthGuard('jwt'))
+  async checkAndAddUser(@Request() req): Promise<string> {
+    const auth0_user_id = req.user.id;
+    if(!auth0_user_id)
+    throw new BadRequestException('Auth0 user ID not provided');
+    const emailFromHeaders = req.headers['us'];
+    if(!emailFromHeaders)
+    throw new BadRequestException('user email not provided');
+    console.log(`User Email: ${emailFromHeaders}`);
+    return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
+  
 
-  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+  @Post('')
+  async createUser(@Body() user: CreateUserDto) {
     try {
-      const updatedUser = await this.userModel.findOneAndUpdate(
-        { auth0_user_id: id },
-        user,
-        { new: true },
-      ).exec();
-      if (!updatedUser) {
-        throw new NotFoundException(`User with ID ${id} not found`);
+      if(!user) {
+        throw new BadRequestException('user is null');
       }
-      return updatedUser;
+      return this._userService.createUser(user);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      if (error.name === 'ConflictException') {
+        throw new ConflictException(error.message);
+      }
+       else if (error.code==400) {
+        throw new BadRequestException(error.message ||'Failed to create user');
+
+        }  
+       throw new InternalServerErrorException('Unexpected error occurred');
+
+      }
     }
+   
+  
+
+  @Put(':id')
+  async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
+    try {
+      if(!user) {
+        throw new BadRequestException('user is null');
+      }
+      return this._userService.updateUser(id, user);
+    } catch (error) {
+      if (error.name== NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else if (error.name== BadRequestException) {
+        throw new BadRequestException(error.message);
+      } else if (error.name== ConflictException) {
+        throw new ConflictException(error.message);
+      } else {
+        throw new InternalServerErrorException('An unexpected error occurred: ' + error.message);
+      }
+      }
   }
 }
+
