@@ -23,7 +23,7 @@ export class RabbitPublisherService {
 
   async connectToRabbitMQ() {
     try {
-      const amqpUrl = `amqp://${this.configService.get('AMQP_HOST')}:${this.configService.get('AMQP_PORT')}`;
+      const amqpUrl = this.configService.get('AMQP_URL');
       const username = this.configService.get('AMQP_USERNAME');
       const password = this.configService.get('AMQP_PASSWORD');
 

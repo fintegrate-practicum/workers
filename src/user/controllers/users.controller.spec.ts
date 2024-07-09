@@ -64,4 +64,24 @@ describe('UsersController', () => {
       expect(error.status).toBe(HttpStatus.NOT_FOUND);
     }
   });
+
+  it('should create a new user when createTask is called', async () => {
+    const mockCreateUserDto = {
+      userName: 'Test User',
+      userEmail: 'test@example.com',
+      auth0_user_id: 'n05y7452opu',
+      registeredAt: new Date('2024-12-31'),
+      lastLogin: new Date('2024-12-31'),
+      mobile: '0555555555',
+      status: 'Married',
+      dateOfBirth: new Date('2024-12-31'),
+      address: {
+        city: 'TV',
+        street: 'Hshalom',
+        num: 5,
+      },
+    };    const createdUser = await controller.createTask(mockCreateUserDto);
+  
+    expect(createdUser).toEqual(mockCreateUserDto);
+  });
 });
