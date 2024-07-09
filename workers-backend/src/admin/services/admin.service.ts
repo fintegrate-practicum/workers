@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Employee } from 'src/schemas/employee.entity'; // Assuming Employee entity is defined
-
+import { Employee } from 'src/schemas/employee.entity';
+import { User } from 'src/schemas/user.entity';
 @Injectable()
 export class AdminService {
   constructor(
     @InjectModel('Employee') private readonly EmployeeModel: Model<Employee>,
-  ) {}
+    @InjectModel('User') private readonly userModel: Model<User>,
+
+  ) { }
 
   async findAllByBusinessId(
     businessId: string,
@@ -27,5 +29,12 @@ export class AdminService {
 
   async getEmployee(id: string): Promise<Employee> {
     return await this.EmployeeModel.findById(id).exec();
+  }
+
+  async getUserById(userId: string): Promise<User> {
+    return this.userModel.findById(userId).exec();
+  }
+  async getUsersByBusinessId(businessId: string): Promise<User[]> {
+    return this.userModel.find({ businessId }).exec();
   }
 }
