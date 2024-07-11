@@ -1,7 +1,7 @@
 import {
   BadRequestException,
   HttpException,
-  HttpStatus,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
@@ -21,7 +21,6 @@ export class UserService {
     const user = await this.userModel.findById(userId).exec();
     return user;
   }
-
 
   async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
     if (!emailFromHeaders) {
@@ -51,7 +50,7 @@ export class UserService {
       return user;
     } catch (error) {
       this.logger.error('Failed to find user', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Error fetching user');
     }
   }
   async findOneByEmail(email: string): Promise<User | undefined> {
@@ -61,14 +60,14 @@ export class UserService {
       return user;
     } catch (error) {
       this.logger.error('Failed to find user by email', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Error fetching user');
     }
   }
 
   async updatAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
     if (!existingUserByEmail) {
         this.logger.error('User with this email does not exist');
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('User not found');
     }
 
     try {
@@ -80,7 +79,7 @@ export class UserService {
         }
     } catch (error) {
         this.logger.error('Failed to update user', error.stack);
-        throw new HttpException('Error updating user', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new InternalServerErrorException('Error updating user');
     }
 }
   async createUser(user: CreateUserDto): Promise<User> {
@@ -108,3 +107,4 @@ export class UserService {
     }
   }
 }
+

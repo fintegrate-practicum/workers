@@ -39,7 +39,6 @@ export class UsersController {
   }
   
 
-
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
     try {
@@ -58,3 +57,4 @@ export class UsersController {
     }
   }
 }
+
