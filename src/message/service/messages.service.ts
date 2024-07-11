@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Message } from '../../schemas/message.entity';
@@ -10,20 +10,15 @@ export class MessagesService {
     ) { }
 
     async addMessage(message: Message): Promise<Message> {
-        try {
-            if (!message)
-                throw new BadRequestException('Message content is required')
-            const newMessage = new this.messageModel(message);
-            return await newMessage.save();
-        } catch (error) {
-            console.error(error);
-            throw new InternalServerErrorException('Error adding message');
-        }
+        if (!message)
+            throw new BadRequestException('Message content is required')
+        const newMessage = new this.messageModel(message);
+        return await newMessage.save();
     }
 
     async getMessagesByEmployeeId(id: string): Promise<Message[]> {
         if (!id)
-            throw new BadRequestException('Employee ID is required');
+            throw new BadRequestException('ID is required');
         try {
             const objectId = new mongoose.Types.ObjectId(id);
             return await this.messageModel
@@ -39,17 +34,11 @@ export class MessagesService {
 
     async updateMessageIsRead(id: string): Promise<Message> {
         if (!id)
-            throw new BadRequestException('Message ID is required');
-        try{
+            throw new BadRequestException('ID is required');
         let updatedMessageIsRead = await this.messageModel.findByIdAndUpdate(id, { read_status: true });
-        if (!updatedMessageIsRead) 
-            throw new HttpException('Message not found', HttpStatus.NOT_FOUND);
+        if (!updatedMessageIsRead)
+            throw new NotFoundException('Message not found');
         updatedMessageIsRead = await this.messageModel.findById(id)
         return updatedMessageIsRead;
-    }catch(error){
-        if (error.status === HttpStatus.NOT_FOUND)
-            throw error;
-        throw new InternalServerErrorException('Error updating message status');
-    }
     }
 }

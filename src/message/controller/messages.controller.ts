@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Post, NotFoundException } from '@nestjs/common';
 import { Message } from '../../schemas/message.entity';
 import { MessagesService } from '../service/messages.service'
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -11,22 +11,10 @@ export class MessagesController {
 
     @Get('/:id')
     async getMessagesByEmployeeId(@Param('id') id: string) {
-        if (!id)
-            throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
-        try {
-            const messages = await this._messageService.getMessagesByEmployeeId(id);
-            if (!messages || messages.length === 0)
-                throw new HttpException('Messages not found', HttpStatus.NOT_FOUND);
-            return messages;
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: 'Failed to get messages by employee ID',
-                },
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-        }
+        const messages = await this._messageService.getMessagesByEmployeeId(id);
+        if (!messages || messages.length === 0)
+            return [];
+        return messages;
     }
     @Post('/')
     @ApiBody({
@@ -45,34 +33,16 @@ export class MessagesController {
         }
     })
     async postMessage(@Body() message: Message) {
-        if (!message)
-            throw new HttpException('Message body is required', HttpStatus.BAD_REQUEST);
-        try {
-            const addMessage = await this._messageService.addMessage(message);
-            return addMessage;
-        } catch (err) {
-            throw new Error(`Error adding message: ${err.message}`);
-        }
+        const addMessage = await this._messageService.addMessage(message);
+        return addMessage;
     }
 
     @Put('/:id')
     async updateMessageIsRead(@Param('id') id: string) {
-        if (!id)
-            throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
-        try{
         const updatedMessage = await this._messageService.updateMessageIsRead(id);
         if (!updatedMessage)
-            throw new HttpException('Message not found', HttpStatus.NOT_FOUND);
+            throw new NotFoundException('Message not found');
         return updatedMessage;
-    }catch(error){
-        throw new HttpException(
-            {
-                status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: `Error updating message: ${error.message}`,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-    }
     }
 }
 
