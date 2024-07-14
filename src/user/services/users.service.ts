@@ -2,13 +2,13 @@ import {
   BadRequestException,
   ConflictException,
   HttpException,
+  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
-  ValidationError,
 } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { User } from 'src/schemas/user.entity';
@@ -20,13 +20,19 @@ export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
   async findOneByUserId(userId: string): Promise<User | undefined> {
+    if (!userId) {
+      throw new BadRequestException('User ID must be provided');
+}
     const user = await this.userModel.findById(userId).exec();
     return user;
   }
 
   async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
+    if(!auth0_user_id)
+    throw new BadRequestException('Auth0 user ID not provided');
+
     if (!emailFromHeaders) {
-        throw new BadRequestException('Email not found in headers');
+        throw new BadRequestException('user email not provided');
     }
 
     const existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
@@ -40,12 +46,13 @@ export class UserService {
         return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
 
-    const newUser = new User(); // יש לוודא יצירת אובייקט משתמש נכון לפי הדגם שלך
+    const newUser = new User(); 
     newUser.auth0_user_id = auth0_user_id;
     newUser.userEmail = emailFromHeaders;
     await this.createUser(newUser);
     return 'User added successfully.';
 }
+
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
@@ -53,8 +60,8 @@ export class UserService {
       {
         this.logger.error(`user with the id ${userId} was not found`);
         throw new NotFoundException(`user with the id ${userId} was not found`)
-
       }
+      
       return user;
     } catch (error) {
       this.logger.error('Failed to find user', error.stack);
@@ -114,6 +121,9 @@ export class UserService {
 }
 
   async createUser(user: CreateUserDto): Promise<User> {
+    if(!user) {
+      throw new BadRequestException('user is null');
+    }
     const newUser = new this.userModel(user);
     try {
       return await newUser.save();
@@ -130,6 +140,12 @@ export class UserService {
   }
 
   async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+    if(!user) {
+      throw new BadRequestException('user is null');
+    }
+    if(!id){
+      throw new BadRequestException('user id not provided');
+    }
     try {
       const updatedUser = await this.userModel.findOneAndUpdate(
         { auth0_user_id: id },
@@ -144,7 +160,7 @@ export class UserService {
     {
       if (error.name === 'ValidationError') {
         throw new BadRequestException('Validation failed: ' + error.message);
-      } else if (error.code === 11000) { // לדוגמה, אם יש שגיאת ייחודיות
+      } else if (error.code === 11000) { 
         throw new ConflictException('Duplicate key error: ' + error.message);
       } else {
         throw new InternalServerErrorException('An unexpected error occurred: ' + error.message);
