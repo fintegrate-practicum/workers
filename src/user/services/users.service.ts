@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ConflictException,
   HttpException,
-  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   ValidationError,
@@ -59,7 +58,7 @@ export class UserService {
       return user;
     } catch (error) {
       this.logger.error('Failed to find user', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Error fetching user');
     }
   }
   async findOneByEmail(email: string): Promise<User | undefined> {
@@ -73,14 +72,14 @@ export class UserService {
       return user;
     } catch (error) {
       this.logger.error('Failed to find user by email', error.stack);
-      throw new HttpException('Error fetching user', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Error fetching user');
     }
   }
 
   async updateAuth0UserId(existingUserByEmail: User | undefined, auth0_user_id: string): Promise<User | undefined> {
     if (!existingUserByEmail) {
         this.logger.error('User with this email does not exist');
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('User not found');
     }
 
     try {
@@ -109,7 +108,7 @@ export class UserService {
         throw new HttpException('Duplicate key error: ' + error.message, HttpStatus.CONFLICT);
     } else {
         this.logger.error('Failed to update user', error.stack);
-        throw new HttpException('Error updating user: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new InternalServerErrorException('Error updating user');
     }
 }
 }
@@ -154,3 +153,4 @@ export class UserService {
     }
   }
 }
+
