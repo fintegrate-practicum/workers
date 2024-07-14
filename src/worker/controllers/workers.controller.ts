@@ -27,14 +27,14 @@ import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
-  constructor(private readonly workersService: WorkersService) {}
+  constructor(private readonly workersService: WorkersService) { }
   @ApiBearerAuth()
   @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
-    if(!businessId)
+    if (!businessId)
       throw new HttpException('businessId is required', HttpStatus.BAD_REQUEST);
     return this.workersService.findAll(businessId);
   }
@@ -43,7 +43,7 @@ export class WorkersController {
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
-    if(!id)
+    if (!id)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
     try {
       const employee = await this.workersService.activateEmployee(id);
@@ -63,7 +63,7 @@ export class WorkersController {
 
   @Get(':id')
   getWorker(@Param('id') id: string) {
-    if(!id)
+    if (!id)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
     const employee = this.workersService.getEmployeeByUserId(id);
     if (!employee)
@@ -72,7 +72,7 @@ export class WorkersController {
   }
 
   @Get('data')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     if (!req || !res)
@@ -81,10 +81,11 @@ export class WorkersController {
   }
 
   @Get('company/:companyId')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
-    if(id)
-      throw new HttpException('companyId is required', HttpStatus.BAD_REQUEST); 
+    //i added !id instead of id
+    if (!id)
+      throw new HttpException('companyId is required', HttpStatus.BAD_REQUEST);
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
   }
@@ -122,12 +123,12 @@ export class WorkersController {
         },
       }),
     )
-    @Body()requestBody: workerValidationsSchema,){
-    if(!requestBody)
+    @Body() requestBody: workerValidationsSchema,) {
+    if (!requestBody)
       throw new HttpException('Request body is required', HttpStatus.BAD_REQUEST);
     try {
-      const result =  this.workersService.createEmployee(requestBody);
-      this.logger.log('good');
+      const result = this.workersService.createEmployee(requestBody);
+      this.logger.log('good1234');
       return result;
     } catch (error) {
       if (error instanceof HttpException) {
@@ -142,9 +143,9 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-    if(!id)
+    if (!id)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
-    if(!user)
+    if (!user)
       throw new HttpException('User data is required', HttpStatus.BAD_REQUEST);
     try {
       const response = this.workersService.updateEmployeeByUserId(id, user);

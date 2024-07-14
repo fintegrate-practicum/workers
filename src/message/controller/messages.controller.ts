@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, HttpException, HttpStatus, Post, Logger } from '@nestjs/common';
 import { Message } from '../../schemas/message.entity';
 import { MessagesService } from '../service/messages.service'
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -14,6 +14,7 @@ export class MessagesController {
         if (!id)
             throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
         try {
+
             const messages = await this._messageService.getMessagesByEmployeeId(id);
             if (!messages || messages.length === 0)
                 throw new HttpException('Messages not found', HttpStatus.NOT_FOUND);
@@ -59,20 +60,20 @@ export class MessagesController {
     async updateMessageIsRead(@Param('id') id: string) {
         if (!id)
             throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
-        try{
-        const updatedMessage = await this._messageService.updateMessageIsRead(id);
-        if (!updatedMessage)
-            throw new HttpException('Message not found', HttpStatus.NOT_FOUND);
-        return updatedMessage;
-    }catch(error){
-        throw new HttpException(
-            {
-                status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: `Error updating message: ${error.message}`,
-            },
-            HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-    }
+        try {
+            const updatedMessage = await this._messageService.updateMessageIsRead(id);
+            if (!updatedMessage)
+                throw new HttpException('Message not found', HttpStatus.NOT_FOUND);
+            return updatedMessage;
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.INTERNAL_SERVER_ERROR,
+                    error: `Error updating message: ${error.message}`,
+                },
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
     }
 }
 

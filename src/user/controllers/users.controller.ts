@@ -32,64 +32,70 @@ export class UsersController {
   getWorker(@Param('id') auth0_user_id: string) {
     if (!auth0_user_id) {
       throw new BadRequestException('User ID must be provided');
-}
+    }
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
 
   @Put('jwt')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {
     const auth0_user_id = req.user.id;
-    if(!auth0_user_id)
-    throw new BadRequestException('Auth0 user ID not provided');
+    if (!auth0_user_id)
+      throw new BadRequestException('Auth0 user ID not provided');
     const emailFromHeaders = req.headers['us'];
-    if(!emailFromHeaders)
-    throw new BadRequestException('user email not provided');
+    if (!emailFromHeaders)
+      throw new BadRequestException('user email not provided');
     console.log(`User Email: ${emailFromHeaders}`);
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
-  
+
 
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
     try {
-      if(!user) {
+      if (!user) {
         throw new BadRequestException('user is null');
       }
+      this.logger.log('createUser')
+
       return this._userService.createUser(user);
     } catch (error) {
       if (error.name === 'ConflictException') {
+        this.logger.log('error.name === ConflictException')
+
         throw new ConflictException(error.message);
       }
-       else if (error.code==400) {
-        throw new BadRequestException(error.message ||'Failed to create user');
+      else if (error.code == 400) {
+        this.logger.log('error.code == 400')
 
-        }  
-       throw new InternalServerErrorException('Unexpected error occurred');
+        throw new BadRequestException(error.message || 'Failed to create user');
 
       }
+      throw new InternalServerErrorException('Unexpected error occurred');
+
     }
-   
-  
+  }
+
+
 
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     try {
-      if(!user) {
+      if (!user) {
         throw new BadRequestException('user is null');
       }
       return this._userService.updateUser(id, user);
     } catch (error) {
-      if (error.name== NotFoundException) {
+      if (error.name == NotFoundException) {
         throw new NotFoundException(error.message);
-      } else if (error.name== BadRequestException) {
+      } else if (error.name == BadRequestException) {
         throw new BadRequestException(error.message);
-      } else if (error.name== ConflictException) {
+      } else if (error.name == ConflictException) {
         throw new ConflictException(error.message);
       } else {
         throw new InternalServerErrorException('An unexpected error occurred: ' + error.message);
       }
-      }
+    }
   }
 }
 
