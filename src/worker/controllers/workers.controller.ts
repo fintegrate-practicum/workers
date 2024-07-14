@@ -8,8 +8,7 @@ import {
   Post,
   ValidationPipe,
   BadRequestException,
-  HttpStatus,
-  // UseGuards,
+  UseGuards,
   Put,
   NotFoundException,
 } from '@nestjs/common';
@@ -18,7 +17,7 @@ import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { Logger } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
@@ -33,7 +32,7 @@ export class WorkersController {
   @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
@@ -58,14 +57,14 @@ export class WorkersController {
   }
 
   @Get('data')
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
     res.json({ message: 'Original data' });
   }
 
   @Get('company/:companyId')
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
@@ -94,7 +93,7 @@ export class WorkersController {
     },
   })
   @Post('')
-  //@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
       new ValidationPipe({
@@ -105,6 +104,7 @@ export class WorkersController {
       }),
     )
     @Body() requestBody: workerValidationsSchema,) {
+    this.logger.log(requestBody);
     const result = this.workersService.createEmployee(requestBody);
     this.logger.log('good');
     return result;
@@ -112,20 +112,10 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-    try {
       const response = this.workersService.updateEmployeeByUserId(id, user);
       if (!response) {
         throw new NotFoundException('employee not found');
       }
       return response;
-    } catch (error) {
-      if (error.status == HttpStatus.BAD_REQUEST) {
-        throw new NotFoundException('employee not found');
-      } else if (error.status === HttpStatus.NOT_FOUND) {
-        throw new NotFoundException('employee not found');
-      } else {
-        throw error;
-      }
-    }
   }
 }

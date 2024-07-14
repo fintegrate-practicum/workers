@@ -18,7 +18,7 @@ export class MessagesService {
 
     async getMessagesByEmployeeId(id: string): Promise<Message[]> {
         if (!id)
-            throw new BadRequestException('ID is required');
+            throw new BadRequestException('employee id is required');
         try {
             const objectId = new mongoose.Types.ObjectId(id);
             return await this.messageModel
@@ -35,10 +35,10 @@ export class MessagesService {
     async updateMessageIsRead(id: string): Promise<Message> {
         if (!id)
             throw new BadRequestException('ID is required');
-        let updatedMessageIsRead = await this.messageModel.findByIdAndUpdate(id, { read_status: true });
-        if (!updatedMessageIsRead)
+        const messageToUpdate = await this.messageModel.findByIdAndUpdate(id, { read_status: true });
+        if (!messageToUpdate)
             throw new NotFoundException('Message not found');
-        updatedMessageIsRead = await this.messageModel.findById(id)
-        return updatedMessageIsRead;
+        const updatedMessage = await this.messageModel.findById(id)
+        return updatedMessage;
     }
 }
