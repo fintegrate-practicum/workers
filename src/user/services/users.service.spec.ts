@@ -1,8 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './users.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 describe('UsersService', () => {
   let service: UserService;
+  let model: Model<any>
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -10,6 +13,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
+    model = module.get<Model<any>>(getModelToken('User'));
   });
 
   it('should be defined', () => {
@@ -36,7 +40,7 @@ describe('UsersService', () => {
       save: jest.fn(() => Promise.resolve(mockCreateUserDto)),
     };
 
-    jest.spyOn(service, 'userModel', 'get').mockReturnValue(mockUserModel as any);
+    jest.spyOn(model, 'findOne').mockReturnValue(mockUserModel as any);
     const createdUser = await service.createUser(mockCreateUserDto);
     expect(createdUser).toEqual(mockCreateUserDto);
   });

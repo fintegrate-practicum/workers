@@ -62,6 +62,8 @@ describe('WorkersService', () => {
         .spyOn(model, 'create')
         .mockResolvedValueOnce([mockEmployee[0]] as any);
       const newEmployee: workerValidationsSchema = {
+        userId: '12345',
+        nameEmployee: 'aa',
         businessId: '123456',
         createdBy: 'John Doe',
         code: 'bb',
@@ -76,14 +78,14 @@ describe('WorkersService', () => {
   describe('getEmployee', () => {
     it('should find and return an employee by ID', async () => {
       jest.spyOn(model, 'findById').mockResolvedValueOnce(mockEmployee[0]);
-      const result = await workersService.getEmployee(mockEmployee[0].code);
+      const result = await workersService.getEmployeeByUserId(mockEmployee[0].code);
       expect(result).toEqual(mockEmployee[0]);
     });
 
     it('should handle error when employee is not found', async () => {
       jest.spyOn(model, 'findById').mockResolvedValueOnce(null);
       await expect(
-        workersService.getEmployee('nonExistentCode'),
+        workersService.getEmployeeByUserId('nonExistentCode'),
       ).rejects.toThrowError();
     });
   });
@@ -98,7 +100,7 @@ describe('WorkersService', () => {
         createdBy: 'Dan',
         updatedBy: 'Yon',
       });
-      const result = await workersService.updateEmployee(
+      const result = await workersService.updateEmployeeByUserId(
         mockEmployee[0].code,
         updatedEmployeeData,
       );
@@ -116,7 +118,7 @@ describe('WorkersService', () => {
         updatedBy: 'Yon',
       });
       await expect(
-        workersService.updateEmployee(
+        workersService.updateEmployeeByUserId(
           mockEmployee[0].code,
           updatedEmployeeData,
         ),

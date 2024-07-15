@@ -35,6 +35,7 @@ describe('TasksController', () => {
 
   describe('createTask', () => {
     const taskData: CreateTaskDto = {
+      directLink: 'http://localhost:3001/api#/Workers/WorkersController_create',
       businessId: new Types.ObjectId('123'),
       taskName: 'Test Task',
       completionDate: new Date(0),
@@ -47,7 +48,7 @@ describe('TasksController', () => {
     };
 
     it('should call service.createTask with dto', async () => {
-      const mockResult = { ...taskData };
+      const mockResult = { ...taskData } as any;
       jest.spyOn(service, 'createTask').mockResolvedValue(mockResult);
 
       const result = await controller.createTask(taskData);
@@ -96,12 +97,12 @@ describe('TasksController', () => {
   describe('getAllManagerTasks', () => {
     let result;
     beforeEach(async () => {
-      jest.spyOn(service, 'getAllManagerTasks');
-      result = await controller.getAllManagerTasks(businessId, managerId);
+      jest.spyOn(service, 'getAllTasks');
+      result = await controller.getAllManagerTasks(managerId);
     });
 
     it('should call service.getAllTasks with managerId', () => {
-      expect(service.getAllManagerTasks).toBeCalledWith(managerId);
+      expect(service.getAllTasks).toBeCalledWith(managerId);
     });
 
     it('result should be equal to dynamicArry', () => {
@@ -125,7 +126,7 @@ describe('TasksController', () => {
           completionDate: new Date(0),
           managerId: 'Test managerId',
           urgency: 2,
-        };
+        } as any;
         jest.spyOn(service, 'updateTask').mockResolvedValue(mockTask);
         const result = await controller.updateTask('123', taskData, 'manager');
         expect(service.updateTask).toHaveBeenCalledWith('123', taskData);
@@ -149,7 +150,7 @@ describe('TasksController', () => {
           targetDate: new Date(0),
           employee: new Types.ObjectId['123'](),
           urgency: 2,
-        };
+        } as any;
         jest.spyOn(service, 'updateTask').mockResolvedValue(mockTask);
         const result = await controller.updateTask('123', taskData, 'employee');
         expect(service.updateTask).toHaveBeenCalledWith('123', taskData);
@@ -170,7 +171,7 @@ describe('TasksController', () => {
         employee: new Types.ObjectId['123'](),
         status: TaskStatus.Completed,
         urgency: 2,
-      };
+      } as any;
       jest.spyOn(service, 'deleteTask').mockResolvedValue(mockTask);
       const result = await controller.deleteTask('123');
       expect(service.deleteTask).toHaveBeenCalledWith('123');
