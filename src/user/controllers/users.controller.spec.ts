@@ -80,7 +80,7 @@ describe('UsersController', () => {
         street: 'Hshalom',
         num: 5,
       },
-    };    const createdUser = await controller.createTask(mockCreateUserDto);
+    };    const createdUser = await controller.createUser(mockCreateUserDto);
   
     expect(createdUser).toEqual(mockCreateUserDto);
   });
