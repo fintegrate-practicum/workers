@@ -13,7 +13,6 @@ async function initializeSwagger(app) {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 }
-const t = 9;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
