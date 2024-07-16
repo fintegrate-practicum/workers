@@ -7,10 +7,10 @@ import {
   Body,
   Post,
   ValidationPipe,
-  HttpException,
-  HttpStatus,
+  BadRequestException,
   UseGuards,
   Put,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { WorkersService } from '../services/workers.service';
@@ -41,25 +41,18 @@ export class WorkersController {
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
-    try {
-      const employee = await this.workersService.activateEmployee(id);
-      if (!employee) {
-        throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
-      }
-
-      return employee;
-    } catch (error) {
-      console.error('Error activating employee:', error.message);
-      throw new HttpException(
-        error.message,
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    const employee = await this.workersService.activateEmployee(id);
+    if (!employee) {
+      throw new NotFoundException('employee not found');
     }
+    return employee;
   }
 
   @Get(':id')
   getWorker(@Param('id') id: string) {
-    return this.workersService.getEmployeeByUserId(id);
+    const employee = this.workersService.getEmployeeByUserId(id);
+    if (!employee) throw new NotFoundException('employee not found');
+    return employee;
   }
 
   @Get('data')
@@ -99,49 +92,31 @@ export class WorkersController {
     },
   })
   @Post('')
-  //@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
       new ValidationPipe({
         exceptionFactory: (errors) => {
           Logger.log('error validation! ' + errors);
-          return new HttpException(errors, HttpStatus.BAD_REQUEST);
+          return new BadRequestException(errors);
         },
       }),
     )
-    @Body()requestBody: workerValidationsSchema,
-  ){
-    try {
-      const result =  this.workersService.createEmployee(requestBody);
-      this.logger.log('good');
-      return result;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    @Body()
+    requestBody: workerValidationsSchema,
+  ) {
+    this.logger.log(requestBody);
+    const result = this.workersService.createEmployee(requestBody);
+    this.logger.log('good');
+    return result;
   }
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-    try {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
-      if (!response) {
-        throw new HttpException('employee not found', HttpStatus.BAD_REQUEST);
-      }
-      return response;
-    } catch (error) {
-      if (error.status === HttpStatus.BAD_REQUEST) {
-        throw new HttpException('employee not found', HttpStatus.BAD_REQUEST);
-      } else if (error.status === HttpStatus.NOT_FOUND) {
-        throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
-      } else {
-        throw error;
-      }
+    const response = this.workersService.updateEmployeeByUserId(id, user);
+    if (!response) {
+      throw new NotFoundException('employee not found');
     }
+    return response;
   }
 }

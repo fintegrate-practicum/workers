@@ -1,47 +1,47 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, ObjectId } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Message } from '../../schemas/message.entity';
 
 @Injectable()
 export class MessagesService {
-    constructor(
-        @InjectModel(Message.name) private readonly messageModel: Model<Message>,
-    ) { }
+  constructor(
+    @InjectModel(Message.name) private readonly messageModel: Model<Message>,
+  ) {}
 
-    async addMessage(message: Message): Promise<Message> {
-        try {
-            if (message) {
-                const newMessage = new this.messageModel(message);
-                return await newMessage.save();
-            }
-            return null;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
+  async addMessage(message: Message): Promise<Message> {
+    if (!message) throw new BadRequestException('Message content is required');
+    const newMessage = new this.messageModel(message);
+    return await newMessage.save();
+  }
 
-    async getMessagesByEmployeeId(id: string): Promise<Message[]> {
-        try {
-            const objectId = new mongoose.Types.ObjectId(id);
-            return await this.messageModel
-                .find({ receiver_id: objectId })
-                .sort({ date_time: -1 })
-                .exec();
-        } catch (error) {
-            throw new InternalServerErrorException(
-                'Failed to get messages by employee ID',
-            );
-        }
+  async getMessagesByEmployeeId(id: string): Promise<Message[]> {
+    if (!id) throw new BadRequestException('employee id is required');
+    try {
+      const objectId = new mongoose.Types.ObjectId(id);
+      return await this.messageModel
+        .find({ receiver_id: objectId })
+        .sort({ date_time: -1 })
+        .exec();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to get messages by employee ID',
+      );
     }
+  }
 
-    async updateMessageIsRead(id: string): Promise<Message> {
-        let updatedMessageIsRead = await this.messageModel.findByIdAndUpdate(id, { read_status: true });
-        updatedMessageIsRead = await this.messageModel.findById(id)
-        if (!updatedMessageIsRead) {
-            throw new Error('Message not found');
-        }
-        return updatedMessageIsRead;
-    }
+  async updateMessageIsRead(id: string): Promise<Message> {
+    if (!id) throw new BadRequestException('ID is required');
+    const messageToUpdate = await this.messageModel.findByIdAndUpdate(id, {
+      read_status: true,
+    });
+    if (!messageToUpdate) throw new NotFoundException('Message not found');
+    const updatedMessage = await this.messageModel.findById(id);
+    return updatedMessage;
+  }
 }
