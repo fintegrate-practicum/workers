@@ -26,7 +26,7 @@ import { UserModule } from './user/module/users.module';
     MessagesModule,
     TasksModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
       }),
