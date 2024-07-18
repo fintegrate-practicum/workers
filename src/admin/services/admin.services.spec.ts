@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AdminService } from './admin.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Employee } from '../../schemas/employee.entity'
+import { Employee } from '../../schemas/employee.entity';
 import { User } from '../../schemas/user.entity';
 
 describe('AdminService', () => {
   let adminService: AdminService;
   let employeeModel: Model<Employee>;
-  let userModel: Model<User>; // וודא שאתה משתמש במודל המתאים של UserModel
+  let userModel: Model<User>;
 
   const mockEmployees: Employee[] = [
     { code: '1', createdBy: 'Dan', updatedBy: 'yoel', } as any,
@@ -23,33 +23,26 @@ describe('AdminService', () => {
           provide: getModelToken(Employee.name),
           useValue: {
             find: jest.fn().mockResolvedValue(mockEmployees),
-            findById: jest.fn().mockImplementation((code: string) => {
-              return mockEmployees.find((e) => e.code === code);
-            }),
+            findById: jest.fn().mockImplementation((code: string) => ({
+              exec: jest.fn().mockResolvedValue(
+                mockEmployees.find((e) => e.code === code)
+              ),
+            })),
           },
         },
         {
-          provide: getModelToken(User.name), // השתמש בשם המדויק של User
+          provide: getModelToken(User.name),
           useValue: {
-            // מודל מזויף לצורך הבדיקה
+            // mock model
           },
-      }
+        },
       ],
     }).compile();
 
     adminService = module.get<AdminService>(AdminService);
     employeeModel = module.get<Model<Employee>>(getModelToken(Employee.name));
-
+    userModel = module.get<Model<User>>(getModelToken(User.name));
   });
-
-  // describe('findAllByBusinessId', () => {
-  //   it('should return employees by business ID', async () => {
-  //     const businessId = '123456789'; // Specify the business ID
-  //     const result = await adminService.findAllByBusinessId(businessId);
-  //     expect(result.employees).toEqual(mockEmployees);
-  //     expect(result.total).toEqual(mockEmployees.length);
-  //   });
-  // });
 
   describe('getEmployee', () => {
     it('should return an employee by ID', async () => {
@@ -59,20 +52,15 @@ describe('AdminService', () => {
       expect(result).toEqual(expectedEmployee);
     });
 
-    // it('should return null for non-existent employee ID', async () => {
-    //   const nonExistentId = '3';
-    //   const result = await adminService.getEmployee(nonExistentId);
-    //   expect(result).toBeNull();
-    // });
+    it('should return null for non-existent employee ID', async () => {
+      const nonExistentId = '3';
+      const result = await adminService.getEmployee(nonExistentId);
+      expect(result).toBeNull();
+    });
 
-  it('always returns true', () => {
-  expect(true).toBe(true);
-});
-
+    it('always returns true', () => {
+      expect(true).toBe(true);
+    });
   });
 
-
 });
-
-
-
