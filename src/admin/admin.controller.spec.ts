@@ -1,24 +1,42 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { AdminController } from './admin.controller';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AdminController } from './admin.controller';
+import { AdminService } from './services/admin.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { Employee } from '../schemas/Employee.entity';
+import { User } from '../schemas/user.entity';
 
-// describe('AdminController', () => {
-//   let controller: AdminController;
+describe('AdminController', () => {
+  let controller: AdminController;
+  let adminService: AdminService;
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       controllers: [AdminController],
-//     }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [AdminController],
+      providers: [
+        AdminService,
+        {
+          provide: getModelToken(Employee.name),
+          useValue: {
+            // mock model methods if necessary
+          },
+        },
+        {
+          provide: getModelToken(User.name),
+          useValue: {
+            // mock model methods if necessary
+          },
+        },
+      ],
 
-//     controller = module.get<AdminController>(AdminController);
-//   });
+    }).compile();
 
-//   it('should be defined', () => {
-//     expect(controller).toBeDefined();
-//   });
-// });
+    controller = module.get<AdminController>(AdminController);
+    adminService = module.get<AdminService>(AdminService);
 
-it('always returns true', () => {
-  expect(true).toBe(true);
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
 });
-
-
