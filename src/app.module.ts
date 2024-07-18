@@ -15,7 +15,6 @@ import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -28,12 +27,12 @@ import { UserModule } from './user/module/users.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule, WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
-        uri: process.env.MONGODB_CONNECTION,
+        uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController],
+  controllers:[AppController],
   providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
