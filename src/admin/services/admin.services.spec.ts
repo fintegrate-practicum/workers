@@ -58,9 +58,6 @@ describe('AdminService', () => {
       expect(result).toBeNull();
     });
 
-    it('always returns true', () => {
-      expect(true).toBe(true);
-    });
   });
 
 });

@@ -39,9 +39,5 @@ describe('AdminController', () => {
     expect(controller).toBeDefined();
   });
 
-it('always returns true', () => {
-  expect(true).toBe(true);
-});
-
 });
 
