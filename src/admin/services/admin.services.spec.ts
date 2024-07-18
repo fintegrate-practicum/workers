@@ -25,7 +25,7 @@ describe('AdminService', () => {
             find: jest.fn().mockResolvedValue(mockEmployees),
             findById: jest.fn().mockImplementation((code: string) => ({
               exec: jest.fn().mockResolvedValue(
-                mockEmployees.find((e) => e.code === code)
+                mockEmployees.find((e) => e.code === code) || null
               ),
             })),
           },
