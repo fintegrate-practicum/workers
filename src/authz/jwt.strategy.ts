@@ -32,6 +32,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     } else if (aud !== process.env.AUTH0_AUDIENCE) {
       throw new HttpException('Invalid audience.', HttpStatus.UNAUTHORIZED);
     }
+
+
+
+
+
+
+    
     return { id: sub };
   }
 }

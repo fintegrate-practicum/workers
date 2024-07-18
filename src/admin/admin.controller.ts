@@ -10,6 +10,7 @@ export class AdminController {
 
   @Get('user/:id')
   async getUserById(@Param('id') id: string) :Promise<User>{
+    
     return this.adminService.getUserById(id);
   }
 

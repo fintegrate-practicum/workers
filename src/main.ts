@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-
+import { AuthMiddleware } from './try'; 
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
     .setTitle('Main api base')
@@ -21,6 +21,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalInterceptors(new TransformDataStructure());
+  app.use(AuthMiddleware)
   await app.listen(3001);
   console.log('HTTP server is listening on port 3001');
 }

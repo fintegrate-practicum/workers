@@ -37,3 +37,5 @@ import { UserModule } from './user/module/users.module';
   providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
+
+
