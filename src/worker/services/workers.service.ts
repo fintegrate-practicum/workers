@@ -1,20 +1,20 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-// import { User } from 'src/schemas/user.entity';
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
-  userModel;
 
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
+    if (!worker)
+      throw new BadRequestException('Request body is required');
     try {
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
@@ -28,8 +28,8 @@ export class WorkersService {
     }
   }
   async findAll(businessId: string): Promise<Employee[]> {
-    if(!businessId)
-      throw new HttpException('Business ID is required', HttpStatus.BAD_REQUEST); 
+    if (!businessId)
+      throw new BadRequestException('businessId is required');
     try{
     const query = { businessId };
     const employees = await this.employeeModel.find(query).exec();
@@ -43,8 +43,8 @@ export class WorkersService {
   }
 
   async findAllByBusinessId(businessId: string,page = 1,limit = 10,): Promise<Employee[]> {
-    if(!businessId)
-      throw new HttpException('Business ID is required', HttpStatus.BAD_REQUEST);
+    if (!businessId)
+      throw new BadRequestException('companyId is required');
     try {
       const skip = (page - 1) * limit;
       const query = { businessId };
@@ -63,8 +63,8 @@ export class WorkersService {
   }
 
   async getEmployeeByUserId(userId: string): Promise<Employee> {
-    if(!userId)
-      throw new HttpException('User ID is required', HttpStatus.BAD_REQUEST);
+    if (!userId)
+      throw new BadRequestException('ID is required');
     try {
       const employee = await this.employeeModel.findOne({ userId }).exec();
       if (!employee) {
@@ -85,8 +85,10 @@ export class WorkersService {
   
 
   async updateEmployeeByUserId(userId: string,updatedEmployee: Employee,): Promise<Employee> {
-    if(!userId)
-      throw new HttpException('User ID is required', HttpStatus.BAD_REQUEST);
+    if (!userId)
+      throw new BadRequestException('ID is required');
+    if (!updatedEmployee)
+      throw new BadRequestException('User data is required');
     try {
       const employee = await this.employeeModel
         .findOneAndUpdate({ userId }, updatedEmployee, { new: true })
@@ -107,8 +109,6 @@ export class WorkersService {
   }
 
   async deleteEmployee(id: string): Promise<Employee> {
-    if(!id)
-      throw new HttpException('Employee ID is required', HttpStatus.BAD_REQUEST);
     try {
       const employee = await this.employeeModel.findByIdAndDelete(id).exec();
       if (!employee) {
@@ -133,8 +133,8 @@ export class WorkersService {
   }
 
   async activateEmployee(id: string): Promise<Employee> {
-    if(!id)
-      throw new HttpException('Employee ID is required', HttpStatus.BAD_REQUEST);
+    if (!id)
+      throw new BadRequestException('ID is required');
     try {
       const updatedEmployee = await this.employeeModel
         .findByIdAndUpdate(id, { active: true }, { new: true })
@@ -151,3 +151,10 @@ export class WorkersService {
     }
   }
 }
+
+
+
+
+
+
+
