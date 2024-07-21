@@ -9,7 +9,6 @@ FROM node:lts-alpine
     # --- END NETFREE CERT INTSALL ---
 WORKDIR /app
 
-
 COPY package*.json ./
 
 
