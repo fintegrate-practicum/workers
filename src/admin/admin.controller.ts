@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param,UseGuards } from '@nestjs/common';
 import { AdminService } from './services/admin.service';
 import {User} from '../schemas/user.entity'
+import { AuthGuard } from '@nestjs/passport';
 // import { Admin } from './admin.entity';
 
 
@@ -9,9 +10,10 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
   @Get('user/:id')
-  async getUserById(@Param('id') id: string) :Promise<User>{
+  @UseGuards(AuthGuard('jwt'))
+  async getUserById(req) :Promise<User>{
     
-    return this.adminService.getUserById(id);
+    return this.adminService.getUserById(req.user.id);
   }
 
   @Get('business/:businessId/users')
