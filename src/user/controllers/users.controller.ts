@@ -25,7 +25,7 @@ export class UsersController {
 
   constructor(private readonly _userService: UserService) { }
 
-  @Get(':id')
+  @Get()
   @UseGuards(AuthGuard('jwt'))
   getWorker(req) {
     const auth0_user_id = req.user.id;
@@ -51,7 +51,7 @@ export class UsersController {
     }
   }
 
-  @Put(':id')
+  @Put()
   @UseGuards(AuthGuard('jwt'))
   async updateUser(req, @Body() user: UpdateUserDto) {
     try {
