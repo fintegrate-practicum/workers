@@ -26,7 +26,9 @@ export class UsersController {
   constructor(private readonly _userService: UserService) { }
 
   @Get(':id')
-  getWorker(@Param('id') auth0_user_id: string) {
+  @UseGuards(AuthGuard('jwt'))
+  getWorker(req) {
+    const auth0_user_id = req.user.id;
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
   @Put('jwt')
@@ -50,9 +52,10 @@ export class UsersController {
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
+  @UseGuards(AuthGuard('jwt'))
+  async updateUser(req, @Body() user: UpdateUserDto) {
     try {
-      return this._userService.updateUser(id, user);
+      return this._userService.updateUser(req.user.id, user);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

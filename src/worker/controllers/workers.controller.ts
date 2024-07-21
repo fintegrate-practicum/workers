@@ -42,11 +42,13 @@ export class WorkersController {
   @Get('employee/:id')
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
-  async activateEmployee(@Param('id') id: string): Promise<Employee> {
-    if(!id)
+  @UseGuards(AuthGuard('jwt'))
+  async activateEmployee(req): Promise<Employee> {
+    const userId = req.user.id;
+    if(!userId)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
     try {
-      const employee = await this.workersService.activateEmployee(id);
+      const employee = await this.workersService.activateEmployee(userId);
       if (!employee) {
         throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
       }
@@ -62,10 +64,12 @@ export class WorkersController {
   }
 
   @Get(':id')
-  getWorker(@Param('id') id: string) {
-    if(!id)
+  @UseGuards(AuthGuard('jwt'))
+  getWorker(req) {
+    const userId = req.user.id;
+    if(!userId)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
-    const employee = this.workersService.getEmployeeByUserId(id);
+    const employee = this.workersService.getEmployeeByUserId(userId);
     if (!employee)
       throw new HttpException('employee not found', HttpStatus.NOT_FOUND);
     return employee;
@@ -141,13 +145,15 @@ export class WorkersController {
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() user: Employee) {
-    if(!id)
+  @UseGuards(AuthGuard('jwt'))
+  updateUser(req, @Body() user: Employee) {
+    const userId = req.user.id;
+    if(!userId)
       throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
     if(!user)
       throw new HttpException('User data is required', HttpStatus.BAD_REQUEST);
     try {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
+      const response = this.workersService.updateEmployeeByUserId(userId, user);
       if (!response) {
         throw new HttpException('employee not found', HttpStatus.BAD_REQUEST);
       }
