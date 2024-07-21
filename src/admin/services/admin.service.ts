@@ -27,7 +27,6 @@ export class AdminService {
     return { employees, total };
   }
 
-
   async getEmployee(id: string): Promise<Employee> {
     return await this.EmployeeModel.findById(id).exec();
   }
