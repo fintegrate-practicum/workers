@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-import { AuthMiddleware } from './try'; 
+
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
     .setTitle('Main api base')
