@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AdminService } from './services/admin.service';
-import {User} from '../schemas/user.entity'
+import {User} from '../../../infra/src/userFromWorkers/schema/user.entity'
 // import { Admin } from './admin.entity';
 
 
