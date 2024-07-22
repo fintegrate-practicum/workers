@@ -53,28 +53,26 @@ describe('MessagesService', () => {
     expect(service).toBeDefined();
   });
 
-  // describe('addMessage', () => {
-  //   it('should throw BadRequestException if message is not provided', async () => {
-  //     await expect(service.addMessage(null)).rejects.toThrow(BadRequestException);
-  //   });
+  describe('addMessage', () => {
+    it('should throw BadRequestException if message is not provided', async () => {
+      await expect(service.addMessage(null)).rejects.toThrow(BadRequestException);
+    });
 
-  //   it('should create and return a message', async () => {
-  //     const newMessage = {
-  //       business_id: '12#@%2',
-  //       sender_id: new Types.ObjectId(),
-  //       receiver_id: new Types.ObjectId(),
-  //       message_content: 'Test message 3',
-  //       date_time: new Date(),
-  //       read_status: false,
-  //       status: 'new',
-  //     };
+    it('should create and return a message', async () => {
+      const newMessage = {
+        business_id: '12#@%2',
+        sender_id: new Types.ObjectId(),
+        receiver_id: new Types.ObjectId(),
+        message_content: 'Test message 3',
+        date_time: new Date(),
+        read_status: false,
+        status: 'new',
+      };
 
-  //     const result = await service.addMessage(newMessage as any);
-  //     expect(result).toEqual(mockMessage);
-  //     expect(mockMessageModel.create).toHaveBeenCalledWith(newMessage);
-  //   });
-  // });
-
+      const result = await service.addMessage(newMessage as any);
+      expect(result).toEqual(mockMessage);
+      expect(mockMessageModel.create).toHaveBeenCalledWith(newMessage);
+    });
   describe('getMessagesByEmployeeId', () => {
     it('should throw BadRequestException if id is not provided', async () => {
       await expect(service.getMessagesByEmployeeId('')).rejects.toThrow(BadRequestException);
@@ -113,6 +111,7 @@ describe('MessagesService', () => {
       expect(mockMessageModel.findById).toHaveBeenCalledWith(mockMessage._id.toHexString());
     });
   });
+});
 });
 
 

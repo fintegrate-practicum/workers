@@ -1,86 +1,94 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { HttpException, HttpStatus } from '@nestjs/common';
-// import { MessagesController } from './messages.controller';
-// import { MessagesService } from '../service/messages.service';
-// import { Message, MessageSchema } from '../../schemas/message.entity';
-// import { Types } from 'mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { MessagesController } from './messages.controller';
+import { MessagesService } from '../service/messages.service';
+import { Types } from 'mongoose';
+import { BadRequestException, HttpException } from '@nestjs/common';
 
-// describe('MessagesController', () => {
-//     let controller: MessagesController;
-//     let service: MessagesService;
+describe('MessagesController', () => {
+  let controller: MessagesController;
+  let service: MessagesService;
 
-//     const mockMessage: Partial<Message> = {
-//         sender_id: new Types.ObjectId(),
-//         receiver_id: new Types.ObjectId(),
-//         message_content: 'Test message content',
-//         date_time: new Date(),
-//         read_status: false,
-//         status: 'sent',
-//     };
+  const mockMessage = {
+    _id: new Types.ObjectId(),
+    business_id: '12#@%2',
+    sender_id: new Types.ObjectId(),
+    receiver_id: new Types.ObjectId(),
+    message_content: 'Test message',
+    date_time: new Date(),
+    read_status: false,
+    status: 'new',
+  };
 
-//     const mockMessagesService = {
-//         getMessagesByEmployeeId: jest.fn(),
-//     };
+  const mockMessageService = {
+    getMessagesByEmployeeId: jest.fn().mockResolvedValue([mockMessage]),
+    addMessage: jest.fn().mockResolvedValue(mockMessage),
+    updateMessageIsRead: jest.fn().mockResolvedValue(mockMessage),
+  };
 
-//     beforeEach(async () => {
-//         const module: TestingModule = await Test.createTestingModule({
-//             controllers: [MessagesController],
-//             providers: [
-//                 {
-//                     provide: MessagesService,
-//                     useValue: {
-//                         mockMessagesService,
-//                         updateMessageIsRead: jest.fn().mockResolvedValue({ _id: '1', read_status: true }),
-//                     }
-//                 },
-//             ],
-//         }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [MessagesController],
+      providers: [
+        {
+          provide: MessagesService,
+          useValue: mockMessageService,
+        },
+      ],
+    }).compile();
 
-//         controller = module.get<MessagesController>(MessagesController);
-//         service = module.get<MessagesService>(MessagesService);
-//     });
-
-//     it('should be defined', () => {
-//         expect(controller).toBeDefined();
-//     });
-
-//     describe('getMessagesByEmployeeId', () => {
-//         it('should return an array of messages', async () => {
-//             const employeeId = '60d9c6f3f9b5b61710f0f4f4';
-//             const messages = [mockMessage];
-//             mockMessagesService.getMessagesByEmployeeId.mockResolvedValueOnce(
-//                 messages,
-//             );
-
-//             const result = await controller.getMessagesByEmployeeId(employeeId);
-//             expect(result).toEqual(messages);
-//             expect(service.getMessagesByEmployeeId).toHaveBeenCalledWith(employeeId);
-//         });
-
-//         it('should throw HttpException if service throws error', async () => {
-//             const employeeId = '60d9c6f3f9b5b61710f0f4f4';
-//             mockMessagesService.getMessagesByEmployeeId.mockRejectedValueOnce(
-//                 new HttpException('Invalid data', HttpStatus.BAD_REQUEST),
-//             );
-
-//             await expect(
-//                 controller.getMessagesByEmployeeId(employeeId),
-//             ).rejects.toThrow(HttpException);
-//         });
-//     });
-
-//     it('should call updateMessageIsRead and return the result', async () => {
-//         const id = '1';
-//         const result = { _id: '1', read_status: true };
-
-//         expect(await controller.updateMessageIsRead(id)).toEqual(result);
-//         expect(service.updateMessageIsRead).toHaveBeenCalledWith(id);
-//     });
-// });
-
-it('always returns true', () => {
-    expect(true).toBe(true);
+    controller = module.get<MessagesController>(MessagesController);
+    service = module.get<MessagesService>(MessagesService);
   });
-  
-  
-  
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  describe('getMessagesByEmployeeId', () => {
+    it('should return an array of messages', async () => {
+      const result = await controller.getMessagesByEmployeeId(mockMessage.receiver_id.toHexString());
+      expect(result).toEqual([mockMessage]);
+      expect(service.getMessagesByEmployeeId).toHaveBeenCalledWith(mockMessage.receiver_id.toHexString());
+    });
+
+    it('should return an empty array if no messages are found', async () => {
+      jest.spyOn(service, 'getMessagesByEmployeeId').mockResolvedValueOnce([]);
+      const result = await controller.getMessagesByEmployeeId(mockMessage.receiver_id.toHexString());
+      expect(result).toEqual([]);
+    });
+  });
+  it('should throw HttpException if service throws error', async () => {
+    const employeeId = '60d9c6f3f9b5b61710f0f4f4';
+    mockMessageService.getMessagesByEmployeeId.mockRejectedValueOnce(
+      new BadRequestException('Invalid data'),
+    );
+
+    await expect(controller.getMessagesByEmployeeId(employeeId)).rejects.toThrow(HttpException);
+  });
+
+
+describe('postMessage', () => {
+    it('should call addMessage and return the result', async () => {
+      const result = await controller.postMessage(mockMessage as any);
+      expect(result).toEqual(mockMessage);
+      expect(service.addMessage).toHaveBeenCalledWith(mockMessage);
+    });
+
+    it('should throw HttpException if service throws error', async () => {
+      mockMessageService.addMessage.mockRejectedValueOnce(
+        new BadRequestException('Invalid data'),
+      );
+
+      await expect(controller.postMessage(mockMessage as any)).rejects.toThrow(HttpException);
+    });
+  });
+
+describe('updateMessageIsRead', () => {
+    it('should call updateMessageIsRead and return the result', async () => {
+      const id = mockMessage._id.toHexString();
+      const result = await controller.updateMessageIsRead(id);
+      expect(result).toEqual(mockMessage);
+      expect(service.updateMessageIsRead).toHaveBeenCalledWith(id);
+    });
+  });
+});
