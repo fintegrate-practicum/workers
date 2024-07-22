@@ -37,10 +37,12 @@ export class WorkersController {
     return this.workersService.findAll(businessId);
   }
 
-  @Get('employee/:id')
+
   @ApiOperation({ summary: 'Activate an employee' })
-  @Post(':id/activate')
-  async activateEmployee(@Param('id') id: string): Promise<Employee> {
+  @Put('activate')
+  @UseGuards(AuthGuard('jwt'))
+  async activateEmployee(req): Promise<Employee> {
+    const id=req.user.id
     const employee = await this.workersService.activateEmployee(id);
     if (!employee) {
       throw new NotFoundException('employee not found');
@@ -48,9 +50,11 @@ export class WorkersController {
     return employee;
   }
 
-  @Get(':id')
-  getWorker(@Param('id') id: string) {
-    const employee = this.workersService.getEmployeeByUserId(id);
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  getWorker(req) {
+    const UseId=req.user.id
+    const employee = this.workersService.getEmployeeByUserId(UseId);
     if (!employee)
       throw new NotFoundException('employee not found');
     return employee;
@@ -110,9 +114,11 @@ export class WorkersController {
     return result;
   }
 
-  @Put(':id')
-  updateUser(@Param('id') id: string, @Body() user: Employee) {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
+  @Put('')
+  @UseGuards(AuthGuard('jwt'))
+  updateUser(req, @Body() user: Employee) {
+    const userId=req.user.id
+      const response = this.workersService.updateEmployeeByUserId(userId, user);
       if (!response) {
         throw new NotFoundException('employee not found');
       }
