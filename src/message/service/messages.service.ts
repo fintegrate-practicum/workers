@@ -9,13 +9,13 @@ export class MessagesService {
         @InjectModel(Message.name) private readonly messageModel: Model<Message>,
     ) { }
 
-    async addMessage(message: Message): Promise<Message> {
+    async addMessage(message: Partial<Message>): Promise<Message> {
         if (!message)
-            throw new BadRequestException('Message content is required')
-        const newMessage = new this.messageModel(message);
-        return await newMessage.save();
-    }
-
+          throw new BadRequestException('Message content is required');
+        const newMessage = await this.messageModel.create(message);
+        return newMessage;
+      }
+    
     async getMessagesByEmployeeId(id: string): Promise<Message[]> {
         if (!id)
             throw new BadRequestException('employee id is required');
