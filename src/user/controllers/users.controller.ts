@@ -27,6 +27,11 @@ export class UsersController {
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
 
+  @Get('email/:email')
+  getUserByEmail(@Param('email') email: string) {
+    return this._userService.findOneByEmail(email);
+  }
+
   @Put('jwt')
   @UseGuards(AuthGuard('jwt'))
   async checkAndAddUser(@Request() req): Promise<string> {
@@ -35,17 +40,27 @@ export class UsersController {
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
   
-
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
       return this._userService.createUser(user);
     }
    
-  
-
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
       return this._userService.updateUser(id, user);
+  }
+
+  @Get(':id/businesses')
+  async getUserBusinesses(@Param('id') userId: string) {
+    return this._userService.getUserBusinesses(userId);
+  }
+
+  @Get(':userId/business/:businessId')
+  async getUserRoleInBusiness(
+    @Param('userId') userId: string,
+    @Param('businessId') businessId: string,
+  ) {
+    return this._userService.getUserRoleInBusiness(userId, businessId);
   }
 }
 

@@ -32,8 +32,24 @@ export class User extends Document {
     street: string;
     num: number;
   };
+
   @Prop()
   phone: string;
+
+  @Prop({
+    type: [
+      {
+        businessId: String,
+        role: { type: String, enum: ['Manager', 'Employee', 'User'] }
+      }
+    ],
+    default: []
+  })
+  businessRoles: {
+    businessId: string;
+    role: 'Manager' | 'Employee' | 'User';
+  }[];
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
