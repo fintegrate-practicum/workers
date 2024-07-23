@@ -12,7 +12,7 @@ describe('TasksController', () => {
   let controller: TasksController;
   let service: TasksService;
 
-  const validObjectId = new Types.ObjectId().toHexString(); // יוצר ObjectId תקף
+  const validObjectId = new Types.ObjectId().toHexString(); 
 
   const dynamicArry = [
     {
@@ -48,8 +48,7 @@ describe('TasksController', () => {
           useValue: {
             createTask: jest.fn(),
             getAllTasks: jest.fn().mockResolvedValue(dynamicArry),
-            updateTaskEmployee: jest.fn(),
-            updateTaskManager: jest.fn(),
+            updateTask: jest.fn(),
             deleteTask: jest.fn(),
           },
         },
@@ -59,25 +58,6 @@ describe('TasksController', () => {
     controller = await module.resolve(TasksController);
     service = module.get<TasksService>(TasksService);
   });
-beforeEach(async () => {
-  const module: TestingModule = await Test.createTestingModule({
-    controllers: [TasksController],
-    providers: [
-      {
-        provide: TasksService,
-        useValue: {
-          createTask: jest.fn(),
-          getAllTasks: jest.fn().mockResolvedValue(dynamicArry), 
-          updateTask: jest.fn(),
-          deleteTask: jest.fn(), 
-        },
-      },
-    ],
-  }).compile();
-
-  controller = module.get<TasksController>(TasksController);
-  service = module.get<TasksService>(TasksService);
-});
 
   describe('createTask', () => {
     const taskData: CreateTaskDto = {
@@ -187,17 +167,7 @@ beforeEach(async () => {
   
   describe('deleteTask', () => {
     it('should call service.deleteTask with taskId', async () => {
-      const mockTask = {
-        businessId: new Types.ObjectId(validObjectId),
-        taskName: 'Test Task',
-        completionDate: new Date(0),
-        description: 'Test description',
-        managerId: 'Test managerId',
-        targetDate: new Date(0),
-        employee: [new Types.ObjectId(validObjectId)],
-        status: TaskStatus.Completed,
-        urgency: 2,
-      } as any;
+      const mockTask = {} as any;
       jest.spyOn(service, 'deleteTask').mockResolvedValue(mockTask);
       const result = await controller.deleteTask('123');
       expect(service.deleteTask).toHaveBeenCalledWith('123');

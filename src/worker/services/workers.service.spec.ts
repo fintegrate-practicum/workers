@@ -1,79 +1,79 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { WorkersService } from '../services/workers.service';
-// import { getModelToken } from '@nestjs/mongoose';
-// import { Employee } from '../../schemas/employee.entity';
-// import { Model, Types } from 'mongoose';
-// import { EMPTY } from 'rxjs';
-// import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
-// import { workerValidationsSchema } from '../validations/worker.validations.schema';
+import { Test, TestingModule } from '@nestjs/testing';
+import { WorkersService } from '../services/workers.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { Employee } from '../../schemas/employee.entity';
+import { Model, Types } from 'mongoose';
+import { EMPTY } from 'rxjs';
+import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
+import { workerValidationsSchema } from '../validations/worker.validations.schema';
 
-// describe('WorkersService', () => {
-//   let workersService: WorkersService;
-//   let model: Model<Employee>;
-//   const mockEmployee: Employee[] = [
-//     new Employee({
-//       businessId: '123',
-//       code: 'EMP001',
-//       createdBy: 'admin',
-//       updatedBy: 'admin',
-//       role: {
-//         type: 'aa',
-//         activate: false,
-//         description: 'developer',
-//       },
-//     }),
-//     new Employee({
-//       businessId: '123',
-//       code: 'EMP001',
-//       createdBy: 'admin',
-//       updatedBy: 'admin',
-//       role: {
-//         type: 'aa',
-//         activate: false,
-//         description: 'developer',
-//       },
-//     }),
-//   ];
+describe('WorkersService', () => {
+  let workersService: WorkersService;
+  let model: Model<Employee>;
+  const mockEmployee: Employee[] = [
+    new Employee({
+      businessId: '123',
+      code: 'EMP001',
+      createdBy: 'admin',
+      updatedBy: 'admin',
+      role: {
+        type: 'aa',
+        activate: false,
+        description: 'developer',
+      },
+    }),
+    new Employee({
+      businessId: '123',
+      code: 'EMP001',
+      createdBy: 'admin',
+      updatedBy: 'admin',
+      role: {
+        type: 'aa',
+        activate: false,
+        description: 'developer',
+      },
+    }),
+  ];
 
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       providers: [
-//         WorkersService,
-//         {
-//           provide: getModelToken('Employee'),
-//           useValue: {
-//             create: jest.fn(),
-//             findById: jest.fn(),
-//             findByIdAndUpdate: jest.fn(),
-//             findByIdAndDelete: jest.fn(),
-//             find: jest.fn(),
-//             countDocuments: jest.fn(),
-//           },
-//         },
-//       ],
-//     }).compile();
-//     workersService = module.get<WorkersService>(WorkersService);
-//     model = module.get<Model<Employee>>(getModelToken('Employee'));
-//   });
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        WorkersService,
+        {
+          provide: getModelToken('Employee'),
+          useValue: {
+            create: jest.fn(),
+            findById: jest.fn(),
+            findByIdAndUpdate: jest.fn(),
+            findByIdAndDelete: jest.fn(),
+            find: jest.fn(),
+            countDocuments: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
+    workersService = module.get<WorkersService>(WorkersService);
+    model = module.get<Model<Employee>>(getModelToken('Employee'));
+  });
 
-//   describe('createEmployee', () => {
-//     it('should create and return an employee', async () => {
-//       jest
-//         .spyOn(model, 'create')
-//         .mockResolvedValueOnce([mockEmployee[0]] as any);
-//       const newEmployee: workerValidationsSchema = {
-//         userId: '12345',
-//         nameEmployee: 'aa',
-//         businessId: '123456',
-//         createdBy: 'John Doe',
-//         code: 'bb',
-//         updateBy: 'aa',
-//         role: new RoleValidationSchema(),
-//       };
-//       const result = await workersService.createEmployee(newEmployee);
-//       expect(result).toEqual(mockEmployee[0]);
-//     });
-//   });
+  // describe('createEmployee', () => {
+  //   it('should create and return an employee', async () => {
+  //     jest
+  //       .spyOn(model, 'create')
+  //       .mockResolvedValueOnce([mockEmployee[0]] as any);
+  //     const newEmployee: workerValidationsSchema = {
+  //       userId: '12345',
+  //       nameEmployee: 'aa',
+  //       businessId: '123456',
+  //       createdBy: 'John Doe',
+  //       code: 'bb',
+  //       updateBy: 'aa',
+  //       role: new RoleValidationSchema(),
+  //     };
+  //     const result = await workersService.createEmployee(newEmployee);
+  //     expect(result).toEqual(mockEmployee[0]);
+  //   });
+  // });
 
 //   describe('getEmployee', () => {
 //     it('should find and return an employee by ID', async () => {
@@ -154,11 +154,8 @@
 //       const result = await workersService.findAllByBusinessId(businessId);
 //       expect(result).toEqual(mockEmployees);
 //     });
-//   });
+  });
 // });
 
-it('always returns true', () => {
-  expect(true).toBe(true);
-});
 
 
