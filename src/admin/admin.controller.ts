@@ -17,6 +17,7 @@ export class AdminController {
   async getUsersByBusinessId(@Param('businessId') businessId: string) :Promise<User[]>{
     return this.adminService.getUsersByBusinessId(businessId);
   }
+}
 
   // @Get()
   // async findAll(): Promise<Admin[]> {
@@ -27,4 +28,3 @@ export class AdminController {
   // getAdmin(@Param('id') id: string) {
   //   return this.adminService.getAdmin(id);
   // }
-}
