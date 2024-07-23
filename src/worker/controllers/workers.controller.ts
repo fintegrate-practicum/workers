@@ -41,8 +41,7 @@ export class WorkersController {
   @ApiOperation({ summary: 'Activate an employee' })
   @Put('activate')
   @UseGuards(AuthGuard('jwt'))
-  async activateEmployee(req): Promise<Employee> {
-    const id=req.user.id
+  async activateEmployee(@Param('id') id: string): Promise<Employee> {
     const employee = await this.workersService.activateEmployee(id);
     if (!employee) {
       throw new NotFoundException('employee not found');
@@ -52,9 +51,8 @@ export class WorkersController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  getWorker(req) {
-    const UseId=req.user.id
-    const employee = this.workersService.getEmployeeByUserId(UseId);
+  getWorker(@Param('id') id: string) {
+    const employee = this.workersService.getEmployeeByUserId(id);
     if (!employee)
       throw new NotFoundException('employee not found');
     return employee;
