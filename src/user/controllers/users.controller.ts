@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Body,
   Post,
   Put,
@@ -21,10 +22,9 @@ export class UsersController {
 
   constructor(private readonly _userService: UserService) { }
 
-  @Get()
+  @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  getWorker(@Request() req) {
-    const auth0_user_id = req.user.id;
+  getWorker(@Param('id') auth0_user_id: string) {
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
 
