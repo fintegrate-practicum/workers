@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { TaskStatus } from 'src/enum/taskStatus.enum';
+import { TaskStatus } from '../enum/taskStatus.enum';
 
 export type TaskDoc = Task & Document;
 @Schema()
