@@ -16,10 +16,10 @@ export class WorkersService {
     if (!worker)
       throw new BadRequestException('Request body is required');
     try {
-      const newEmployee = new this.employeeModel(worker);
+      const newEmployee =  this.employeeModel.create(worker);
       const workerCode = this.generateUniqueNumber();
-      newEmployee.code = workerCode;
-      return await newEmployee.save();   
+      (await newEmployee).code = workerCode;
+      return  newEmployee;   
     } catch (error) {
       throw new HttpException(
         'Error creating employee',
@@ -62,25 +62,25 @@ export class WorkersService {
     }
   }
 
-  async getEmployeeByUserId(userId: string): Promise<Employee> {
-    if (!userId)
-      throw new BadRequestException('ID is required');
-    try {
-      const employee = await this.employeeModel.findOne({ userId }).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error fetching employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  // async getEmployeeByUserId(userId: string): Promise<Employee> {
+  //   if (!userId)
+  //     throw new BadRequestException('ID is required');
+  //   try {
+  //     const employee = await this.employeeModel.findOne({ userId }).exec();
+  //     if (!employee) {
+  //       throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+  //     }
+  //     return employee;
+  //   } catch (error) {
+  //     if (error.status === HttpStatus.NOT_FOUND) {
+  //       throw error;
+  //     }
+  //     throw new HttpException(
+  //       'Error fetching employee',
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
   
   
 
