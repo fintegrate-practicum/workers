@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class BusinessRole {
   @ApiProperty({
     description: 'ID of the business',
     example: '12345',
   })
-//   @IsNotEmpty()
+  @IsNotEmpty()
   @IsString()
   businessId: string;
 
@@ -14,7 +14,7 @@ export class BusinessRole {
     description: 'Role of the user in the business',
     example: 'Manager',
   })
-//   @IsNotEmpty()
+  @IsNotEmpty()
   @IsString()
   role: string;
 }
