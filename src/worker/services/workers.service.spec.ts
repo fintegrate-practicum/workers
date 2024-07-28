@@ -56,24 +56,24 @@
 //     model = module.get<Model<Employee>>(getModelToken('Employee'));
 //   });
 
-//   describe('createEmployee', () => {
-//     it('should create and return an employee', async () => {
-//       jest
-//         .spyOn(model, 'create')
-//         .mockResolvedValueOnce([mockEmployee[0]] as any);
-//       const newEmployee: workerValidationsSchema = {
-//         userId: '12345',
-//         nameEmployee: 'aa',
-//         businessId: '123456',
-//         createdBy: 'John Doe',
-//         code: 'bb',
-//         updateBy: 'aa',
-//         role: new RoleValidationSchema(),
-//       };
-//       const result = await workersService.createEmployee(newEmployee);
-//       expect(result).toEqual(mockEmployee[0]);
-//     });
-//   });
+  // describe('createEmployee', () => {
+  //   it('should create and return an employee', async () => {
+  //     jest
+  //       .spyOn(model, 'create')
+  //       .mockResolvedValueOnce([mockEmployee[0]] as any);
+  //     const newEmployee: workerValidationsSchema = {
+  //       userId: '12345',
+  //       nameEmployee: 'aa',
+  //       businessId: '123456',
+  //       createdBy: 'John Doe',
+  //       code: 'bb',
+  //       updateBy: 'aa',
+  //       role: new RoleValidationSchema(),
+  //     };
+  //     const result = await workersService.createEmployee(newEmployee);
+  //     expect(result).toEqual(mockEmployee[0]);
+  //   });
+  // });
 
 //   describe('getEmployee', () => {
 //     it('should find and return an employee by ID', async () => {
@@ -154,11 +154,9 @@
 //       const result = await workersService.findAllByBusinessId(businessId);
 //       expect(result).toEqual(mockEmployees);
 //     });
-//   });
+  // });
 // });
 
 it('always returns true', () => {
   expect(true).toBe(true);
 });
-
-
