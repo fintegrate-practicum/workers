@@ -12,7 +12,7 @@ export class BusinessRole {
 
   @ApiProperty({
     description: 'Role of the user in the business',
-    example: 'Manager',
+    example: 'Admin',
   })
   @IsNotEmpty()
   @IsString()

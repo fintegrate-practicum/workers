@@ -13,9 +13,11 @@ export class WorkersService {
   ) {}
 
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
+    this.logger.log('create')
     if (!worker)
       throw new BadRequestException('Request body is required');
     try {
+      this.logger.log('try')
       const newEmployee = new this.employeeModel(worker);
       const workerCode = this.generateUniqueNumber();
       newEmployee.code = workerCode;

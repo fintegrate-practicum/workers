@@ -104,6 +104,7 @@ export class WorkersController {
       }),
     )
     @Body() requestBody: workerValidationsSchema,) {
+    this.logger.log('1');
     this.logger.log(requestBody);
     const result = this.workersService.createEmployee(requestBody);
     this.logger.log('good');
@@ -112,10 +113,10 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
-      if (!response) {
-        throw new NotFoundException('employee not found');
-      }
-      return response;
+    const response = this.workersService.updateEmployeeByUserId(id, user);
+    if (!response) {
+      throw new NotFoundException('employee not found');
+    }
+    return response;
   }
 }

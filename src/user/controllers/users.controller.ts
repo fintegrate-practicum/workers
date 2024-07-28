@@ -14,6 +14,7 @@ import { Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/schemas/user.entity';
 
 @ApiTags('User')
 @Controller('user')
@@ -30,6 +31,13 @@ export class UsersController {
   @Get('email/:email')
   getUserByEmail(@Param('email') email: string) {
     return this._userService.findOneByEmail(email);
+  }
+
+  @Get('jwt')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserByToken(@Request() req): Promise<User> {
+    const auth0_user_id = req.user.id;
+    return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
 
   @Put('jwt')

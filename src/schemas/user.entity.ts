@@ -40,14 +40,14 @@ export class User extends Document {
     type: [
       {
         businessId: String,
-        role: { type: String, enum: ['Manager', 'Employee', 'User'] }
+        role: { type: String, enum: ['admin', 'employee', 'client'] }
       }
     ],
     default: []
   })
   businessRoles: {
     businessId: string;
-    role: 'Manager' | 'Employee' | 'User';
+    role: 'admin' | 'employee' | 'client';
   }[];
 
 }
