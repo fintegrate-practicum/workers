@@ -1,18 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  UseInterceptors,
-  Query,
-  Body,
-  Post,
-  ValidationPipe,
-  BadRequestException,
-  UseGuards,
-  Put,
-  NotFoundException,
-} from '@nestjs/common';
-
+import {  Controller, Get,Param, UseInterceptors, Query, Body, Post, ValidationPipe, BadRequestException, UseGuards, Put, NotFoundException,} from '@nestjs/common';
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
@@ -28,31 +14,33 @@ export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
   constructor(private readonly workersService: WorkersService) { }
+
   @ApiBearerAuth()
-  @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
   @Get()
+  @ApiOperation({ summary: 'Get the employees of the company' })
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
 
   @Get('employee/:id')
-  @ApiOperation({ summary: 'Activate an employee' })
-  @Post(':id/activate')
-  async activateEmployee(@Param('id') id: string): Promise<Employee> {
-    const employee = await this.workersService.activateEmployee(id);
+  @ApiOperation({ summary: 'Get an employee' })
+  async getEmployee(@Param('id') id: string): Promise<Employee> {
+    const employee = await this.workersService.getEmployeeByUserId(id);
     if (!employee) {
       throw new NotFoundException('employee not found');
     }
     return employee;
   }
 
-  @Get(':id')
-  getWorker(@Param('id') id: string) {
-    const employee = this.workersService.getEmployeeByUserId(id);
-    if (!employee)
+  @Post(':id/activate')
+  @ApiOperation({ summary: 'Activate an employee' })
+  async activateEmployee(@Param('id') id: string): Promise<Employee> {
+    const employee = await this.workersService.activateEmployee(id);
+    if (!employee) {
       throw new NotFoundException('employee not found');
+    }
     return employee;
   }
 
@@ -65,7 +53,7 @@ export class WorkersController {
 
   @Get('company/:companyId')
   @UseGuards(AuthGuard('jwt'))
-  async get(@Param('companyId') id: string): Promise<Employee[]> {
+  async getByCompanyId(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
     return result;
   }
@@ -92,7 +80,7 @@ export class WorkersController {
       },
     },
   })
-  @Post('')
+  @Post()
   @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
@@ -105,17 +93,17 @@ export class WorkersController {
     )
     @Body() requestBody: workerValidationsSchema,) {
     this.logger.log(requestBody);
-    const result = this.workersService.createEmployee(requestBody);
+    const result = await this.workersService.createEmployee(requestBody);
     this.logger.log('good');
     return result;
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() user: Employee) {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
-      if (!response) {
-        throw new NotFoundException('employee not found');
-      }
-      return response;
+  updateEmployee(@Param('id') id: string, @Body() user: Employee) {
+    const response = this.workersService.updateEmployeeByUserId(id, user);
+    if (!response) {
+      throw new NotFoundException('employee not found');
+    }
+    return response;
   }
 }
