@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { RabbitPublisherService } from './rabbit-publisher.service';
 
 describe('RabbitPublisherService', () => {
@@ -6,7 +7,10 @@ describe('RabbitPublisherService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RabbitPublisherService],
+      providers: [
+        RabbitPublisherService,
+        ConfigService, // הוספת ConfigService לספקים
+      ],
     }).compile();
 
     service = module.get<RabbitPublisherService>(RabbitPublisherService);
@@ -16,3 +20,7 @@ describe('RabbitPublisherService', () => {
     expect(service).toBeDefined();
   });
 });
+
+
+
+
