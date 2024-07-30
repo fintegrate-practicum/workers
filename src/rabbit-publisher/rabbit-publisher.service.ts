@@ -16,7 +16,7 @@ export class RabbitPublisherService implements OnModuleInit {
     console.log('connected to rabbit');
   }
 
-  private async connectToRabbitMQ() {
+ async connectToRabbitMQ() {
     try {
       const amqpUrl = this.configService.get('AMQP_URL');
       const username = this.configService.get('AMQP_USERNAME');
