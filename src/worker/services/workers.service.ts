@@ -16,10 +16,10 @@ export class WorkersService {
     if (!worker)
       throw new BadRequestException('Request body is required');
     try {
-      const newEmployee = new this.employeeModel(worker);
+      const newEmployee =  this.employeeModel.create(worker);
       const workerCode = this.generateUniqueNumber();
-      newEmployee.code = workerCode;
-      return await newEmployee.save();   
+      (await newEmployee).code = workerCode;
+      return  newEmployee;   
     } catch (error) {
       throw new HttpException(
         'Error creating employee',
@@ -42,17 +42,9 @@ export class WorkersService {
   }
   }
 
-  async findAllByBusinessId(businessId: string,page = 1,limit = 10,): Promise<Employee[]> {
-    if (!businessId)
-      throw new BadRequestException('companyId is required');
+  async findAllByBusinessId(businessId: string): Promise<Employee[]> {
     try {
-      const skip = (page - 1) * limit;
-      const query = { businessId };
-      const employees = await this.employeeModel
-        .find(query)
-        .skip(skip)
-        .limit(limit)
-        .exec();
+      const employees = await this.employeeModel.find({ businessId }).exec();
       return employees;
     } catch (error) {
       throw new HttpException(
@@ -61,70 +53,47 @@ export class WorkersService {
       );
     }
   }
-
   async getEmployeeByUserId(userId: string): Promise<Employee> {
-    if (!userId)
-      throw new BadRequestException('ID is required');
-    try {
-      const employee = await this.employeeModel.findOne({ userId }).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error fetching employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  if (!userId) {
+    throw new BadRequestException('ID is required');
   }
-  
-  
-
-  async updateEmployeeByUserId(userId: string,updatedEmployee: Employee,): Promise<Employee> {
-    if (!userId)
-      throw new BadRequestException('ID is required');
-    if (!updatedEmployee)
-      throw new BadRequestException('User data is required');
-    try {
-      const employee = await this.employeeModel
-        .findOneAndUpdate({ userId }, updatedEmployee, { new: true })
-        .exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error updating employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+  try {
+    console.log('Fetching employee with userId:', userId);
+    const employee = await this.employeeModel.findOne({ userId }).exec();
+    if (!employee) {
+      console.warn('Employee not found with userId:', userId);
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
     }
-  }
-
-  async deleteEmployee(id: string): Promise<Employee> {
-    try {
-      const employee = await this.employeeModel.findByIdAndDelete(id).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error deleting employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    return employee;
+  } catch (error) {
+    console.error('Error fetching employee:', error);
+    if (error.status === HttpStatus.NOT_FOUND) {
+      throw error;
     }
+    throw new HttpException(
+      'Error fetching employee',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
+}
+async deleteEmployee(id: string): Promise<Employee> {
+  try {
+    this.logger.log(`Attempting to delete employee with id: ${id}`);
+    const employee = await this.employeeModel.findByIdAndDelete(id);
+    if (!employee) {
+      this.logger.warn(`Employee not found with id: ${id}`);
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+    }
+    this.logger.log(`Successfully deleted employee with id: ${id}`);
+    return employee;
+  } catch (error) {
+    this.logger.error(`Error deleting employee: ${error.message}`);
+    throw new HttpException(
+      'Error deleting employee',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+  }
+}
 
   generateUniqueNumber(): string {
     const timestamp = new Date().getTime(); // Get current timestamp
@@ -150,11 +119,28 @@ export class WorkersService {
       throw error;
     }
   }
+
+async updateEmployeeByUserId(userId: string,updatedEmployee: Employee,): Promise<Employee> {
+  if (!userId)
+    throw new BadRequestException('ID is required');
+  if (!updatedEmployee)
+    throw new BadRequestException('User data is required');
+  try {
+    const employee = await this.employeeModel
+      .findOneAndUpdate({ userId }, updatedEmployee, { new: true })
+      .exec();
+    if (!employee) {
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+    }
+    return employee;
+  } catch (error) {
+    if (error.status === HttpStatus.NOT_FOUND) {
+      throw error;
+    }
+    throw new HttpException(
+      'Error updating employee',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+  }
 }
-
-
-
-
-
-
-
+}
