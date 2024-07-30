@@ -36,18 +36,18 @@ export class RabbitPublisherService implements OnModuleInit {
       await this.initializeRabbitMQ();
     } catch (error) {
       console.error('Error connecting to RabbitMQ:', error);
-      throw error; // Re-throw to handle it in the application logic
+      throw error; 
     }
   }
 
-  private async initializeRabbitMQ(): Promise<void> {
+   async initializeRabbitMQ(): Promise<void> {
     try {
       await this.channel.assertExchange(this.nameExchange, 'direct', { durable: false });
       await this.channel.assertQueue(this.nameQueue, { durable: true });
       await this.channel.bindQueue(this.nameQueue, this.nameExchange, 'message_type');
     } catch (error) {
       console.error('Error initializing RabbitMQ:', error);
-      throw error; // Re-throw to handle it in the application logic
+      throw error; 
     }
   }
 
@@ -60,7 +60,7 @@ export class RabbitPublisherService implements OnModuleInit {
       console.log(`Message published to exchange: ${exchangeName}`);
     } catch (error) {
       console.error(`Message not published: ${error}`);
-      throw error; // Re-throw to handle it in the application logic
+      throw error; 
     }
   }
 }
