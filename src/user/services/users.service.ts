@@ -27,28 +27,53 @@ export class UserService {
     return user;
   }
 
-  async checkAndAddUser(auth0_user_id: string, emailFromHeaders: string): Promise<string> {
-    if(!auth0_user_id)
-    throw new BadRequestException('Auth0 user ID not provided');
-
-    if (!emailFromHeaders) {
-        throw new BadRequestException('user email not provided');
+  async checkAndAddUser(user: any): Promise<string> {
+    const user_id = user.user_id.split('|');
+    const userId = user_id[1];
+    if (!userId) {
+      throw new BadRequestException('Auth0 user ID not provided');
+    }
+    if (!user.email) {
+      throw new BadRequestException('user email not provided');
     }
 
-    const existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
+    let existingUserByAuth0Id: User | undefined;
+    try {
+      existingUserByAuth0Id = await this.findOneByUserAuth0Id(userId);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        existingUserByAuth0Id = undefined;
+      } else {
+        throw error;
+      }
+    }
     if (existingUserByAuth0Id) {
-        return `User with id ${auth0_user_id} already exists.`;
+      return `User with id ${userId} already exists.`;
     }
 
-    const existingUserByEmail = await this.findOneByEmail(emailFromHeaders);
+    let existingUserByEmail: User | undefined;
+    try {
+      existingUserByEmail = await this.findOneByEmail(user.email)
+    }
+    catch (error) {
+      if (error instanceof NotFoundException) {
+        existingUserByAuth0Id = undefined;
+      }
+      else {
+        throw error;
+      }
+    }
     if (existingUserByEmail) {
-        await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
-        return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
+      await this.updateAuth0UserId(existingUserByEmail, userId);
+      return `User with email ${user.email} already exists and was updated with the new ID ${userId}.`;
     }
 
-    const newUser = new User(); 
-    newUser.auth0_user_id = auth0_user_id;
-    newUser.userEmail = emailFromHeaders;
+    let newUser = new CreateUserDto;
+    newUser.auth0_user_id = userId;
+    newUser.userEmail = user.email;
+    newUser.userName = user.name;
+    newUser.registeredAt = user.created_at;
+    newUser.lastLogin = user.last_login;
     await this.createUser(newUser);
     return 'User added successfully.';
 }
@@ -64,7 +89,9 @@ export class UserService {
       
       return user;
     } catch (error) {
-      this.logger.error('Failed to find user', error.stack);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException('Error fetching user');
     }
   }
