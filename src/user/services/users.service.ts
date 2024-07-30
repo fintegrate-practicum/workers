@@ -28,27 +28,23 @@ export class UserService {
   }
 
   async checkAndAddUser(user: any): Promise<string> {
-    const user_id = user.user_id.split('|');
-    const userId = user_id[1];
-    if (!userId) {
+    const user_id_from_metadate = user.user_id.split('|');
+    const auth0_user_id = user_id_from_metadate[1];
+    if (!auth0_user_id) {
       throw new BadRequestException('Auth0 user ID not provided');
     }
     if (!user.email) {
       throw new BadRequestException('user email not provided');
     }
 
-    let existingUserByAuth0Id: User | undefined;
+    let existingUserByAuth0Id: User;
     try {
-      existingUserByAuth0Id = await this.findOneByUserAuth0Id(userId);
+      existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        existingUserByAuth0Id = undefined;
-      } else {
-        throw error;
-      }
+      this.logger.log(`user with ${auth0_user_id} isn't exist`)
     }
     if (existingUserByAuth0Id) {
-      return `User with id ${userId} already exists.`;
+      return `User with id ${auth0_user_id} already exists.`;
     }
 
     let existingUserByEmail: User | undefined;
@@ -56,20 +52,15 @@ export class UserService {
       existingUserByEmail = await this.findOneByEmail(user.email)
     }
     catch (error) {
-      if (error instanceof NotFoundException) {
-        existingUserByAuth0Id = undefined;
-      }
-      else {
-        throw error;
-      }
+      return `User with email ${user.email} isn't exists.`;
     }
     if (existingUserByEmail) {
-      await this.updateAuth0UserId(existingUserByEmail, userId);
-      return `User with email ${user.email} already exists and was updated with the new ID ${userId}.`;
+      await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
+      return `User with email ${user.email} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
 
     let newUser = new CreateUserDto;
-    newUser.auth0_user_id = userId;
+    newUser.auth0_user_id = auth0_user_id;
     newUser.userEmail = user.email;
     newUser.userName = user.name;
     newUser.registeredAt = user.created_at;
@@ -79,22 +70,13 @@ export class UserService {
 }
 
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
-    try {
-      const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
-      if(!user)
-      {
-        this.logger.error(`user with the id ${userId} was not found`);
-        throw new NotFoundException(`user with the id ${userId} was not found`)
-      }
-      
-      return user;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Error fetching user');
+    const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
+    if (!user) {
+      this.logger.error(`user with the id ${userId} was not found`);
     }
+    return user;
   }
+  
   async findOneByEmail(email: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ userEmail: email }).exec();
