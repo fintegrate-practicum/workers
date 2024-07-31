@@ -104,7 +104,6 @@ export class WorkersController {
       }),
     )
     @Body() requestBody: workerValidationsSchema,) {
-    this.logger.log('1');
     this.logger.log(requestBody);
     const result = this.workersService.createEmployee(requestBody);
     this.logger.log('good');
