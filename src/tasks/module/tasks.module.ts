@@ -10,12 +10,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
+    UserModule,
     MongooseModule.forFeature([
       { name: Task.name, schema: TaskSchema },
+      { name: User.name, schema: UserSchema },
       { name: Employee.name, schema: EmployeeSchema },
     ]),
   ],
   providers: [
+    UserService,
     TasksService,
     Task,
     RabbitPublisherService,
