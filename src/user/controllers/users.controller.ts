@@ -14,9 +14,13 @@ import { Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { AuthGuard } from '@nestjs/passport';
-
+import { UseInterceptors } from '@nestjs/common';
 @ApiTags('User')
-@Controller('user')
+
+ import { AuditLogInterceptor } from ; @UseInterceptors(AuditLogInterceptor) @Controller
+
+
+('user')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 

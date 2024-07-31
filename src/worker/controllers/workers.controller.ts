@@ -23,7 +23,13 @@ import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Workers')
-@Controller('workers')
+
+// import { AuditLogInterceptor } from '
+
+../../../infrastructure/auditLog-middleware/audit-log.interceptor'; @UseInterceptors(AuditLogInterceptor) @Controller
+
+
+('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
