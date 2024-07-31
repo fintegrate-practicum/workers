@@ -16,10 +16,10 @@ export class WorkersService {
     if (!worker)
       throw new BadRequestException('Request body is required');
     try {
-      const newEmployee =  this.employeeModel.create(worker);
       const workerCode = this.generateUniqueNumber();
-      (await newEmployee).code = workerCode;
-      return  newEmployee;   
+      const newEmployee = await this.employeeModel.create(worker);
+      newEmployee.code = workerCode;
+      return await newEmployee.save();
     } catch (error) {
       throw new HttpException(
         'Error creating employee',
@@ -27,6 +27,8 @@ export class WorkersService {
       );
     }
   }
+  
+  
   async findAll(businessId: string): Promise<Employee[]> {
     if (!businessId)
       throw new BadRequestException('businessId is required');
@@ -42,9 +44,20 @@ export class WorkersService {
   }
   }
 
-  async findAllByBusinessId(businessId: string): Promise<Employee[]> {
+  async findAllByBusinessId(
+    businessId: string, 
+    page: number = 1, 
+    limit: number = 10
+  ): Promise<Employee[]> {
     try {
-      const employees = await this.employeeModel.find({ businessId }).exec();
+      const skip = (page - 1) * limit;
+  
+      const employees = await this.employeeModel
+        .find({ businessId })
+        .skip(skip)
+        .limit(limit)
+        .exec();
+  
       return employees;
     } catch (error) {
       throw new HttpException(
@@ -53,6 +66,7 @@ export class WorkersService {
       );
     }
   }
+    
   async getEmployeeByUserId(userId: string): Promise<Employee> {
   if (!userId) {
     throw new BadRequestException('ID is required');

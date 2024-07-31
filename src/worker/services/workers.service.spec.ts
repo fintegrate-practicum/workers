@@ -20,7 +20,7 @@ const mockEmployee = {
 
 const mockEmployeeModel = {
   create: jest.fn().mockResolvedValue(mockEmployee),
-  find: jest.fn().mockImplementation(() => ({
+find: jest.fn().mockImplementation(() => ({
     exec: jest.fn().mockResolvedValue([mockEmployee, mockEmployee]), // מתן תוצאה שווה לשני עובדים
   })),
   findOne: jest.fn().mockResolvedValue(mockEmployee),
@@ -30,6 +30,7 @@ const mockEmployeeModel = {
   findByIdAndUpdate: jest.fn().mockResolvedValue(mockEmployee),
   findByIdAndDelete: jest.fn().mockResolvedValue(mockEmployee), 
   countDocuments: jest.fn().mockResolvedValue(2), 
+
   exec: jest.fn(),
 };
 
@@ -60,32 +61,41 @@ describe('WorkersService', () => {
     it('should throw BadRequestException if worker is not provided', async () => {
       await expect(service.createEmployee(null)).rejects.toThrow(BadRequestException);
     });
-
+  
     it('should create and return an employee with valid data', async () => {
       const worker: workerValidationsSchema = {
         userId: '12345',
-        businessId: new Types.ObjectId().toString(), // השתמש בסוג המתאים
+        businessId: new Types.ObjectId().toString(),
         nameEmployee: 'John Doe',
         code: 'EMP001',
         createdBy: 'admin',
-        updateBy: 'admin', 
+        updateBy: 'admin',
         role: {
           type: 'developer',
           active: false,
           description: 'Developer Role',
         } as Role,
       };
-
-      jest.spyOn(model, 'create').mockResolvedValueOnce(worker as any);
-
+  
+      const workerCode = 'uniqueCode'; 
+  
+      jest.spyOn(service, 'generateUniqueNumber').mockReturnValue(workerCode);
+  
+      const savedEmployee = {
+        ...mockEmployee,
+        save: jest.fn().mockResolvedValue(mockEmployee),
+      };  
+      jest.spyOn(mockEmployeeModel, 'create').mockResolvedValue(savedEmployee);
+      jest.spyOn(savedEmployee, 'save').mockResolvedValue(savedEmployee);
+  
       const result = await service.createEmployee(worker);
-
-      expect(result).toEqual(worker);
-
+  
+      expect(result).toEqual(savedEmployee);
       expect(mockEmployeeModel.create).toHaveBeenCalledWith(worker);
+      expect(savedEmployee.save).toHaveBeenCalled();
     });
 
-describe('getEmployeeByUserId', () => {
+    describe('getEmployeeByUserId', () => {
   it('should throw BadRequestException if userId is not provided', async () => {
     await expect(service.getEmployeeByUserId(null)).rejects.toThrow(BadRequestException);
   });
@@ -181,18 +191,35 @@ describe('deleteEmployee', () => {
   });
     });
 
-describe('findAllByBusinessId', () => {
-  it('should find and return employees by business ID', async () => {
-    const businessId = '123456789';
-    const mockEmployees = [mockEmployee, mockEmployee];
-    jest.spyOn(model, 'find').mockImplementation(() => ({
-      exec: jest.fn().mockResolvedValue(mockEmployees),
-    }) as any);
-    const result = await service.findAllByBusinessId(businessId);
-    expect(result).toEqual(mockEmployees);
-  });
-});
-
+    describe('findAllByBusinessId', () => {
+      it('should find and return employees by business ID with pagination', async () => {
+        const businessId = '123456789';
+        const page = 1;
+        const limit = 2;
+        const skip = (page - 1) * limit;
+        const mockEmployees = [mockEmployee, mockEmployee];
+    
+        const limitMock = jest.fn().mockImplementation(() => ({
+          exec: jest.fn().mockResolvedValue(mockEmployees),
+        }));
+        
+        const skipMock = jest.fn().mockImplementation(() => ({
+          limit: limitMock,
+        }));
+    
+        jest.spyOn(model, 'find').mockImplementation(() => ({
+          skip: skipMock,
+        }) as any);
+    
+        const result = await service.findAllByBusinessId(businessId, page, limit);
+    
+        expect(model.find).toHaveBeenCalledWith({ businessId });
+        expect(skipMock).toHaveBeenCalledWith(skip);
+        expect(limitMock).toHaveBeenCalledWith(limit);
+        expect(result).toEqual(mockEmployees);
+      });
+    });
+        
   describe('updateEmployee', () => {
     it('should update and return an employee by ID', async () => {
       const userId = 'someId';
@@ -224,6 +251,6 @@ describe('findAllByBusinessId', () => {
     await expect(service.updateEmployeeByUserId(userId, updatedEmployee)).rejects.toThrow(HttpException);
     await expect(service.updateEmployeeByUserId(userId, updatedEmployee)).rejects.toThrow('Error updating employee');
   });
-});
+ });
 });
 
