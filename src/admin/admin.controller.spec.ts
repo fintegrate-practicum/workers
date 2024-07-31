@@ -3,7 +3,7 @@ import { AdminController } from './admin.controller';
 import { AdminService } from './services/admin.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Employee } from '../schemas/Employee.entity';
-import { User } from '../../../infra/src/userFromWorkers/schema/user.entity';
+import { User } from '../schemas/user.entity';
 
 describe('AdminController', () => {
   let controller: AdminController;
