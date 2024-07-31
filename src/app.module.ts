@@ -7,7 +7,7 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
 import { env } from 'process';
-import { AuthzModule } from './authz/authz.module';
+import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
@@ -15,7 +15,6 @@ import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -28,12 +27,12 @@ import { UserModule } from './user/module/users.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule, WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
-        uri: process.env.MONGODB_CONNECTION,
+        uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController],
+  controllers:[AppController],
   providers: [AppService, RabbitPublisherService, TransformDataStructure],
 })
 export class AppModule {}
