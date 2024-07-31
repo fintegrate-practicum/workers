@@ -12,6 +12,7 @@ import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
 import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service'
+import { UserService } from '../../user/services/users.service';
 import { Message } from '../../interface/message.interface';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class TasksService {
   constructor(
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
     private readonly rabbitPublisherService: RabbitPublisherService,
+    private readonly usersService: UserService,
   ) { }
 
   public readonly logger = new Logger(TasksService.name);
