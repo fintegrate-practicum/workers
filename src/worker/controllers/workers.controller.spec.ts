@@ -10,7 +10,6 @@ import { RoleValidationSchema } from '../validations/worker.roleValidation.schem
 describe('WorkersController', () => {
   let controller: WorkersController;
   let service: WorkersService;
-
   const mockEmployee: Employee = {
     businessId: '123',
     code: 'EMP001',
@@ -87,12 +86,12 @@ describe('WorkersController', () => {
 
       expect(result).toEqual(createdEmployee);
     });
+
     it('should activate an employee successfully', async () => {
       const activatedEmployee = { ...mockEmployee, active: true };
       mockWorkersService.activateEmployee.mockResolvedValueOnce(
         activatedEmployee,
       );
-
       const result = await controller.activateEmployee(
         '60d9c6f3f9b5b61710f0f4f4',
       );
@@ -103,33 +102,32 @@ describe('WorkersController', () => {
       );
     });
 
-  it('should handle errors during employee creation', async () => {
-    const requestBody: workerValidationsSchema = {
-      userId: '',
-      nameEmployee: '',
-      businessId: '',
-      code: '',
-      createdBy: '',
-      role: new RoleValidationSchema(),
-      updateBy: '',
-    };
+    it('should handle errors during employee creation', async () => {
+      const requestBody: workerValidationsSchema = {
+        userId: '',
+        nameEmployee: '',
+        businessId: '',
+        code: '',
+        createdBy: '',
+        role: new RoleValidationSchema(),
+        updateBy: '',
+      };
 
-    const errorMessage = 'Internal server error';
+      const errorMessage = 'Internal server error';
 
-    jest
-      .spyOn(service, 'createEmployee')
-      .mockRejectedValueOnce(
-        new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR),
-      );
+      jest
+        .spyOn(service, 'createEmployee')
+        .mockRejectedValueOnce(
+          new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR),
+        );
 
-    try {
-      await controller.create(requestBody);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpException);
-      expect(error.message).toBe(errorMessage);
-      expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      try {
+        await controller.create(requestBody);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpException);
+        expect(error.message).toBe(errorMessage);
+        expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    });
   });
 });
-});
-
