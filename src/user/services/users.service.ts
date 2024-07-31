@@ -36,7 +36,6 @@ export class UserService {
     if (!user.email) {
       throw new BadRequestException('user email not provided');
     }
-
     let existingUserByAuth0Id: User;
     try {
       existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
@@ -46,20 +45,18 @@ export class UserService {
     if (existingUserByAuth0Id) {
       return `User with id ${auth0_user_id} already exists.`;
     }
-
-    let existingUserByEmail: User | undefined;
+    let existingUserByEmail: User;
     try {
       existingUserByEmail = await this.findOneByEmail(user.email)
     }
     catch (error) {
-      return `User with email ${user.email} isn't exists.`;
+      this.logger.log("existingUserByEmail")
     }
     if (existingUserByEmail) {
       await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
       return `User with email ${user.email} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
-
-    let newUser = new CreateUserDto;
+    const newUser = new CreateUserDto();
     newUser.auth0_user_id = auth0_user_id;
     newUser.userEmail = user.email;
     newUser.userName = user.name;
@@ -70,11 +67,18 @@ export class UserService {
 }
 
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
-    if (!user) {
-      this.logger.error(`user with the id ${userId} was not found`);
+    try {
+      const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
+      if (!user) {
+        this.logger.log(`user with the id ${userId} was not found`);
+        throw new NotFoundException(`user with the id ${userId} was not found`)
+      }
+
+      return user;
+    } catch (error) {
+      this.logger.log('Failed to find user', error.stack);
+      throw new NotFoundException('Error fetching user');
     }
-    return user;
   }
   
   async findOneByEmail(email: string): Promise<User | undefined> {
@@ -87,7 +91,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      this.logger.error('Failed to find user by email', error.stack);
+      this.logger.log('Failed to find user by email', error.stack);
       throw new InternalServerErrorException('Error fetching user');
     }
   }
