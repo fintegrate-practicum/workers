@@ -11,7 +11,6 @@ import { AuthzModule } from './authz/authz.module';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { UserModule } from '../../infra/src/userFromWorkers/module/users.module';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { UserModule } from '../../infra/src/userFromWorkers/module/users.module'
       isGlobal: true,
     }),
 
-    UserModule,
     TasksModule,
     WorkersModule,
     MessagesModule,
