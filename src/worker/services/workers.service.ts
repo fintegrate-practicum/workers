@@ -12,6 +12,24 @@ export class WorkersService {
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
 
+  async findById(id: string): Promise<Employee> {
+    if (!id) {
+      throw new BadRequestException('ID is required');
+    }
+    try {
+      const employee = await this.employeeModel.findById(id).exec();
+      if (!employee) {
+        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+      }
+      return employee;
+    } catch (error) {
+      throw new HttpException(
+        'Error fetching employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     if (!worker)
       throw new BadRequestException('Request body is required');
