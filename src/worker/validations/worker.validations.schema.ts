@@ -23,7 +23,7 @@ export class workerValidationsSchema {
 
   @IsString()
   @IsNotEmpty()
-  updateBy: string;
+  updatedBy: string;
 
   @IsNotEmpty()
   @IsObject()
