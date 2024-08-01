@@ -3,7 +3,7 @@ import { TasksService } from './tasks.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Task } from '../../schemas/task.entity';
-import { UserService } from '../../user/services/users.service';
+import { UserService } from '../../user/users.service';
 import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
