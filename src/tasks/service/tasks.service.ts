@@ -12,7 +12,7 @@ import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
 import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service'
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../users/users.service';
 import { Message } from '../../interface/message.interface';
 
 @Injectable()

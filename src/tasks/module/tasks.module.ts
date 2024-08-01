@@ -7,7 +7,7 @@ import { User, UserSchema } from 'src/schemas/user.entity';
 import { WorkersService } from 'src/worker/services/workers.service';
 import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/users/users.service';
 
 @Module({
   imports: [
