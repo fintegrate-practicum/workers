@@ -112,10 +112,10 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
-      if (!response) {
-        throw new NotFoundException('employee not found');
-      }
-      return response;
+    const response = this.workersService.updateEmployeeByUserId(id, user);
+    if (!response) {
+      throw new NotFoundException('employee not found');
+    }
+    return response;
   }
 }

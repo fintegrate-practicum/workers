@@ -67,13 +67,21 @@ export class UserService {
 }
 
   async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
-    if (!user) {
-      this.logger.error(`user with the id ${userId} was not found`);
-      throw new NotFoundException(`user with the id ${userId} was not found`)
+    try {
+      const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
+      if(!user)
+      {
+        this.logger.error(`user with the id ${userId} was not found`);
+        throw new NotFoundException(`user with the id ${userId} was not found`)
+      }      
+      return user;
+    } catch (error) {
+      this.logger.error('Failed to find user', error.stack);
+      throw new InternalServerErrorException('Error fetching user');
     }
     return user;
   }
+
   async findOneByEmail(email: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ userEmail: email }).exec();
@@ -174,5 +182,29 @@ export class UserService {
   
     }
   }
+
+  async getUserBusinesses(userId: string): Promise<{ businessId: string; role: string }[]> {
+    const user = await this.findOneByUserId(userId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    return user.businessRoles;
+  }
+
+    async getUserRoleInBusiness(userId: string, businessId: string): Promise<{ role: string } | { message: string }> {
+      const user = await this.findOneByUserId(userId);
+      
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+  
+      const businessRole = user.businessRoles.find(br => br.businessId === businessId);
+  
+      if (!businessRole) {
+        return { message: `User with ID ${userId} does not have a role in business with ID ${businessId}` };
+      }
+  
+      return { role: businessRole.role };
+    }
 }
 
