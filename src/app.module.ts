@@ -8,7 +8,6 @@ import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
 import { env } from 'process';
 import { AuthzModule } from 'fintegrate-auth';
-
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
@@ -19,7 +18,6 @@ import { UserModule } from './user/module/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     UserModule,
     TasksModule,
     WorkersModule,
