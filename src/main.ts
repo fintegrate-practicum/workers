@@ -21,7 +21,10 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalInterceptors(new TransformDataStructure());
-  await app.listen(4000);
-  console.log('Server is running on http://localhost:4000');
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+  
 }
 bootstrap();
