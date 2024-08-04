@@ -79,7 +79,6 @@ export class UserService {
       this.logger.error('Failed to find user', error.stack);
       throw new InternalServerErrorException('Error fetching user');
     }
-    return user;
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {
