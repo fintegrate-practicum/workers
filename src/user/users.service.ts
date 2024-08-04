@@ -8,7 +8,7 @@ import { Model } from "mongoose";
   
     constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
   
-    async findOneByUserId(userId: string): Promise<User | undefined> {
+    async findOneByUserId(userId: string): Promise<User> {
       if (!userId) {
         throw new BadRequestException('User ID must be provided');
   }
