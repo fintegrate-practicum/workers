@@ -11,9 +11,9 @@ import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
-import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.service';
-import { UserService } from 'src/user/services/users.service';
-import { Message } from 'src/interface/message.interface';
+import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service'
+import { UserService } from '../../user/services/users.service';
+import { Message } from '../../interface/message.interface';
 
 @Injectable()
 export class TasksService {
@@ -55,10 +55,8 @@ export class TasksService {
       throw new NotFoundException('Manager not found');
     }
 
-    const newTask = new this.taskModel(task);
-
     try {
-      await newTask.save();
+      const newTask = await this.taskModel.create(task);
       this.logger.log('Task saved successfully.');
 
       await Promise.all(
@@ -83,6 +81,7 @@ export class TasksService {
       );
 
       this.logger.log('Messages published');
+      return newTask;
     } catch (error) {
       this.logger.error('Error creating task or sending messages', error);
       throw new InternalServerErrorException('Failed to create task');

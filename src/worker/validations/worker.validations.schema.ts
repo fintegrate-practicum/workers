@@ -10,7 +10,6 @@ export class workerValidationsSchema {
   @IsNotEmpty()
   businessId: string;
 
-  @IsNotEmpty()
   @IsString()
   code: string;
 
@@ -24,7 +23,7 @@ export class workerValidationsSchema {
 
   @IsString()
   @IsNotEmpty()
-  updateBy: string;
+  updatedBy: string;
 
   @IsNotEmpty()
   @IsObject()
