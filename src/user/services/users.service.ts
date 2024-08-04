@@ -12,9 +12,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
+<<<<<<< HEAD
 import { User } from 'src/schemas/user.entity';
 import * as dotenv from 'dotenv';
 dotenv.config();
+=======
+import { User } from '../../schemas/user.entity';
+
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
@@ -33,6 +38,7 @@ export class UserService {
     const user = await this.userModel.findById(userId).exec();
     return user;
   }
+<<<<<<< HEAD
   async findOneByUserAuth0Id(userId: string): Promise<User> {
     this.logger.log(`Searching for user with ID: ${userId}`);
     let user = await this.userModel.findOne({ auth0_user_id: userId });
@@ -72,11 +78,64 @@ export class UserService {
         throw new Error(`Failed to fetch user metadata from Auth0: ${response.statusText}`);
       }
       return await response.json();
+=======
+
+  async checkAndAddUser(user: any): Promise<string> {
+    const user_id_from_metadate = user.user_id.split('|');
+    const auth0_user_id = user_id_from_metadate[1];
+    if (!auth0_user_id) {
+      throw new BadRequestException('Auth0 user ID not provided');
+    }
+    if (!user.email) {
+      throw new BadRequestException('user email not provided');
+    }
+    let existingUserByAuth0Id: User;
+    try {
+      existingUserByAuth0Id = await this.findOneByUserAuth0Id(auth0_user_id);
+    } catch (error) {
+      this.logger.log(`user with ${auth0_user_id} isn't exist`)
+    }
+    if (existingUserByAuth0Id) {
+      return `User with id ${auth0_user_id} already exists.`;
+    }
+    let existingUserByEmail: User;
+    try {
+      existingUserByEmail = await this.findOneByEmail(user.email)
+    }
+    catch (error) {
+      this.logger.log("existingUserByEmail")
+    }
+    if (existingUserByEmail) {
+      await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
+      return `User with email ${user.email} already exists and was updated with the new ID ${auth0_user_id}.`;
+    }
+    const newUser = new CreateUserDto();
+    newUser.auth0_user_id = auth0_user_id;
+    newUser.userEmail = user.email;
+    newUser.userName = user.name;
+    newUser.registeredAt = user.created_at;
+    newUser.lastLogin = user.last_login;
+    await this.createUser(newUser);
+    return 'User added successfully.';
+}
+
+  async findOneByUserAuth0Id(userId: string): Promise<User | undefined> {
+    try {
+      const user = await this.userModel.findOne({ auth0_user_id: userId }).exec();
+      if(!user)
+      {
+        this.logger.error(`user with the id ${userId} was not found`);
+        throw new NotFoundException(`user with the id ${userId} was not found`)
+      }      
+      return user;
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02
     } catch (error) {
       this.logger.error(`Failed to fetch user metadata: ${error.message}`);
       throw error;
     }
+    return user;
   }
+
   async findOneByEmail(email: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({ userEmail: email }).exec();
@@ -86,7 +145,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      this.logger.error('Failed to find user by email', error.stack);
+      this.logger.log('Failed to find user by email', error.stack);
       throw new InternalServerErrorException('Error fetching user');
     }
   }
@@ -165,4 +224,33 @@ export class UserService {
       }
     }
   }
+<<<<<<< HEAD
 }
+=======
+
+  async getUserBusinesses(userId: string): Promise<{ businessId: string; role: string }[]> {
+    const user = await this.findOneByUserId(userId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+    return user.businessRoles;
+  }
+
+    async getUserRoleInBusiness(userId: string, businessId: string): Promise<{ role: string } | { message: string }> {
+      const user = await this.findOneByUserId(userId);
+      
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+  
+      const businessRole = user.businessRoles.find(br => br.businessId === businessId);
+  
+      if (!businessRole) {
+        return { message: `User with ID ${userId} does not have a role in business with ID ${businessId}` };
+      }
+  
+      return { role: businessRole.role };
+    }
+}
+
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02

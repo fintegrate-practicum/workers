@@ -54,6 +54,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
+<<<<<<< HEAD
+=======
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/schemas/user.entity';
+
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02
 @ApiTags('User')
 @Controller('user')
 export class UsersController {
@@ -63,12 +69,59 @@ export class UsersController {
   getWorker(@Param('id') auth0_user_id: string) {
     return this._userService.findOneByUserAuth0Id(auth0_user_id);
   }
+<<<<<<< HEAD
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
     return this._userService.createUser(user);
   }
+=======
+
+  @Get('email/:email')
+  getUserByEmail(@Param('email') email: string) {
+    return this._userService.findOneByEmail(email);
+  }
+
+  @Get('jwt')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserByToken(@Request() req): Promise<User> {
+    const auth0_user_id = req.user.id;
+    return this._userService.findOneByUserAuth0Id(auth0_user_id);
+  }
+
+  @Put('jwt')
+  @UseGuards(AuthGuard('jwt'))
+  async checkAndAddUser(@Request() req): Promise<string> {
+    const auth0_user_id = req.user.id;
+    const emailFromHeaders = req.headers['us'];
+    return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
+  }
+  
+  @Post('')
+  async createUser(@Body() user: CreateUserDto) {
+      return this._userService.createUser(user);
+    }
+   
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     return this._userService.updateUser(id, user);
   }
+<<<<<<< HEAD
 }
+=======
+
+  @Get(':id/businesses')
+  async getUserBusinesses(@Param('id') userId: string) {
+    return this._userService.getUserBusinesses(userId);
+  }
+
+  @Get(':userId/business/:businessId')
+  async getUserRoleInBusiness(
+    @Param('userId') userId: string,
+    @Param('businessId') businessId: string,
+  ) {
+    return this._userService.getUserRoleInBusiness(userId, businessId);
+  }
+}
+
+>>>>>>> cff230ce064ec1980c6c709827931c362858da02

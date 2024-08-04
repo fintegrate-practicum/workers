@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Employee } from 'src/schemas/employee.entity';
-import { User } from 'src/schemas/user.entity';
+import { Employee } from '../../schemas/employee.entity';
+import { User } from '../../schemas/user.entity';
 @Injectable()
 export class AdminService {
   constructor(

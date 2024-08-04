@@ -12,7 +12,6 @@ import {
   Put,
   NotFoundException,
 } from '@nestjs/common';
-
 import { WorkersService } from '../services/workers.service';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
@@ -92,6 +91,7 @@ export class WorkersController {
       },
     },
   })
+  
   @Post('')
   @UseGuards(AuthGuard('jwt'))
   async create(
@@ -112,10 +112,10 @@ export class WorkersController {
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() user: Employee) {
-      const response = this.workersService.updateEmployeeByUserId(id, user);
-      if (!response) {
-        throw new NotFoundException('employee not found');
-      }
-      return response;
+    const response = this.workersService.updateEmployeeByUserId(id, user);
+    if (!response) {
+      throw new NotFoundException('employee not found');
+    }
+    return response;
   }
 }

@@ -7,7 +7,8 @@ import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.serv
 import { WorkersModule } from './worker/module/workers.module';
 import { Employee } from './schemas/employee.entity';
 import { env } from 'process';
-import { AuthzModule } from './authz/authz.module';
+import { AuthzModule } from 'fintegrate-auth';
+
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
