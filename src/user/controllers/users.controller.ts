@@ -17,7 +17,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/schemas/user.entity';
 
 @ApiTags('User')
-@Controller('user')
+
+//  import { AuditLogInterceptor } from ; @UseInterceptors(AuditLogInterceptor) @Controller('user')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 
@@ -47,21 +48,12 @@ export class UsersController {
     const emailFromHeaders = req.headers['us'];
     return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
   }
-<<<<<<< HEAD
 
   @Post('')
   async createUser(@Body() user: CreateUserDto) {
     return this._userService.createUser(user);
   }
 
-=======
-  
-  @Post('')
-  async createUser(@Body() user: CreateUserDto) {
-      return this._userService.createUser(user);
-    }
-   
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     return this._userService.updateUser(id, user);

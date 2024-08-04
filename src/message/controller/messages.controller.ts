@@ -12,7 +12,13 @@ import { MessagesService } from '../service/messages.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('message')
-@Controller('message')
+
+// import { AuditLogInterceptor } from '
+
+../../../infrastructure/auditLog-middleware/audit-log.interceptor'; @UseInterceptors(AuditLogInterceptor) @Controller
+
+
+('message')
 export class MessagesController {
   constructor(private readonly _messageService: MessagesService) {}
 
