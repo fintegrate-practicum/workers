@@ -91,6 +91,7 @@ export class WorkersController {
       },
     },
   })
+
   @Post('')
   @UseGuards(AuthGuard('jwt'))
   async create(
