@@ -70,7 +70,7 @@ describe('WorkersController', () => {
         businessId: '123456',
         createdBy: 'John Doe',
         code: 'bb',
-        updateBy: 'aa',
+        updatedBy: 'aa',
         role: new RoleValidationSchema(),
       };
 
@@ -110,7 +110,7 @@ describe('WorkersController', () => {
         code: '',
         createdBy: '',
         role: new RoleValidationSchema(),
-        updateBy: '',
+        updatedBy: '',
       };
 
       const errorMessage = 'Internal server error';

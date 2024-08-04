@@ -45,9 +45,6 @@
 //     expect(createdUser).toEqual(mockCreateUserDto);
 //   });
 
-<<<<<<< HEAD
-});
-=======
 // });
 
 it('always returns true', () => {
@@ -55,4 +52,3 @@ it('always returns true', () => {
 });
 
 
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1

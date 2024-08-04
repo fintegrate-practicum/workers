@@ -46,7 +46,9 @@ export class UsersController {
   async checkAndAddUser(@Request() req): Promise<string> {
     const auth0_user_id = req.user.id;
     const emailFromHeaders = req.headers['us'];
-    return this._userService.checkAndAddUser(auth0_user_id, emailFromHeaders);
+    return this._userService.checkAndAddUser(auth0_user_id
+      // , emailFromHeaders
+    );
   }
 
   @Post('')

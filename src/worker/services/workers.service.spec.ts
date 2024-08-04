@@ -70,7 +70,7 @@ describe('WorkersService', () => {
         nameEmployee: 'John Doe',
         code: 'EMP001',
         createdBy: 'admin',
-        updateBy: 'admin',
+        updatedBy: 'admin',
         role: {
           type: 'developer',
           active: false,

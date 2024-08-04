@@ -9,7 +9,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserDto } from 'src/dto/createUser.dto';
+import { CreateUserDto } from '../../../src/dto/createUser.dto';
 import { UpdateUserDto } from 'src/dto/updateUser.dto';
 import { User } from '../../schemas/user.entity';
 
@@ -27,23 +27,6 @@ export class UserService {
     return user;
   }
 
-<<<<<<< HEAD
-  async checkAndAddUser(
-    auth0_user_id: string,
-    emailFromHeaders: string,
-  ): Promise<string> {
-    if (!auth0_user_id)
-      throw new BadRequestException('Auth0 user ID not provided');
-
-    if (!emailFromHeaders) {
-      throw new BadRequestException('user email not provided');
-    }
-
-    const existingUserByAuth0Id =
-      await this.findOneByUserAuth0Id(auth0_user_id);
-    if (existingUserByAuth0Id) {
-      return `User with id ${auth0_user_id} already exists.`;
-=======
   async checkAndAddUser(user: any): Promise<string> {
     const user_id_from_metadate = user.user_id.split('|');
     const auth0_user_id = user_id_from_metadate[1];
@@ -68,20 +51,12 @@ export class UserService {
     }
     catch (error) {
       this.logger.log("existingUserByEmail")
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
     }
     if (existingUserByEmail) {
       await this.updateAuth0UserId(existingUserByEmail, auth0_user_id);
-<<<<<<< HEAD
-      return `User with email ${emailFromHeaders} already exists and was updated with the new ID ${auth0_user_id}.`;
-    }
-
-    const newUser = new User();
-=======
       return `User with email ${user.email} already exists and was updated with the new ID ${auth0_user_id}.`;
     }
     const newUser = new CreateUserDto();
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
     newUser.auth0_user_id = auth0_user_id;
     newUser.userEmail = user.email;
     newUser.userName = user.name;
@@ -98,20 +73,13 @@ export class UserService {
         .exec();
       if (!user) {
         this.logger.error(`user with the id ${userId} was not found`);
-<<<<<<< HEAD
-        throw new NotFoundException(`user with the id ${userId} was not found`);
-      }
-
-=======
         throw new NotFoundException(`user with the id ${userId} was not found`)
       }      
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
       return user;
     } catch (error) {
       this.logger.error('Failed to find user', error.stack);
       throw new InternalServerErrorException('Error fetching user');
     }
-    return user;
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {

@@ -4,13 +4,6 @@ import {User} from '../schemas/user.entity'
 // import { Admin } from './admin.entity';
 
 
-
-// import { AuditLogInterceptor } from '
-
-../../../infrastructure/auditLog-middleware/audit-log.interceptor'; @UseInterceptors(AuditLogInterceptor) @Controller
-
-
-('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 

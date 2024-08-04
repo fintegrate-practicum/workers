@@ -43,16 +43,9 @@ export class WorkersService {
 
   async findAllByBusinessId(
     businessId: string,
-<<<<<<< HEAD
-    page = 1,
-    limit = 10,
-  ): Promise<Employee[]> {
-    if (!businessId) throw new BadRequestException('companyId is required');
-=======
     page: number = 1,
     limit: number = 10,
   ): Promise<Employee[]> {
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
     try {
       const skip = (page - 1) * limit;
       const employees = await this.employeeModel
@@ -70,13 +63,9 @@ export class WorkersService {
   }
 
   async getEmployeeByUserId(userId: string): Promise<Employee> {
-<<<<<<< HEAD
-    if (!userId) throw new BadRequestException('ID is required');
-=======
     if (!userId) {
       throw new BadRequestException('ID is required');
     }
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
     try {
       console.log('Fetching employee with userId:', userId);
       const employee = await this.employeeModel.findOne({ userId }).exec();
@@ -97,51 +86,6 @@ export class WorkersService {
     }
   }
 
-<<<<<<< HEAD
-=======
-  async deleteEmployee(id: string): Promise<Employee> {
-    try {
-      this.logger.log(`Attempting to delete employee with id: ${id}`);
-      const employee = await this.employeeModel.findByIdAndDelete(id);
-      if (!employee) {
-        this.logger.warn(`Employee not found with id: ${id}`);
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      this.logger.log(`Successfully deleted employee with id: ${id}`);
-      return employee;
-    } catch (error) {
-      this.logger.error(`Error deleting employee: ${error.message}`);
-      throw new HttpException(
-        'Error deleting employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  generateUniqueNumber(): string {
-    const timestamp = new Date().getTime(); // Get current timestamp
-    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
-    return `${timestamp}${random}`; // Concatenate timestamp and random number
-  }
-
-  async activateEmployee(id: string): Promise<Employee> {
-    if (!id) throw new BadRequestException('ID is required');
-    try {
-      const updatedEmployee = await this.employeeModel
-        .findByIdAndUpdate(id, { active: true }, { new: true })
-        .exec();
-      if (!updatedEmployee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      this.logger.log('The status will change successfully');
-      return updatedEmployee;
-    } catch (error) {
-      console.error('Error activating employee:', error);
-      throw error;
-    }
-  }
-
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
   async updateEmployeeByUserId(
     userId: string,
     updatedEmployee: Employee,
@@ -167,8 +111,6 @@ export class WorkersService {
       );
     }
   }
-<<<<<<< HEAD
-
   async deleteEmployee(id: string): Promise<Employee> {
     try {
       const employee = await this.employeeModel.findByIdAndDelete(id).exec();
@@ -210,6 +152,5 @@ export class WorkersService {
       throw error;
     }
   }
-=======
->>>>>>> 6658a0a4904c84122bae058d438987a236e33fa1
+
 }
