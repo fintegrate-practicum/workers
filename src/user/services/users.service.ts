@@ -27,8 +27,8 @@ export class UserService {
     return user;
   }
 
-  async checkAndAddUser(user: any): Promise<string> {
-    const user_id_from_metadate = user.user_id.split('|');
+  async checkAndAddUser(user: any,userId:string): Promise<string> {
+    const user_id_from_metadate = userId.split('|');
     const auth0_user_id = user_id_from_metadate[1];
     if (!auth0_user_id) {
       throw new BadRequestException('Auth0 user ID not provided');
