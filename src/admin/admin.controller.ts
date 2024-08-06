@@ -3,7 +3,6 @@ import { AdminService } from './services/admin.service';
 import {User} from '../schemas/user.entity'
 // import { Admin } from './admin.entity';
 
-
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) { }
@@ -18,6 +17,10 @@ export class AdminController {
     return this.adminService.getUsersByBusinessId(businessId);
   }
 
+  @Get('business/:businessId/client')
+  async getClientsByBusinessId(@Param('businessId') businessId: string): Promise<User[]> {
+      return this.adminService.getClientsByBusinessId(businessId);
+  }
   // @Get()
   // async findAll(): Promise<Admin[]> {
   //   return this.adminService.findAll();

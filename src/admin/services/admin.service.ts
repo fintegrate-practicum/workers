@@ -37,6 +37,11 @@ export class AdminService {
   async getUsersByBusinessId(businessId: string): Promise<User[]> {
     return this.userModel.find({ 'businessRoles.businessId': businessId }).exec();
 }
+
+async getClientsByBusinessId(businessId: string): Promise<User[]> {
+  return this.userModel.find({
+      'businessRoles.businessId': businessId,
+      'businessRoles.role': 'client'
+  }).exec();
 }
-
-
+}
