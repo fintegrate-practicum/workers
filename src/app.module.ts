@@ -11,6 +11,7 @@ import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
+import { LoggerModule } from 'logger/logger.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MessagesModule } from './message/module/messages.module';
       isGlobal: true,
     }),
     TasksModule,
+    LoggerModule,
     WorkersModule,
     MessagesModule,
     TasksModule,

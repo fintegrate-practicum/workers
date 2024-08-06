@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
+import { PapertrailLogger } from 'logger/logger.service';
 
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
@@ -16,6 +17,8 @@ async function initializeSwagger(app) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const papertrailLogger = app.get(PapertrailLogger);
+  app.useLogger(papertrailLogger);  
 
   await initializeSwagger(app);
 
