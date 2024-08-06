@@ -7,7 +7,6 @@ import { Role } from '../../schemas/EmployeeRole.entity';
 import { Types } from 'mongoose';
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-
 const mockEmployee = {
   _id: new Types.ObjectId(),
   userId: '12345',
@@ -17,7 +16,6 @@ const mockEmployee = {
   createdBy: 'admin',
   updatedBy: 'admin',
 } as Employee;
-
 const mockEmployeeModel = {
   create: jest.fn().mockResolvedValue(mockEmployee),
   find: jest.fn().mockImplementation(() => ({
@@ -32,11 +30,9 @@ const mockEmployeeModel = {
   countDocuments: jest.fn().mockResolvedValue(2),
   exec: jest.fn(),
 };
-
 describe('WorkersService', () => {
   let service: WorkersService;
   let model: Model<Employee>;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -47,22 +43,18 @@ describe('WorkersService', () => {
         },
       ],
     }).compile();
-
     service = module.get<WorkersService>(WorkersService);
     model = module.get<Model<Employee>>(getModelToken('Employee'));
   });
-
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
   describe('createEmployee', () => {
     it('should throw BadRequestException if worker is not provided', async () => {
       await expect(service.createEmployee(null)).rejects.toThrow(
         BadRequestException,
       );
     });
-
     it('should create and return an employee with valid data', async () => {
       const worker: workerValidationsSchema = {
         userId: '12345',
@@ -77,113 +69,87 @@ describe('WorkersService', () => {
           description: 'Developer Role',
         } as Role,
       };
-
       const workerCode = 'uniqueCode';
-
       jest.spyOn(service, 'generateUniqueNumber').mockReturnValue(workerCode);
-
       const savedEmployee = {
         ...mockEmployee,
         save: jest.fn().mockResolvedValue(mockEmployee),
       };
       jest.spyOn(mockEmployeeModel, 'create').mockResolvedValue(savedEmployee);
       jest.spyOn(savedEmployee, 'save').mockResolvedValue(savedEmployee);
-
       const result = await service.createEmployee(worker);
-
       expect(result).toEqual(savedEmployee);
       expect(mockEmployeeModel.create).toHaveBeenCalledWith(worker);
       expect(savedEmployee.save).toHaveBeenCalled();
     });
-
     describe('getEmployeeByUserId', () => {
       it('should throw BadRequestException if userId is not provided', async () => {
         await expect(service.getEmployeeByUserId(null)).rejects.toThrow(
           BadRequestException,
         );
       });
-
       it('should return an employee if found', async () => {
         const userId = '12345';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockResolvedValue(mockEmployee),
         } as any);
-
         const result = await service.getEmployeeByUserId(userId);
         expect(result).toEqual(mockEmployee);
         expect(mockEmployeeModel.findOne).toHaveBeenCalledWith({ userId });
       });
-
       it('should throw HttpException if employee is not found', async () => {
         const userId = 'nonExistingUserId';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockResolvedValue(null),
         } as any);
-
         await expect(
           service.getEmployeeByUserId(userId),
         ).rejects.toHaveProperty('status', HttpStatus.NOT_FOUND);
       });
-
       it('should throw HttpException for internal server error', async () => {
         const userId = '12345';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockRejectedValue(new Error('Some error')),
         } as any);
-
         await expect(
           service.getEmployeeByUserId(userId),
         ).rejects.toHaveProperty('status', HttpStatus.INTERNAL_SERVER_ERROR);
       });
     });
-
     describe('getEmployeeByUserId', () => {
       it('should throw BadRequestException if userId is not provided', async () => {
         await expect(service.getEmployeeByUserId(null)).rejects.toThrow(
           BadRequestException,
         );
       });
-
       it('should return an employee if found', async () => {
         const userId = '12345';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockResolvedValue(mockEmployee),
         } as any);
-
         const result = await service.getEmployeeByUserId(userId);
         expect(result).toEqual(mockEmployee);
         expect(mockEmployeeModel.findOne).toHaveBeenCalledWith({ userId });
       });
-
       it('should throw HttpException if employee is not found', async () => {
         const userId = 'nonExistingUserId';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockResolvedValue(null),
         } as any);
-
         await expect(
           service.getEmployeeByUserId(userId),
         ).rejects.toHaveProperty('status', HttpStatus.NOT_FOUND);
       });
-
       it('should throw HttpException for internal server error', async () => {
         const userId = '12345';
-
         jest.spyOn(mockEmployeeModel, 'findOne').mockReturnValue({
           exec: jest.fn().mockRejectedValue(new Error('Some error')),
         } as any);
-
         await expect(
           service.getEmployeeByUserId(userId),
         ).rejects.toHaveProperty('status', HttpStatus.INTERNAL_SERVER_ERROR);
       });
     });
-
     describe('deleteEmployee', () => {
       it('should delete and return an employee by ID', async () => {
         jest
@@ -197,7 +163,6 @@ describe('WorkersService', () => {
           mockEmployee._id.toString(),
         );
       });
-
       it('should handle error when deleting employee fails', async () => {
         jest
           .spyOn(model, 'findByIdAndDelete')
@@ -207,7 +172,6 @@ describe('WorkersService', () => {
         ).rejects.toThrowError('Error deleting employee');
       });
     });
-
     describe('findAllByBusinessId', () => {
       it('should find and return employees by business ID with pagination', async () => {
         const businessId = '123456789';
@@ -215,22 +179,18 @@ describe('WorkersService', () => {
         const limit = 2;
         const skip = (page - 1) * limit;
         const mockEmployees = [mockEmployee, mockEmployee];
-
         const limitMock = jest.fn().mockImplementation(() => ({
           exec: jest.fn().mockResolvedValue(mockEmployees),
         }));
-
         const skipMock = jest.fn().mockImplementation(() => ({
           limit: limitMock,
         }));
-
         jest.spyOn(model, 'find').mockImplementation(
           () =>
             ({
               skip: skipMock,
             }) as any,
         );
-
         const result = await service.findAllByBusinessId(
           businessId,
           page,
@@ -242,7 +202,6 @@ describe('WorkersService', () => {
         expect(result).toEqual(mockEmployees);
       });
     });
-
     describe('updateEmployee', () => {
       it('should update and return an employee by ID', async () => {
         const userId = 'someId';
@@ -254,11 +213,9 @@ describe('WorkersService', () => {
           ...updatedEmployee,
           position: 'Developer',
         } as unknown as Employee;
-
         (model.findOneAndUpdate as jest.Mock).mockReturnValue({
           exec: jest.fn().mockResolvedValue(mockUpdatedEmployee),
         });
-
         const result = await service.updateEmployeeByUserId(
           userId,
           updatedEmployee,
@@ -271,14 +228,12 @@ describe('WorkersService', () => {
         );
       });
     });
-
     it('should handle error when updating employee fails', async () => {
       const userId = 'someId';
       const updatedEmployee = {
         userId,
         name: 'John Doe',
       } as unknown as Employee;
-
       (model.findOneAndUpdate as jest.Mock).mockReturnValue({
         exec: jest
           .fn()
@@ -289,7 +244,6 @@ describe('WorkersService', () => {
             ),
           ),
       });
-
       await expect(
         service.updateEmployeeByUserId(userId, updatedEmployee),
       ).rejects.toThrow(HttpException);

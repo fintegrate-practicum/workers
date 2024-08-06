@@ -4,14 +4,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Employee } from '../../schemas/employee.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
-
 @Injectable()
 export class WorkersService {
   private readonly logger = new Logger(WorkersService.name);
   constructor(
     @InjectModel('Employee') private readonly employeeModel: Model<Employee>,
   ) {}
-
   async createEmployee(worker: workerValidationsSchema): Promise<Employee> {
     if (!worker) throw new BadRequestException('Request body is required');
     try {
@@ -26,7 +24,6 @@ export class WorkersService {
       );
     }
   }
-
   async findAll(businessId: string): Promise<Employee[]> {
     if (!businessId) throw new BadRequestException('businessId is required');
     try {
@@ -40,7 +37,6 @@ export class WorkersService {
       );
     }
   }
-
   async findAllByBusinessId(
     businessId: string,
     page: number = 1,
@@ -61,7 +57,6 @@ export class WorkersService {
       );
     }
   }
-
   async getEmployeeByUserId(userId: string): Promise<Employee> {
     if (!userId) {
       throw new BadRequestException('ID is required');
@@ -85,7 +80,45 @@ export class WorkersService {
       );
     }
   }
-
+  async deleteEmployee(id: string): Promise<Employee> {
+    try {
+      this.logger.log(`Attempting to delete employee with id: ${id}`);
+      const employee = await this.employeeModel.findByIdAndDelete(id);
+      if (!employee) {
+        this.logger.warn(`Employee not found with id: ${id}`);
+        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+      }
+      this.logger.log(`Successfully deleted employee with id: ${id}`);
+      return employee;
+    } catch (error) {
+      this.logger.error(`Error deleting employee: ${error.message}`);
+      throw new HttpException(
+        'Error deleting employee',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  generateUniqueNumber(): string {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
+    return `${timestamp}${random}`; // Concatenate timestamp and random number
+  }
+  async activateEmployee(id: string): Promise<Employee> {
+    if (!id) throw new BadRequestException('ID is required');
+    try {
+      const updatedEmployee = await this.employeeModel
+        .findByIdAndUpdate(id, { active: true }, { new: true })
+        .exec();
+      if (!updatedEmployee) {
+        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+      }
+      this.logger.log('The status will change successfully');
+      return updatedEmployee;
+    } catch (error) {
+      console.error('Error activating employee:', error);
+      throw error;
+    }
+  }
   async updateEmployeeByUserId(
     userId: string,
     updatedEmployee: Employee,
@@ -111,46 +144,4 @@ export class WorkersService {
       );
     }
   }
-  async deleteEmployee(id: string): Promise<Employee> {
-    try {
-      const employee = await this.employeeModel.findByIdAndDelete(id).exec();
-      if (!employee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-      return employee;
-    } catch (error) {
-      if (error.status === HttpStatus.NOT_FOUND) {
-        throw error;
-      }
-      throw new HttpException(
-        'Error deleting employee',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  generateUniqueNumber(): string {
-    const timestamp = new Date().getTime(); // Get current timestamp
-    const random = Math.floor(Math.random() * 10000); // Generate random number between 0 and 9999
-    return `${timestamp}${random}`; // Concatenate timestamp and random number
-  }
-
-  async activateEmployee(id: string): Promise<Employee> {
-    if (!id) throw new BadRequestException('ID is required');
-    try {
-      const updatedEmployee = await this.employeeModel
-        .findByIdAndUpdate(id, { active: true }, { new: true })
-        .exec();
-      if (!updatedEmployee) {
-        throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
-      }
-
-      this.logger.log('The status will change successfully');
-      return updatedEmployee;
-    } catch (error) {
-      console.error('Error activating employee:', error);
-      throw error;
-    }
-  }
-
 }
