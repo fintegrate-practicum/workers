@@ -78,7 +78,7 @@ export class WorkersController {
         businessId: { type: 'string' },
         code: { type: 'string' },
         createdBy: { type: 'string' },
-        updateBy: { type: 'string' },
+        updatedBy: { type: 'string' },
         nameEmployee: { type: 'string' },
         role: {
           type: 'object',
