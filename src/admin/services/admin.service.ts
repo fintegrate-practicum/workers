@@ -8,8 +8,7 @@ export class AdminService {
   constructor(
     @InjectModel('Employee') private readonly EmployeeModel: Model<Employee>,
     @InjectModel('User') private readonly userModel: Model<User>,
-
-  ) { }
+  ) {}
 
   async findAllByBusinessId(
     businessId: string,
@@ -35,13 +34,17 @@ export class AdminService {
     return this.userModel.findById(userId).exec();
   }
   async getUsersByBusinessId(businessId: string): Promise<User[]> {
-    return this.userModel.find({ 'businessRoles.businessId': businessId }).exec();
-}
+    return this.userModel
+      .find({ 'businessRoles.businessId': businessId })
+      .exec();
+  }
 
-async getClientsByBusinessId(businessId: string): Promise<User[]> {
-  return this.userModel.find({
-      'businessRoles.businessId': businessId,
-      'businessRoles.role': 'client'
-  }).exec();
-}
+  async getClientsByBusinessId(businessId: string): Promise<User[]> {
+    return this.userModel
+      .find({
+        'businessRoles.businessId': businessId,
+        'businessRoles.role': 'client',
+      })
+      .exec();
+  }
 }
