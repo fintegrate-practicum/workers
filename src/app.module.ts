@@ -11,14 +11,12 @@ import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-
 import { AdminModule } from './admin/module/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
     TasksModule,
     WorkersModule,
     MessagesModule,
