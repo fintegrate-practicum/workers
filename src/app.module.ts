@@ -5,27 +5,22 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
-import { Employee } from './schemas/employee.entity';
-import { env } from 'process';
 import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { UserModule } from './user/module/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
-    UserModule,
-    TasksModule,
+    AuthzModule,
     WorkersModule,
     MessagesModule,
     TasksModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule, WorkersModule, AuthzModule],
+      imports: [ConfigModule, WorkersModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
       }),
@@ -33,6 +28,6 @@ import { UserModule } from './user/module/users.module';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure, AuthzModule],
 })
 export class AppModule {}
