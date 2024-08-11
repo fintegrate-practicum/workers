@@ -1,21 +1,28 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AdminService } from './services/admin.service';
-import {User} from '../schemas/user.entity'
-// import { Admin } from './admin.entity';
-
+import { User } from '../schemas/user.entity';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) { }
+  constructor(private readonly adminService: AdminService) {}
 
   @Get('user/:id')
-  async getUserById(@Param('id') id: string) :Promise<User>{
+  async getUserById(@Param('id') id: string): Promise<User> {
     return this.adminService.getUserById(id);
   }
 
   @Get('business/:businessId/users')
-  async getUsersByBusinessId(@Param('businessId') businessId: string) :Promise<User[]>{
+  async getUsersByBusinessId(
+    @Param('businessId') businessId: string,
+  ): Promise<User[]> {
     return this.adminService.getUsersByBusinessId(businessId);
+  }
+
+  @Get('business/:businessId/client')
+  async getClientsByBusinessId(
+    @Param('businessId') businessId: string,
+  ): Promise<User[]> {
+    return this.adminService.getClientsByBusinessId(businessId);
   }
 
   // @Get()

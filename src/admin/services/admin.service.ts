@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Employee } from 'src/schemas/employee.entity';
-import { User } from 'src/schemas/user.entity';
+import { Employee } from '../../schemas/employee.entity';
+import { User } from '../../schemas/user.entity';
 @Injectable()
 export class AdminService {
   constructor(
     @InjectModel('Employee') private readonly EmployeeModel: Model<Employee>,
     @InjectModel('User') private readonly userModel: Model<User>,
-
-  ) { }
+  ) {}
 
   async findAllByBusinessId(
     businessId: string,
@@ -35,6 +34,17 @@ export class AdminService {
     return this.userModel.findById(userId).exec();
   }
   async getUsersByBusinessId(businessId: string): Promise<User[]> {
-    return this.userModel.find({ businessId }).exec();
+    return this.userModel
+      .find({ 'businessRoles.businessId': businessId })
+      .exec();
+  }
+
+  async getClientsByBusinessId(businessId: string): Promise<User[]> {
+    return this.userModel
+      .find({
+        'businessRoles.businessId': businessId,
+        'businessRoles.role': 'client',
+      })
+      .exec();
   }
 }
