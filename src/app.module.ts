@@ -11,7 +11,8 @@ import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { AdminModule } from './admin/module/admin.module';
+import { PapertrailLogger } from './logger';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,7 +22,6 @@ import { AdminModule } from './admin/module/admin.module';
     WorkersModule,
     MessagesModule,
     TasksModule,
-    AdminModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule, WorkersModule, AuthzModule],
       useFactory: async (config: ConfigService) => ({
@@ -31,6 +31,6 @@ import { AdminModule } from './admin/module/admin.module';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure, PapertrailLogger],
 })
 export class AppModule {}
