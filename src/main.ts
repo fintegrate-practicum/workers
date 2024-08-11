@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
     .setTitle('Main api base')
@@ -16,12 +15,14 @@ async function initializeSwagger(app) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors({
+    origin: 'http://example.com',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
   await initializeSwagger(app);
-
-  app.enableCors();
   app.useGlobalInterceptors(new TransformDataStructure());
   await app.listen(4000);
   console.log('Server is running on http://localhost:4000');
 }
-bootstrap();
+bootstrap()
