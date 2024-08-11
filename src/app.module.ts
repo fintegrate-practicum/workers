@@ -9,6 +9,7 @@ import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
+import { PapertrailLogger } from './logger';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { MessagesModule } from './message/module/messages.module';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure, AuthzModule],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure,PapertrailLogger, AuthzModule],
 })
 export class AppModule {}

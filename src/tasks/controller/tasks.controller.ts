@@ -8,15 +8,13 @@ import {
   Delete,
   Param,
   Headers,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { TasksService } from '../service/tasks.service';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-@ApiTags('User')
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly _taskService: TasksService) { }

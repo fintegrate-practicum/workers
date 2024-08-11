@@ -6,13 +6,11 @@ import { RabbitPublisherService } from 'src/rabbit-publisher/rabbit-publisher.se
 import { User, UserSchema } from 'src/schemas/user.entity';
 import { WorkersService } from 'src/worker/services/workers.service';
 import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
-import { UserService } from 'src/user/services/users.service';
+import { UserService } from '../../user/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from 'src/user/module/users.module';
 
 @Module({
   imports: [
-    UserModule,
     MongooseModule.forFeature([
       { name: Task.name, schema: TaskSchema },
       { name: User.name, schema: UserSchema },
