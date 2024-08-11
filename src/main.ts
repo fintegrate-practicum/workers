@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
-import { PapertrailLogger } from 'logger/logger.service';
+import { PapertrailLogger } from './logger';
 
 async function initializeSwagger(app) {
   const config = new DocumentBuilder()
@@ -25,6 +25,6 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalInterceptors(new TransformDataStructure());
   await app.listen(4000);
-  console.log('Server is running on http://localhost:4000');
+  papertrailLogger.log('Server is running on http://localhost:4000');
 }
 bootstrap();

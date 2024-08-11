@@ -11,7 +11,7 @@ import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { LoggerModule } from 'logger/logger.module';
+import { PapertrailLogger } from './logger';
 
 @Module({
   imports: [
@@ -19,7 +19,6 @@ import { LoggerModule } from 'logger/logger.module';
       isGlobal: true,
     }),
     TasksModule,
-    LoggerModule,
     WorkersModule,
     MessagesModule,
     TasksModule,
@@ -32,6 +31,6 @@ import { LoggerModule } from 'logger/logger.module';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure, PapertrailLogger],
 })
 export class AppModule {}
