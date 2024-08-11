@@ -28,7 +28,6 @@ export class WorkersController {
 
   constructor(private readonly workersService: WorkersService) { }
   @ApiBearerAuth()
-  @ApiTags('workers')
   @UseInterceptors(TransformDataStructure)
   @Get()
   @UseGuards(AuthGuard('jwt'))
