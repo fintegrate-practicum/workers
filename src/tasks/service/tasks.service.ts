@@ -11,9 +11,10 @@ import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { Task } from '../../schemas/task.entity';
-import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service'
+import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.service';
 import { UserService } from '../../user/users.service';
 import { Message } from '../../interface/message.interface';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TasksService {
@@ -21,7 +22,7 @@ export class TasksService {
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
     private readonly rabbitPublisherService: RabbitPublisherService,
     private readonly usersService: UserService,
-  ) { }
+  ) {}
 
   public readonly logger = new Logger(TasksService.name);
   async getAllTasks(managerId: string): Promise<Task[]> {
@@ -39,7 +40,6 @@ export class TasksService {
 
     const employees = await Promise.all(
       task.employee.map((id) =>
-
         this.usersService.findOneByUserId(id.toString()),
       ),
     );
@@ -48,7 +48,7 @@ export class TasksService {
     const nonExistentEmployees = employees.filter((user) => !user);
     if (nonExistentEmployees.length > 0) {
       this.logger.log('One or more employees not found.');
-      throw new NotFoundException('One or more employees not found')
+      throw new NotFoundException('One or more employees not found');
     }
 
     if (!manager) {
@@ -74,7 +74,6 @@ export class TasksService {
               date: newTask.targetDate,
               managerName: manager.userName,
             },
-
           };
           return this.rabbitPublisherService.publishMessageToCommunication(
             message,
@@ -98,7 +97,11 @@ export class TasksService {
       this.logger.error('Invalid update task data');
       throw new BadRequestException('Invalid update task data');
     }
-    const updatedTask = await this.taskModel.findOneAndUpdate({ _id: taskId }, task, { new: true },);
+    const updatedTask = await this.taskModel.findOneAndUpdate(
+      { _id: taskId },
+      task,
+      { new: true },
+    );
     if (!updatedTask) {
       throw new NotFoundException(`Task with ID ${taskId} not found`);
     }
@@ -107,12 +110,91 @@ export class TasksService {
 
   async deleteTask(taskId: string): Promise<Task> {
     if (!taskId) {
-      throw new BadRequestException('taskId is required')
+      throw new BadRequestException('taskId is required');
     }
     const deletedTask = await this.taskModel.findOneAndDelete({ _id: taskId });
     if (!deletedTask) {
       throw new NotFoundException(`Task with ID ${taskId} not found`);
     }
     return deletedTask;
+  }
+  async checkTasksForReminder(): Promise<void> {
+    const tasks = await this.taskModel.find();
+    if (!tasks.length) {
+      this.logger.log('No tasks found.');
+      return;
+    }
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    for (const task of tasks) {
+      if (!task.completionDate) {
+        this.logger.error(`Task ${task._id} has no completion date.`);
+        continue;
+      }
+      const taskDate = new Date(task.completionDate);
+      if (
+        taskDate.toLocaleDateString('en-GB') ===
+        tomorrow.toLocaleDateString('en-GB')
+      ) {
+        const employees = await Promise.all(
+          task.employee?.map(async (id) => {
+            if (!id) {
+              this.logger.error(`Employee ID is missing for task ${task._id}`);
+              return null;
+            }
+            const user = await this.usersService.findOneByUserId(id.toString());
+            if (!user) {
+              this.logger.error(`Employee with ID ${id} not found.`);
+            }
+            return user;
+          }),
+        );
+        const validEmployees = employees.filter((user) => user !== null);
+        if (validEmployees.length === 0) {
+          this.logger.error(`No valid employees found for task ${task._id}`);
+          continue;
+        }
+        const admin = await this.usersService.findOneByUserId(task.managerId);
+        if (!admin) {
+          this.logger.error(
+            `Manager with ID ${task.managerId} not found for task ${task._id}`,
+          );
+          continue;
+        }
+        await Promise.all(
+          validEmployees.map(async (user) => {
+            try {
+              const message: Message = {
+                pattern: 'message_exchange',
+                data: {
+                  to: user.userEmail,
+                  subject: 'Reminder: Task Due Tomorrow',
+                  type: 'email',
+                  kindSubject: 'taskReminder',
+                  name: user.userName,
+                  description:
+                    'Reminder for a task with a due date of tomorrow',
+                  date: task.completionDate,
+                  managerName: admin.userName,
+                },
+              };
+              await this.rabbitPublisherService.publishMessageToCommunication(
+                message,
+              );
+            } catch (error) {
+              this.logger.error(
+                `Failed to send reminder to ${user.userName} for task ${task._id}:`,
+                error,
+              );
+            }
+          }),
+        );
+      }
+    }
+  }
+
+  @Cron('0 0 * * *')
+  async handleCron() {
+    await this.checkTasksForReminder();
   }
 }
