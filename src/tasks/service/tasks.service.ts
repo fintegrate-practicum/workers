@@ -168,7 +168,7 @@ export class TasksService {
                 pattern: 'message_exchange',
                 data: {
                   to: user.userEmail,
-                  subject: 'Reminder: Task Due Tomorrow',
+                  subject: task.description,
                   type: 'email',
                   kindSubject: 'taskReminder',
                   name: user.userName,
