@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { GoogleCalendarService } from '../service/google-calendar.service';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
-import { EventDto } from 'src/dto/createEvent.dto';
+import { EventDto } from '../../../dto/createEvent.dto';
 import { Response } from 'express';
 
 @ApiTags('User')

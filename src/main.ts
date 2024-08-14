@@ -16,7 +16,7 @@ async function initializeSwagger(app) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://example.com',
+    origin: 'http://localhost:4000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
