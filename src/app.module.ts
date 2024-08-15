@@ -5,8 +5,6 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
-import { Employee } from './schemas/employee.entity';
-import { env } from 'process';
 import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
@@ -18,12 +16,12 @@ import { PapertrailLogger } from './logger';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TasksModule,
+    AuthzModule,
     WorkersModule,
     MessagesModule,
     TasksModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule, WorkersModule, AuthzModule],
+      imports: [ConfigModule, WorkersModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
       }),
@@ -31,6 +29,6 @@ import { PapertrailLogger } from './logger';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure, PapertrailLogger],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure,PapertrailLogger, AuthzModule],
 })
 export class AppModule {}
