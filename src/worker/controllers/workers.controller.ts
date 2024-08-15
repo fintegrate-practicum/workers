@@ -20,22 +20,26 @@ import { AuthGuard } from '@nestjs/passport';
 import { TransformDataStructure } from '../../transformDataStructure/convertData';
 import { Request, Response } from 'express';
 import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { Role, Roles, RolesGuard } from 'fintegrate-auth';
 
 @ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   private readonly logger = new Logger(WorkersController.name);
 
-  constructor(private readonly workersService: WorkersService) { }
+  constructor(private readonly workersService: WorkersService) {}
   @ApiBearerAuth()
   @UseInterceptors(TransformDataStructure)
   @Get()
+  @Roles(Role.Admin, Role.Worker)
   @UseGuards(AuthGuard('jwt'))
   async findAll(@Query('businessId') businessId: string): Promise<Employee[]> {
     return this.workersService.findAll(businessId);
   }
 
   @Get('employee/:id')
+  @Roles(Role.Admin, Role.Worker)
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Activate an employee' })
   @Post(':id/activate')
   async activateEmployee(@Param('id') id: string): Promise<Employee> {
@@ -47,14 +51,16 @@ export class WorkersController {
   }
 
   @Get(':id')
+  @Roles(Role.Admin, Role.Worker)
+  @UseGuards(AuthGuard('jwt'))
   getWorker(@Param('id') id: string) {
     const employee = this.workersService.getEmployeeByUserId(id);
-    if (!employee)
-      throw new NotFoundException('employee not found');
+    if (!employee) throw new NotFoundException('employee not found');
     return employee;
   }
 
   @Get('data')
+  @Roles(Role.Admin, Role.Worker)
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataStructure)
   async getData(@Body() req: Request, @Body() res: Response): Promise<void> {
@@ -62,6 +68,7 @@ export class WorkersController {
   }
 
   @Get('company/:companyId')
+  @Roles(Role.Admin, Role.Worker)
   @UseGuards(AuthGuard('jwt'))
   async get(@Param('companyId') id: string): Promise<Employee[]> {
     const result = await this.workersService.findAllByBusinessId(id);
@@ -90,8 +97,8 @@ export class WorkersController {
       },
     },
   })
-  
   @Post('')
+  @Roles(Role.Admin)
   @UseGuards(AuthGuard('jwt'))
   async create(
     @Body(
@@ -102,7 +109,9 @@ export class WorkersController {
         },
       }),
     )
-    @Body() requestBody: workerValidationsSchema,) {
+    @Body()
+    requestBody: workerValidationsSchema,
+  ) {
     this.logger.log(requestBody);
     const result = this.workersService.createEmployee(requestBody);
     this.logger.log('good');
@@ -110,6 +119,8 @@ export class WorkersController {
   }
 
   @Put(':id')
+  @Roles(Role.Admin, Role.Worker)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   updateUser(@Param('id') id: string, @Body() user: Employee) {
     const response = this.workersService.updateEmployeeByUserId(id, user);
     if (!response) {

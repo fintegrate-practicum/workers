@@ -24,14 +24,18 @@ import { GoogleCalendarModule } from './tasks/google_calendar/module/google-cale
     TasksModule,
     GoogleCalendarModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule, WorkersModule],
-      useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),
   ],
-  controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure,PapertrailLogger, AuthzModule],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    RabbitPublisherService,
+    TransformDataStructure,
+    PapertrailLogger,
+    AuthzModule,
+  ],
 })
 export class AppModule {}
