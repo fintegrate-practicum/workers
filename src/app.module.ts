@@ -5,28 +5,26 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RabbitPublisherService } from './rabbit-publisher/rabbit-publisher.service';
 import { WorkersModule } from './worker/module/workers.module';
-import { UserModule } from './user/module/users.module';
-import { GoogleCalendarModule } from './tasks/google_calendar/module/google-calendar.module';
-import { Employee } from './schemas/employee.entity';
-import { env } from 'process';
 import { AuthzModule } from 'fintegrate-auth';
 import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
-import { AdminModule } from './admin/module/admin.module';
+import { PapertrailLogger } from './logger';
+import { GoogleCalendarModule } from './tasks/google_calendar/module/google-calendar.module';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TasksModule,
+    AuthzModule,
     WorkersModule,
     MessagesModule,
     TasksModule,
     GoogleCalendarModule,
-    AdminModule,
     MongooseModule.forRootAsync({
-      imports: [ConfigModule, WorkersModule, AuthzModule],
+      imports: [ConfigModule, WorkersModule],
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
       }),
@@ -34,6 +32,6 @@ import { AdminModule } from './admin/module/admin.module';
     }),
   ],
   controllers:[AppController],
-  providers: [AppService, RabbitPublisherService, TransformDataStructure],
+  providers: [AppService, RabbitPublisherService, TransformDataStructure,PapertrailLogger, AuthzModule],
 })
 export class AppModule {}

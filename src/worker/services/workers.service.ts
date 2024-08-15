@@ -67,7 +67,7 @@ export class WorkersService {
       throw new BadRequestException('ID is required');
     }
     try {
-      console.log('Fetching employee with userId:', userId);
+      this.logger.log('Fetching employee with userId:', userId);
       const employee = await this.employeeModel.findOne({ userId }).exec();
       if (!employee) {
         console.warn('Employee not found with userId:', userId);
@@ -75,7 +75,7 @@ export class WorkersService {
       }
       return employee;
     } catch (error) {
-      console.error('Error fetching employee:', error);
+      this.logger.error('Error fetching employee:', error);
       if (error.status === HttpStatus.NOT_FOUND) {
         throw error;
       }
@@ -123,7 +123,7 @@ export class WorkersService {
       this.logger.log('The status will change successfully');
       return updatedEmployee;
     } catch (error) {
-      console.error('Error activating employee:', error);
+      this.logger.error('Error activating employee:', error);
       throw error;
     }
   }
