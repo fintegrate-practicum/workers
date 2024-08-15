@@ -1,27 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { google } from 'googleapis';
 import { EventDto } from 'src/dto/createEvent.dto';
 
 @Injectable()
 export class GoogleCalendarService {
   private oauth2Client: any;
-  client_id=process.env.CLIENT_ID;
-  client_secret=process.env.CLIENT_SECRET;
-  redirect_uris=process.env.REDIRECT_URIS;
-  scopes=process.env.SCOPES;
-  redirect_uri=process.env.REDIRECT_URI;
+  client_id_from_google_console=process.env.CLIENT_ID_FROM_GOOGLE_CONSOLE;
+  client_secret_code_google_console=process.env.CLIENT_SECRET_CODE_GOOGLE_CONSOLE;
+  scopes_google_calendar=process.env.SCOPES_GOOGLE_CALENDAR;
+  redirect_uri_for_auth=process.env.REDIRECT_URI_FOR_AUTH;
 
   constructor() {
     this.oauth2Client = new google.auth.OAuth2(
-      this.client_id,
-      this.client_secret,
-      this.redirect_uris
+      this.client_id_from_google_console,
+      this.client_secret_code_google_console,
+      this.redirect_uri_for_auth
     );
   }
 
   generateAuthUrl() {
-    const scopes = this.scopes;
-    const redirect_uri=this.redirect_uri;
+    const scopes = this.scopes_google_calendar;
+    const redirect_uri=this.redirect_uri_for_auth;
     return this.oauth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: scopes,
@@ -49,7 +48,7 @@ export class GoogleCalendarService {
   async addEvent(email: string, event: EventDto) {
     const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client });
     if (!email || !event) {
-      throw new Error('Missing required parameters');
+      throw new BadRequestException('Missing required parameters');
     }
     await calendar.events.insert({
       calendarId: email,
@@ -62,7 +61,7 @@ export class GoogleCalendarService {
     const existingEvent = await this.getEventById(email, eventId);
     
     if (!existingEvent) {
-      throw new Error('Event not found');
+      throw new NotFoundException('Event not found');
     }
   
     const eventToUpdate = {
@@ -82,7 +81,7 @@ export class GoogleCalendarService {
   async getEventById(email: string, eventId: string) {
     const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client });
     if (!email || !eventId) {
-      throw new Error('Missing required parameters');
+      throw new BadRequestException('Missing required parameters');
     }
     const event = await calendar.events.get({
       calendarId: email,
@@ -94,7 +93,7 @@ export class GoogleCalendarService {
   async deleteEvent(email: string, eventId: string) {
     const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client });
     if (!email || !eventId) {
-      throw new Error('Missing required parameters');
+      throw new BadRequestException('Missing required parameters');
     }
     await calendar.events.delete({
       calendarId: email,
