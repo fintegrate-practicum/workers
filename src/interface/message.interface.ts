@@ -7,7 +7,7 @@ export interface Message {
     kindSubject: string;
     name: string;
     description: string;
-    date: Date;
+    date?: Date;
     managerName: string;
   };
 }
