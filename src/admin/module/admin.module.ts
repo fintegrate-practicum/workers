@@ -5,6 +5,7 @@ import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
 import { Role, RoleSchema } from 'src/schemas/EmployeeRole.entity';
 import { AdminService } from '../services/admin.service';
+import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -12,6 +13,7 @@ import { AdminService } from '../services/admin.service';
       { name: Role.name, schema: RoleSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    HttpModule,
   ],
   providers: [AdminService],
   controllers: [AdminController],

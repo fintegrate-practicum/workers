@@ -11,6 +11,7 @@ import {
 import { Project, ProjectSchema } from 'src/schemas/project.entity';
 import { Role, RoleSchema } from 'src/schemas/EmployeeRole.entity';
 import { User, UserSchema } from 'src/schemas/user.entity';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { User, UserSchema } from 'src/schemas/user.entity';
       { name: Role.name, schema: RoleSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    HttpModule,
   ],
   providers: [WorkersService],
   controllers: [WorkersController],

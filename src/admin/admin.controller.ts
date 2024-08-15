@@ -1,17 +1,23 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from './services/admin.service';
 import { User } from '../schemas/user.entity';
+import { Role, Roles, RolesGuard } from 'fintegrate-auth';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get('user/:id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async getUserById(@Param('id') id: string): Promise<User> {
     return this.adminService.getUserById(id);
   }
 
   @Get('business/:businessId/users')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async getUsersByBusinessId(
     @Param('businessId') businessId: string,
   ): Promise<User[]> {
@@ -19,6 +25,8 @@ export class AdminController {
   }
 
   @Get('business/:businessId/client')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   async getClientsByBusinessId(
     @Param('businessId') businessId: string,
   ): Promise<User[]> {

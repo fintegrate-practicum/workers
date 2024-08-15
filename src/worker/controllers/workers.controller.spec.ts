@@ -6,6 +6,7 @@ import { Employee } from '../../schemas/employee.entity';
 import { Role } from '../../schemas/employeeRole.entity';
 import { workerValidationsSchema } from '../validations/worker.validations.schema';
 import { RoleValidationSchema } from '../validations/worker.roleValidation.schema';
+import { HttpModule } from '@nestjs/axios';
 
 describe('WorkersController', () => {
   let controller: WorkersController;
@@ -29,6 +30,7 @@ describe('WorkersController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [HttpModule],
       controllers: [WorkersController],
       providers: [
         {

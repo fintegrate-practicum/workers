@@ -8,6 +8,7 @@ import { WorkersService } from 'src/worker/services/workers.service';
 import { Employee, EmployeeSchema } from 'src/schemas/employee.entity';
 import { UserService } from '../../user/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       { name: User.name, schema: UserSchema },
       { name: Employee.name, schema: EmployeeSchema },
     ]),
+    HttpModule,
   ],
   providers: [
     TasksService,
