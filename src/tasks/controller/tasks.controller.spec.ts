@@ -65,12 +65,8 @@ describe('TasksController', () => {
     };
     it('should call service.createTask with dto and return the created task', async () => {
       const mockResult: Partial<Task> = { ...mockTask };
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jest.spyOn(service, 'createTask').mockResolvedValue(mockResult as any);
-
       const result = await controller.createTask(taskData);
-
       expect(service.createTask).toHaveBeenCalledWith(taskData);
       expect(result).toEqual(mockResult);
     });
