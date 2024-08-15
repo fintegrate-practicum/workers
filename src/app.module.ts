@@ -10,6 +10,8 @@ import { TasksModule } from './tasks/module/tasks.module';
 import { TransformDataStructure } from './transformDataStructure/convertData';
 import { MessagesModule } from './message/module/messages.module';
 import { PapertrailLogger } from './logger';
+import { GoogleCalendarModule } from './tasks/google_calendar/module/google-calendar.module';
+
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { PapertrailLogger } from './logger';
     WorkersModule,
     MessagesModule,
     TasksModule,
+    GoogleCalendarModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule, WorkersModule],
       useFactory: async (config: ConfigService) => ({
