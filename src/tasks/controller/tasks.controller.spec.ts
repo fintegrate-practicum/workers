@@ -29,6 +29,31 @@ describe('TasksController', () => {
     directLink: 'http://localhost:3001/api#/Workers/WorkersController_create',
   };
 
+  const dynamicArry = [
+    {
+      businessId: new Types.ObjectId(validObjectId),
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: new Types.ObjectId(validObjectId),
+      status: TaskStatus.Completed,
+      urgency: 2,
+    },
+    {
+      businessId: new Types.ObjectId(validObjectId),
+      taskName: 'Test Task',
+      completionDate: new Date(0),
+      description: 'efrat',
+      managerId: 'Test managerId',
+      targetDate: new Date(0),
+      employee: new Types.ObjectId(validObjectId),
+      status: TaskStatus.Completed,
+      urgency: 2,
+    },
+  ];
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
@@ -38,7 +63,7 @@ describe('TasksController', () => {
           provide: TasksService,
           useValue: {
             createTask: jest.fn(),
-            getAllTasks: jest.fn().mockResolvedValue([mockTask]),
+            getAllTasks: jest.fn().mockResolvedValue(dynamicArry),
             updateTask: jest.fn(),
             deleteTask: jest.fn(),
           },
@@ -65,6 +90,7 @@ describe('TasksController', () => {
     };
     it('should call service.createTask with dto and return the created task', async () => {
       const mockResult: Partial<Task> = { ...mockTask };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jest.spyOn(service, 'createTask').mockResolvedValue(mockResult as any);
       const result = await controller.createTask(taskData);
       expect(service.createTask).toHaveBeenCalledWith(taskData);
@@ -79,6 +105,24 @@ describe('TasksController', () => {
       await expect(controller.createTask(taskData)).rejects.toThrow(
         BadRequestException,
       );
+    });
+  });
+
+  const managerId = '2';
+
+  describe('getAllManagerTasks', () => {
+    let result;
+    beforeEach(async () => {
+      jest.spyOn(service, 'getAllTasks');
+      result = await controller.getAllManagerTasks(managerId);
+    });
+
+    it('should call service.getAllTasks with managerId', () => {
+      expect(service.getAllTasks).toBeCalledWith(managerId);
+    });
+
+    it('result should be equal to dynamicArry', () => {
+      expect(result).toEqual(dynamicArry);
     });
   });
 
