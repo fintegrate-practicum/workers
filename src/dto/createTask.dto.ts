@@ -82,4 +82,7 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
   directLink: string;
+
+  @IsArray()
+  tags: string[];
 }

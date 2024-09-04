@@ -12,7 +12,6 @@ import { MessagesModule } from './message/module/messages.module';
 import { PapertrailLogger } from './logger';
 import { GoogleCalendarModule } from './tasks/google_calendar/module/google-calendar.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,7 +23,8 @@ import { GoogleCalendarModule } from './tasks/google_calendar/module/google-cale
     TasksModule,
     GoogleCalendarModule,
     MongooseModule.forRootAsync({
-        uri: process.env.MONGODB_URI,
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),
@@ -35,7 +35,6 @@ import { GoogleCalendarModule } from './tasks/google_calendar/module/google-cale
     RabbitPublisherService,
     TransformDataStructure,
     PapertrailLogger,
-    AuthzModule,
   ],
 })
 export class AppModule {}
