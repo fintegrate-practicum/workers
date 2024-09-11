@@ -39,10 +39,7 @@ export class TasksService {
     if (!employeeId || !businessId) {
       throw new BadRequestException('employeeID and businessID is required');
     }
-    const tasksByBusiness = await this.taskModel.find({ businessId }).exec();
-    const tasksByBusinessByEmployee = tasksByBusiness.filter((task) =>
-      task.employee.includes(new Types.ObjectId(employeeId)),
-    );
+    const tasksByBusinessByEmployee = await this.taskModel.find({ businessId:  businessId , employee:  employeeId  }).exec();
     return tasksByBusinessByEmployee;
   }
 
