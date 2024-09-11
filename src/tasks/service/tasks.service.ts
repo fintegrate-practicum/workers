@@ -15,6 +15,7 @@ import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.
 import { UserService } from '../../user/users.service';
 import { Message } from '../../interface/message.interface';
 import { Cron } from '@nestjs/schedule';
+import { TaskStatus } from 'src/enum/taskStatus.enum';
 
 @Injectable()
 export class TasksService {
@@ -208,4 +209,30 @@ export class TasksService {
   async handleCron() {
     await this.checkTasksForReminder();
   }
+
+  async getTasksOpenByEmployee(companyId: string): Promise<{ employeeId: string, count: number }[]> {
+    if (!Types.ObjectId.isValid(companyId)) {
+      this.logger.error('Invalid companyId provided');
+      throw new BadRequestException('Invalid companyId');
+    }
+    const result = await this.taskModel.aggregate([
+      { $match: { businessId: companyId, status: TaskStatus.ToDo } },
+      { $unwind: '$employee' },
+      {
+        $group: {
+          _id: '$employee',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          employeeId: '$_id',
+          count: 1
+        }
+      }
+    ]).exec();
+    return result;
+  }
+
 }
