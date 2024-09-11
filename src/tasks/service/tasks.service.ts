@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
@@ -32,6 +32,17 @@ export class TasksService {
     }
     return await this.taskModel.find({ managerId }).exec();
   }
+  async getAllTasksForEmployee(
+    employeeId: string,
+    businessId: string,
+  ): Promise<Task[]> {
+    if (!employeeId || !businessId) {
+      throw new BadRequestException('employeeID and businessID is required');
+    }
+    const tasksByBusinessByEmployee = await this.taskModel.find({ businessId:  businessId , employee:  employeeId  }).exec();
+    return tasksByBusinessByEmployee;
+  }
+
   async createTask(task: CreateTaskDto) {
     if (!task) {
       this.logger.error('Invalid task data');

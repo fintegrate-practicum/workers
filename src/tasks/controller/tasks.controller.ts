@@ -29,6 +29,17 @@ export class TasksController {
     return await this._taskService.getAllTasks(managerId);
   }
 
+  @Get('/employee/:businessId/:employeeId')
+  async getAllEmployeeTasksByBusinessID(
+    @Param('businessId') businessId: string,
+    @Param('employeeId') employeeId: string,
+  ) {
+    return await this._taskService.getAllTasksForEmployee(
+      employeeId,
+      businessId,
+    );
+  }
+
   @Post('/manager/task')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
