@@ -9,6 +9,8 @@ import {
   Param,
   Headers,
   UseGuards,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { CreateTaskDto } from '../../dto/createTask.dto';
 import { TasksService } from '../service/tasks.service';
@@ -65,4 +67,11 @@ export class TasksController {
   async deleteTask(@Param('id') taskId: string) {
     return await this._taskService.deleteTask(taskId);
   }
+
+  @Get('open-by-employee/:companyId')
+  async getTasksOpenByEmployee(@Param('companyId') companyId: string, @Res() response): Promise<{ employeeId: string, count: number }[]> {
+      const result = await this._taskService.getTasksOpenByEmployee(companyId);
+      return response.status(HttpStatus.OK).send(result);
+  }
+
 }

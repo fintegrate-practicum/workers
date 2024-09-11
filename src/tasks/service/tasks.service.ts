@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UpdateTaskEmployeeDto } from '../../dto/updateTaskEmployee.dto';
 import { UpdateTaskManagerDto } from '../../dto/updateTaskManager.dto';
 import { CreateTaskDto } from '../../dto/createTask.dto';
@@ -15,6 +15,7 @@ import { RabbitPublisherService } from '../../rabbit-publisher/rabbit-publisher.
 import { UserService } from '../../user/users.service';
 import { Message } from '../../interface/message.interface';
 import { Cron } from '@nestjs/schedule';
+import { TaskStatus } from 'src/enum/taskStatus.enum';
 
 @Injectable()
 export class TasksService {
@@ -197,4 +198,30 @@ export class TasksService {
   async handleCron() {
     await this.checkTasksForReminder();
   }
+
+  async getTasksOpenByEmployee(companyId: string): Promise<{ employeeId: string, count: number }[]> {
+    if (!Types.ObjectId.isValid(companyId)) {
+      this.logger.error('Invalid companyId provided');
+      throw new BadRequestException('Invalid companyId');
+    }
+    const result = await this.taskModel.aggregate([
+      { $match: { businessId: companyId, status: TaskStatus.ToDo } },
+      { $unwind: '$employee' },
+      {
+        $group: {
+          _id: '$employee',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          employeeId: '$_id',
+          count: 1
+        }
+      }
+    ]).exec();
+    return result;
+  }
+
 }
