@@ -25,5 +25,7 @@ export class Task {
   completionDate: Date;
   @Prop({ default: null })
   directLink: string;
+  @Prop({ default: null })
+  tags: string[];
 }
 export const TaskSchema = SchemaFactory.createForClass(Task);

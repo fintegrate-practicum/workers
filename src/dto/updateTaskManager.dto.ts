@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsDate, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { TaskStatus } from '../enum/taskStatus.enum';
 
 export class UpdateTaskManagerDto {
@@ -39,4 +39,7 @@ export class UpdateTaskManagerDto {
   @IsNotEmpty()
   @IsEnum(TaskStatus)
   status: TaskStatus;
+
+  @IsArray()
+  tags: string[];
 }
